@@ -268,6 +268,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Helvetica Neue"
       <span class="overlay-title">明細帳 / 會計項目</span>
       <span class="overlay-close" onclick="closeOverlay('acc')">完成</span>
     </div>
+    <div style="padding:10px 16px;border-bottom:1px solid var(--gray2);background:#f8fafc;">
+      <input type="search" id="acc-search" placeholder="輸入明細帳代碼或項目名稱（如 926）…"
+        oninput="filterAccList()"
+        style="width:100%;padding:10px 14px;font-size:15px;border:1.5px solid var(--gray2);
+               border-radius:10px;outline:none;background:#fff;color:var(--gray5);">
+    </div>
     <div id="overlay-acc-list"></div>
   </div>
 </div>
@@ -360,18 +366,37 @@ function buildCatList(){
     el.appendChild(div);
   });
 }
+var _accItems=[];
 function buildAccList(){
-  var el=document.getElementById('overlay-acc-list');
-  el.innerHTML='';
+  var inp=document.getElementById('acc-search');
+  if(inp) inp.value='';
   var filtered=(selCat==='ALL')?ALL:ALL.filter(function(r){return r['分類代碼'].startsWith(selCat);});
-  var items=[{acc:'ALL',name:'全部'}].concat(
+  _accItems=[{acc:'ALL',name:'全部'}].concat(
     filtered.map(function(r){return {acc:r['明細帳'],name:r['會計項目']};})
   );
+  renderAccList('');
+  setTimeout(function(){if(inp) inp.focus();},200);
+}
+function filterAccList(){
+  var q=(document.getElementById('acc-search').value||'').toLowerCase().trim();
+  renderAccList(q);
+}
+function renderAccList(q){
+  var el=document.getElementById('overlay-acc-list');
+  el.innerHTML='';
+  var items=q?_accItems.filter(function(it){
+    return it.acc==='ALL'||it.acc.toLowerCase().includes(q)||it.name.toLowerCase().includes(q);
+  }):_accItems;
+  if(items.length===0){
+    el.innerHTML='<div style="padding:30px;text-align:center;color:#94a3b8;font-size:14px;">查無符合「'+q+'」的明細帳</div>';
+    return;
+  }
   items.forEach(function(it){
     var div=document.createElement('div');
     div.className='overlay-item'+(selAcc===it.acc?' selected':'');
-    div.innerHTML='<span class="item-check">✓</span><span style="font-weight:600;color:#128048;margin-right:6px">'+
-      (it.acc==='ALL'?'':it.acc)+'</span><span>'+it.name+'</span>';
+    div.innerHTML='<span class="item-check">\u2713</span>'+
+      (it.acc!=='ALL'?'<span style="font-weight:700;color:#128048;min-width:52px;display:inline-block;">'+it.acc+'</span>':'')+
+      '<span style="color:#1e293b;">'+it.name+'</span>';
     div.dataset.acc=it.acc;
     div.dataset.name=it.name;
     div.addEventListener('click',function(){
