@@ -262,9 +262,9 @@ CATS.forEach(function(c){
   catWrap.appendChild(ch);
 });
 
-// Unit chips — 從資料動態建立（排序後）
+// Unit chips — 從資料動態建立（排序後，排除空值）
 var unitSet={};
-RAW.forEach(function(r){unitSet[r['預算主管單位']]=true;});
+RAW.forEach(function(r){if(r['預算主管單位'])unitSet[r['預算主管單位']]=true;});
 var UNITS=['all'].concat(Object.keys(unitSet).sort());
 UNITS.forEach(function(u,idx){
   var color=UNIT_PALETTE[(idx-1+UNIT_PALETTE.length)%UNIT_PALETTE.length];
