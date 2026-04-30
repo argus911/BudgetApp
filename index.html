@@ -116,7 +116,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue"
 .detail-item{background:#f9fafb;border-radius:12px;padding:10px}
 .detail-label{font-size:11px;color:#888;margin-bottom:3px}
 .detail-value{font-size:15px;font-weight:700}
+.chart-card{background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.chart-title{font-size:15px;font-weight:700;color:#1a1a2e;margin-bottom:14px}
+.chart-wrap{position:relative;width:100%;max-height:280px}
+.chart-wrap-tall{position:relative;width:100%;max-height:380px}
+.chart-kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.chart-kpi{background:#f5f7fa;border-radius:12px;padding:10px;text-align:center}
+.chart-kpi-val{font-size:17px;font-weight:800;margin-bottom:2px}
+.chart-kpi-lab{font-size:11px;color:#888}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 </head>
 <body>
 
@@ -132,6 +141,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue"
 <div class="tab-bar top-tabs" id="top-tabs">
   <button class="tab-btn active" data-tab="search">🔍 預算查詢</button>
   <button class="tab-btn" data-tab="summary">📊 費用摘要</button>
+  <button class="tab-btn" data-tab="charts">📈 圖表分析</button>
   <button class="tab-btn" data-tab="warn">⚠️ 高用率預警</button>
   <button class="tab-btn" data-tab="info">ℹ️ 資料資訊</button>
 </div>
@@ -167,6 +177,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue"
   </div>
 </div>
 
+<!-- ═══ 圖表分析 Tab ═══ -->
+<div class="tab-content" id="tab-charts">
+  <div class="chart-card">
+    <div class="chart-kpi-grid" id="chart-kpi"></div>
+    <div class="chart-title">預算分配比例（費用分類）</div>
+    <div class="chart-wrap"><canvas id="chart-donut"></canvas></div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title">各費用分類 年度動支率</div>
+    <div class="chart-wrap-tall"><canvas id="chart-cat-bar"></canvas></div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title">各科室 年度動支率</div>
+    <div class="chart-wrap-tall"><canvas id="chart-unit-bar"></canvas></div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title">各費用分類 已用 vs 剩餘（元）</div>
+    <div class="chart-wrap-tall"><canvas id="chart-cat-stack"></canvas></div>
+  </div>
+</div>
+
 <!-- ═══ 高用率預警 Tab ═══ -->
 <div class="tab-content" id="tab-warn">
   <div id="warn-list"></div>
@@ -195,6 +226,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue"
 <div class="tab-bar bottom-tabs" id="bottom-tabs">
   <button class="tab-btn active" data-tab="search">🔍 查詢</button>
   <button class="tab-btn" data-tab="summary">📊 摘要</button>
+  <button class="tab-btn" data-tab="charts">📈 圖表</button>
   <button class="tab-btn" data-tab="warn">⚠️ 預警</button>
   <button class="tab-btn" data-tab="info">ℹ️ 資訊</button>
 </div>
@@ -505,6 +537,7 @@ function switchTab(tabName) {
   if (el) el.classList.add('active');
   document.querySelectorAll('[data-tab="' + tabName + '"]').forEach(function(b) { b.classList.add('active'); });
   if (tabName === 'summary') renderSummary();
+  if (tabName === 'charts') renderCharts();
   if (tabName === 'warn') renderWarn();
 }
 
@@ -630,6 +663,154 @@ function renderWarn() {
         '<span>剩餘：' + fmt(r['剩餘可動支數']) + '</span>' +
       '</div>';
     warnList.appendChild(card);
+  });
+}
+
+// 圖表分析
+var _chartInstances = {};
+function destroyChart(id) {
+  if (_chartInstances[id]) { _chartInstances[id].destroy(); delete _chartInstances[id]; }
+}
+
+function renderCharts() {
+  var CATS = ['人事費','業務外包','業務成本','專案建置成本','設備及折舊','管銷費用'];
+  var catData = {};
+  CATS.forEach(function(c) { catData[c] = {bgt:0, rem:0}; });
+  var totBgt = 0, totUsed = 0, totRem = 0;
+  RAW.forEach(function(r) {
+    var bgt = parseFloat(r['本年度預算']) || 0;
+    var rem = parseFloat(r['剩餘可動支數']) || 0;
+    totBgt += bgt; totRem += rem;
+    if (catData[r['費用分類']]) {
+      catData[r['費用分類']].bgt += bgt;
+      catData[r['費用分類']].rem += rem;
+    }
+  });
+  totUsed = totBgt - totRem;
+
+  // KPI
+  var kpiEl = document.getElementById('chart-kpi');
+  var overallPct = totBgt > 0 ? (totUsed/totBgt*100) : 0;
+  kpiEl.innerHTML =
+    '<div class="chart-kpi"><div class="chart-kpi-val" style="color:#1565c0">' + (totBgt/1e8).toFixed(2) + ' 億</div><div class="chart-kpi-lab">本年度預算</div></div>' +
+    '<div class="chart-kpi"><div class="chart-kpi-val" style="color:#c62828">' + (totUsed/1e8).toFixed(2) + ' 億</div><div class="chart-kpi-lab">累計動支</div></div>' +
+    '<div class="chart-kpi"><div class="chart-kpi-val" style="color:' + rateColor(overallPct) + '">' + overallPct.toFixed(1) + '%</div><div class="chart-kpi-lab">整體動支率</div></div>';
+
+  // 圓餅圖 - 預算分配
+  var activeCats = CATS.filter(function(c) { return catData[c].bgt > 0; });
+  var donutBgts = activeCats.map(function(c) { return catData[c].bgt; });
+  var donutColors = activeCats.map(function(c) { return CAT_COLORS[c] || '#757575'; });
+  destroyChart('donut');
+  var ctx1 = document.getElementById('chart-donut').getContext('2d');
+  _chartInstances['donut'] = new Chart(ctx1, {
+    type: 'doughnut',
+    data: {
+      labels: activeCats,
+      datasets: [{data: donutBgts, backgroundColor: donutColors, borderWidth: 2, borderColor: '#fff'}]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: {
+        legend: {position: 'bottom', labels: {font:{size:11}, padding:8, boxWidth:12}},
+        tooltip: {callbacks: {label: function(ctx) {
+          var v = ctx.parsed; var pct = (v/donutBgts.reduce(function(a,b){return a+b;},0)*100).toFixed(1);
+          return ctx.label + ': ' + (v/1e6).toFixed(1) + '萬 (' + pct + '%)';
+        }}}
+      }
+    }
+  });
+
+  // 橫條圖 - 費用分類動支率
+  var catRates = activeCats.map(function(c) {
+    var d = catData[c];
+    return d.bgt > 0 ? ((d.bgt - d.rem) / d.bgt * 100) : 0;
+  });
+  var catBarColors = activeCats.map(function(c, i) {
+    var r = catRates[i];
+    return r >= 90 ? '#c62828' : r >= 70 ? '#e07b00' : '#128048';
+  });
+  destroyChart('catBar');
+  var ctx2 = document.getElementById('chart-cat-bar').getContext('2d');
+  _chartInstances['catBar'] = new Chart(ctx2, {
+    type: 'bar',
+    data: {
+      labels: activeCats,
+      datasets: [{
+        label: '年度動支率 (%)',
+        data: catRates,
+        backgroundColor: catBarColors,
+        borderRadius: 6
+      }]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: true,
+      plugins: {legend:{display:false}, tooltip:{callbacks:{label:function(ctx){return ctx.parsed.x.toFixed(1)+'%';}}}},
+      scales: {
+        x: {min:0, max:110, ticks:{callback:function(v){return v+'%';}}, grid:{color:'#f0f0f0'}},
+        y: {ticks:{font:{size:12}}}
+      }
+    }
+  });
+
+  // 橫條圖 - 科室動支率
+  var unitNames = Object.keys(unitSet).sort();
+  var unitRates = unitNames.map(function(u) {
+    var rows = RAW.filter(function(r) { return r['預算主管單位'] === u; });
+    var bgt=0, rem=0;
+    rows.forEach(function(r) { bgt += parseFloat(r['本年度預算'])||0; rem += parseFloat(r['剩餘可動支數'])||0; });
+    return bgt > 0 ? ((bgt-rem)/bgt*100) : 0;
+  });
+  var unitBarColors = unitRates.map(function(r) {
+    return r >= 90 ? '#c62828' : r >= 70 ? '#e07b00' : '#128048';
+  });
+  destroyChart('unitBar');
+  var ctx3 = document.getElementById('chart-unit-bar').getContext('2d');
+  _chartInstances['unitBar'] = new Chart(ctx3, {
+    type: 'bar',
+    data: {
+      labels: unitNames,
+      datasets: [{
+        label: '年度動支率 (%)',
+        data: unitRates,
+        backgroundColor: unitBarColors,
+        borderRadius: 6
+      }]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: true,
+      plugins: {legend:{display:false}, tooltip:{callbacks:{label:function(ctx){return ctx.parsed.x.toFixed(1)+'%';}}}},
+      scales: {
+        x: {min:0, max:110, ticks:{callback:function(v){return v+'%';}}, grid:{color:'#f0f0f0'}},
+        y: {ticks:{font:{size:11}}}
+      }
+    }
+  });
+
+  // 堆疊橫條圖 - 已用 vs 剩餘
+  var usedVals = activeCats.map(function(c) { return Math.max(catData[c].bgt - catData[c].rem, 0); });
+  var remVals = activeCats.map(function(c) { return Math.max(catData[c].rem, 0); });
+  destroyChart('catStack');
+  var ctx4 = document.getElementById('chart-cat-stack').getContext('2d');
+  _chartInstances['catStack'] = new Chart(ctx4, {
+    type: 'bar',
+    data: {
+      labels: activeCats,
+      datasets: [
+        {label:'已動支', data: usedVals, backgroundColor:'#1565c0', borderRadius:4},
+        {label:'剩餘可動支', data: remVals, backgroundColor:'#a5d6a7', borderRadius:4}
+      ]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: true,
+      plugins: {
+        legend: {position:'bottom', labels:{font:{size:11}, padding:8, boxWidth:12}},
+        tooltip: {callbacks:{label:function(ctx){return ctx.dataset.label+': '+(ctx.parsed.x/1e6).toFixed(0)+'萬';}}}
+      },
+      scales: {
+        x: {stacked:true, ticks:{callback:function(v){return (v/1e6).toFixed(0)+'萬';}}, grid:{color:'#f0f0f0'}},
+        y: {stacked:true, ticks:{font:{size:12}}}
+      }
+    }
   });
 }
 
