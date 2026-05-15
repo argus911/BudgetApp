@@ -523,10 +523,14 @@ function getMyRecord(){
   return ACTUAL.records.find(r=>r.office===MY_OFFICE);
 }
 
-function gradeOf(score){
+function gradeOf(score, base){
+  // base:該 KPI 的達標基準分數(預設 95,O2/L3 為 98)
   if(score==null) return {cls:'year',txt:'年指標'};
-  if(score>=95) return {cls:'ok',txt:'達標'};
-  if(score>=85) return {cls:'warn',txt:'待加強'};
+  const b = base != null ? base : 95;
+  // 待加強閾值:基準下方 10 分(95→85、98→88)
+  const warnLine = b - 10;
+  if(score>=b) return {cls:'ok',txt:'達標'};
+  if(score>=warnLine) return {cls:'warn',txt:'待加強'};
   return {cls:'bad',txt:'未達標'};
 }
 
@@ -543,25 +547,33 @@ function renderDashboard(){
   document.getElementById('heroGRank').textContent = '#'+me.group_rank;
   document.getElementById('heroPeriod').textContent = `📅 ${ACTUAL.period} · 滿分 ${ACTUAL.max_score} 分`;
 
-  // 紅燈警示區:列出 < 85 分的指標
+  // ★ 紅燈警示:按各 KPI 的 scoring_base 動態判斷
   const badItems = KPI.filter(k=>{
     const s = me.scores[k.id];
-    return s!=null && s<85;
+    const b = k.scoring_base ?? 95;
+    return s!=null && s < (b - 10);  // 低於 (基準-10)
   });
   const warnItems = KPI.filter(k=>{
     const s = me.scores[k.id];
-    return s!=null && s>=85 && s<95;
+    const b = k.scoring_base ?? 95;
+    return s!=null && s >= (b - 10) && s < b;
   });
   const alertBox = document.getElementById('alertBox');
   if(badItems.length>0){
     alertBox.innerHTML = `<div class="alert-bar">
-      <div class="ttl">🔴 ${badItems.length} 項指標未達標(< 85 分)</div>
-      ${badItems.map(k=>`<div>• <b>${k.id}</b> ${k.name}:${me.scores[k.id].toFixed(2)} 分 (權重 ${k.weight}%)</div>`).join('')}
+      <div class="ttl">🔴 ${badItems.length} 項指標未達標</div>
+      ${badItems.map(k=>{
+        const b = k.scoring_base ?? 95;
+        return `<div>• <b>${k.id}</b> ${k.name}:${me.scores[k.id].toFixed(2)} 分 (基準 ${b}、權重 ${k.weight}%)</div>`;
+      }).join('')}
     </div>`;
   } else if(warnItems.length>0){
     alertBox.innerHTML = `<div class="alert-bar" style="background:#fffbeb;border-color:#fde68a;border-left-color:var(--warn);color:#92400e">
-      <div class="ttl">🟡 ${warnItems.length} 項指標待加強(85-95 分)</div>
-      ${warnItems.slice(0,3).map(k=>`<div>• <b>${k.id}</b> ${k.name}:${me.scores[k.id].toFixed(2)} 分</div>`).join('')}
+      <div class="ttl">🟡 ${warnItems.length} 項指標待加強</div>
+      ${warnItems.slice(0,3).map(k=>{
+        const b = k.scoring_base ?? 95;
+        return `<div>• <b>${k.id}</b> ${k.name}:${me.scores[k.id].toFixed(2)} 分 (基準 ${b})</div>`;
+      }).join('')}
       ${warnItems.length>3?`<div style="opacity:.7">…還有 ${warnItems.length-3} 項</div>`:''}
     </div>`;
   } else {
@@ -573,10 +585,11 @@ function renderDashboard(){
   let html = '';
   sorted.forEach(k=>{
     const s = me.scores[k.id];
-    const g = gradeOf(s);
+    const base = k.scoring_base ?? 95;
+    const g = gradeOf(s, base);
     const color = CAT_COLORS[k.cat];
     const scoreText = s==null ? '—' : s.toFixed(2);
-    const sbText = s==null ? '年度結算' : (s>=95?'達 95 分':'差 '+(95-s).toFixed(2)+' 分');
+    const sbText = s==null ? '年度結算' : (s>=base ? `達 ${base} 分` : `差 ${(base-s).toFixed(2)} 分`);
     const progPct = s==null ? 0 : Math.min(100, s);
     html += `<div class="kpi-actual ${g.cls}" data-id="${k.id}">
       <span class="id-tag" style="background:${color}">${k.id}</span>
@@ -791,8 +804,11 @@ function getScoreValue(record, kpiId){
 }
 
 function renderRankBar(isAnnual, kpi, lbl, titleEl, subEl){
+  // 動態判定達標基準:年度合併用 95(即 annual 達成率 100%),單一 KPI 依 scoring_base
+  const base = isAnnual ? 95 : (kpi && kpi.scoring_base != null ? kpi.scoring_base : 95);
+  const warnLine = base - 10;
   titleEl.textContent = `🏆 ${lbl} — 17 處排名`;
-  subEl.textContent = `黃色高亮為彰化 · 紅色為 < 85 · 綠色為 ≥ 95`;
+  subEl.textContent = `黃色高亮為彰化 · 紅色為 < ${warnLine} · 綠色為 ≥ ${base}`;
 
   // 排序:由高到低
   const recs = [...ACTUAL.records].filter(r=>{
@@ -812,8 +828,8 @@ function renderRankBar(isAnnual, kpi, lbl, titleEl, subEl){
   const values = recs.map(r=>+r._v.toFixed(2));
   const colors = recs.map(r=>{
     if(r.office === MY_OFFICE) return '#facc15';  // 黃色高亮彰化
-    if(r._v >= 95) return '#16a34a';
-    if(r._v < 85) return '#dc2626';
+    if(r._v >= base) return '#16a34a';
+    if(r._v < warnLine) return '#dc2626';
     return '#94a3b8';
   });
 
@@ -1101,8 +1117,10 @@ function renderTrendChart(){
   const kpi = isAnnual ? null : KPI.find(k=>k.id===trendCurrentKpi);
   const lbl = isAnnual ? '年度合併達成率' : `${kpi.id} ${kpi.name}`;
   const unit = isAnnual ? '%' : '分';
-  const targetLine = isAnnual ? 100 : 95;
-  const targetLineLabel = isAnnual ? '達標線 100%' : '達標線 95 分';
+  // 達標基準分數:年度合併用 100%(達 95/95=100),單一 KPI 依該指標 scoring_base
+  // O2、L3 = 98,其餘 = 95(從 kpi 字典自動讀取)
+  const targetLine = isAnnual ? 100 : (kpi && kpi.scoring_base != null ? kpi.scoring_base : 95);
+  const targetLineLabel = isAnnual ? '達標線 100%' : `達標線 ${targetLine} 分`;
 
   document.getElementById('trendChartTitle').textContent = `📈 ${lbl} 月度走勢`;
 
