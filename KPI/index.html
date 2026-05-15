@@ -1043,7 +1043,7 @@ function renderTrendControls(){
 }
 
 function getMyMonthlyScores(kpiId){
-  // 回傳 [{period, month, value, maxScore}] — 只含有實資料的月份
+  // 回傳 [{period, month, value, maxScore}] — 只含有實資料且該 KPI 有值的月份
   // 年度合併得分:改用達成率(%),公允比較不同月份
   const out = [];
   HISTORY.months.forEach(m=>{
@@ -1057,18 +1057,22 @@ function getMyMonthlyScores(kpiId){
       v = me.annual / m.max_score * 100;
     } else {
       v = me.scores[kpiId];
+      // ★ 修正:單一 KPI 若該月為 null(年指標或當月未計分),直接跳過
+      if(v == null) return;
     }
     out.push({period: m.period, month: m.month, value: v, maxScore: m.max_score});
   });
   return out;
 }
 
-function getGroupAvgMonthly(kpiId){
+function getGroupAvgMonthly(kpiId, allowedMonths){
+  // allowedMonths:陣列,只計算這些月份的 B 組平均(與彰化資料對齊)
   const myGroup = officeGroup(MY_OFFICE);
   const peers = DATA.groups[myGroup] || [];
   const out = [];
   HISTORY.months.forEach(m=>{
     if(m.placeholder || !m.records) return;
+    if(allowedMonths && !allowedMonths.includes(m.month)) return;
     const vals = peers.map(o=>{
       const r = m.records.find(x=>x.office===o);
       if(!r) return null;
@@ -1089,46 +1093,65 @@ function getGroupAvgMonthly(kpiId){
 function renderTrendChart(){
   if(trendChartInst){ trendChartInst.destroy(); trendChartInst = null; }
   const myData = getMyMonthlyScores(trendCurrentKpi);
-  const grpData = getGroupAvgMonthly(trendCurrentKpi);
+  // ★ B 組均只算彰化有資料的月份,確保對齊
+  const allowedMonths = myData.map(d=>d.month);
+  const grpData = getGroupAvgMonthly(trendCurrentKpi, allowedMonths);
 
   const isAnnual = trendCurrentKpi === 'annual';
   const kpi = isAnnual ? null : KPI.find(k=>k.id===trendCurrentKpi);
   const lbl = isAnnual ? '年度合併達成率' : `${kpi.id} ${kpi.name}`;
   const unit = isAnnual ? '%' : '分';
-  // 達標線:年度合併用 100%(達 95/95),單一 KPI 用 95 分
   const targetLine = isAnnual ? 100 : 95;
   const targetLineLabel = isAnnual ? '達標線 100%' : '達標線 95 分';
 
   document.getElementById('trendChartTitle').textContent = `📈 ${lbl} 月度走勢`;
 
-  // Summary 卡片
+  // ★ 計算缺漏月份(歷史內有實資料,但此 KPI 無值)
+  const realMonths = HISTORY.months.filter(m=>!m.placeholder && m.records).map(m=>m.month);
+  const missingMonths = realMonths.filter(m=>!allowedMonths.includes(m));
+
   const sumBox = document.getElementById('trendSummary');
   if(myData.length === 0){
-    sumBox.innerHTML = '<div class="empty" style="grid-column:1/-1"><span class="icn">📊</span>此指標尚無實資料,請補上歷史月份 PDF</div>';
-    document.getElementById('trendChartSub').textContent = '無資料';
+    sumBox.innerHTML = `<div class="empty" style="grid-column:1/-1">
+      <span class="icn">📊</span>
+      <div><b>${lbl}</b> 尚無實資料</div>
+      <div style="font-size:11px;margin-top:6px">${
+        kpi && (kpi.id==='L4' || kpi.id==='E') 
+          ? '此為年指標,要等年底結算才有資料。' 
+          : '此 KPI 在 ' + realMonths.join('、') + ' 月皆未計分。'
+      }</div>
+    </div>`;
+    document.getElementById('trendChartSub').textContent = '無實績資料,無法繪製趨勢';
     document.getElementById('trendTable').innerHTML = '';
     return;
   }
+
   const latest = myData[myData.length-1];
   const first = myData[0];
   const diff = myData.length>=2 ? latest.value - first.value : 0;
   const trend = diff > 0.3 ? 'up' : (diff < -0.3 ? 'down' : 'flat');
   const trendIcon = trend==='up' ? '📈' : (trend==='down' ? '📉' : '➡️');
-  // 與 B 組均值比較
   const latestGrp = grpData[grpData.length-1];
   const vsGrp = latestGrp ? latest.value - latestGrp.value : null;
   const vsCls = vsGrp==null ? 'flat' : (vsGrp>=0 ? 'up' : 'down');
 
+  const diffLabel = myData.length>=2 ? `vs ${first.month}月` : '單月';
+  const diffText = myData.length>=2 ? `${diff>=0?'+':''}${diff.toFixed(2)}${trendIcon}` : '—';
+
   sumBox.innerHTML = `
-    <div class="tsum-card"><div class="v">${latest.value==null?'—':latest.value.toFixed(2)}${unit}</div><div class="l">${latest.month}月最新</div></div>
-    <div class="tsum-card ${trend}"><div class="v">${diff>=0?'+':''}${diff.toFixed(2)}${trendIcon}</div><div class="l">vs ${first.month}月</div></div>
+    <div class="tsum-card"><div class="v">${latest.value.toFixed(2)}${unit}</div><div class="l">${latest.month}月最新</div></div>
+    <div class="tsum-card ${trend}"><div class="v">${diffText}</div><div class="l">${diffLabel}</div></div>
     <div class="tsum-card ${vsCls}"><div class="v">${vsGrp==null?'—':((vsGrp>=0?'+':'')+vsGrp.toFixed(2))}</div><div class="l">vs B 組均</div></div>
   `;
 
-  document.getElementById('trendChartSub').textContent =
-    isAnnual
-      ? `${myData.length} 個月實資料 · 達成率 = 累計得分 ÷ 累計權重 × 100% · 最新 ${latest.month} 月:${latest.value.toFixed(2)}%`
+  // ★ 缺漏月份提示
+  let subText = isAnnual
+      ? `${myData.length} 個月實資料 · 達成率 = 累計得分 ÷ 累計權重 × 100%`
       : `${myData.length} 個月實資料 · 最新 ${latest.month} 月:${latest.value.toFixed(2)} 分`;
+  if(missingMonths.length > 0){
+    subText += ` · ⚠️ ${missingMonths.join('、')} 月未計分`;
+  }
+  document.getElementById('trendChartSub').textContent = subText;
 
   // 圖表
   const labels = myData.map(d=>`${d.month}月`);
@@ -1178,7 +1201,6 @@ function renderTrendChart(){
     fill: false,
   });
 
-  // y 軸範圍:annual 模式聚焦 80-105%,單一 KPI 用實際值範圍
   const allVals = [...myValues, ...grpValues];
   const yMin = isAnnual ? 85 : Math.max(50, Math.min(...allVals, 90) - 3);
   const yMax = isAnnual ? 105 : Math.min(105, Math.max(...allVals, 100) + 2);
