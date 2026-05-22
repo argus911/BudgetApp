@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>彰化營運處 ICT企客成本分析儀表板</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+  :root {
+    --cht-blue: #1F5FA6;
+    --cht-light: #4A90D9;
+    --cht-dark: #0D3E6F;
+    --warn-red: #E53935;
+    --warn-amber: #F59E0B;
+    --safe-green: #16A34A;
+    --bg: #F0F4F8;
+    --card: #FFFFFF;
+    --text: #1E293B;
+    --sub: #64748B;
+    --border: #E2E8F0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif; background: var(--bg); color: var(--text); }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(135deg, var(--cht-dark) 0%, var(--cht-blue) 60%, var(--cht-light) 100%);
+    color: white; padding: 20px 32px; display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 4px 12px rgba(31,95,166,0.3);
+  }
+  .header h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: 0.5px; }
+  .header .subtitle { font-size: 0.85rem; opacity: 0.8; margin-top: 4px; }
+  .header-right { text-align: right; font-size: 0.8rem; opacity: 0.85; }
+
+  /* ===== TABS ===== */
+  .tab-bar {
+    background: var(--cht-blue); display: flex; gap: 0; overflow-x: auto; padding: 0 16px;
+  }
+  .tab-btn {
+    background: transparent; border: none; color: rgba(255,255,255,0.7);
+    padding: 12px 20px; cursor: pointer; font-size: 0.9rem; white-space: nowrap;
+    border-bottom: 3px solid transparent; transition: all 0.2s; font-family: inherit;
+  }
+  .tab-btn.active { color: white; border-bottom-color: #FFD700; font-weight: 600; }
+  .tab-btn:hover:not(.active) { color: white; background: rgba(255,255,255,0.1); }
+
+  /* ===== MAIN ===== */
+  .main { max-width: 1280px; margin: 0 auto; padding: 24px 16px; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ===== KPI CARDS ===== */
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .kpi-card {
+    background: var(--card); border-radius: 12px; padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07); border-left: 4px solid var(--cht-blue);
+  }
+  .kpi-card.warn { border-left-color: var(--warn-red); }
+  .kpi-card.amber { border-left-color: var(--warn-amber); }
+  .kpi-card.good { border-left-color: var(--safe-green); }
+  .kpi-label { font-size: 0.78rem; color: var(--sub); margin-bottom: 6px; }
+  .kpi-value { font-size: 1.8rem; font-weight: 700; color: var(--text); }
+  .kpi-unit { font-size: 0.75rem; color: var(--sub); margin-left: 4px; }
+  .kpi-badge { font-size: 0.7rem; padding: 2px 8px; border-radius: 20px; margin-top: 6px; display: inline-block; }
+  .kpi-badge.red { background: #FEE2E2; color: var(--warn-red); }
+  .kpi-badge.green { background: #DCFCE7; color: var(--safe-green); }
+  .kpi-badge.amber { background: #FEF3C7; color: #D97706; }
+
+  /* ===== CHART GRID ===== */
+  .chart-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(580px, 1fr)); gap: 20px; margin-bottom: 20px; }
+  .chart-grid.single { grid-template-columns: 1fr; }
+  .chart-card {
+    background: var(--card); border-radius: 12px; padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .chart-card-title { font-size: 1rem; font-weight: 600; color: var(--cht-dark); margin-bottom: 4px; }
+  .chart-card-desc { font-size: 0.78rem; color: var(--sub); margin-bottom: 16px; }
+  canvas { max-height: 340px; }
+
+  /* ===== TABLE ===== */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-top: 16px; }
+  .data-table th { background: var(--cht-blue); color: white; padding: 8px 10px; text-align: left; }
+  .data-table td { padding: 7px 10px; border-bottom: 1px solid var(--border); }
+  .data-table tr:hover td { background: #EFF6FF; }
+  .data-table .over { color: var(--warn-red); font-weight: 600; }
+  .data-table .under { color: var(--safe-green); }
+  .data-table .high { background: #FEF2F2; }
+  .data-table tfoot tr td { background: #1F5FA6; color: white; font-weight: 700; border-top: 2px solid #0D3E6F; }
+  .data-table tfoot tr td.over { color: #FFD700; }
+  .data-table tfoot tr td.under { color: #86EFAC; }
+  .num { text-align: right; font-family: monospace; }
+
+  /* ===== DOWNLOAD BUTTONS ===== */
+  .btn-group { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+  .btn {
+    padding: 8px 18px; border: none; border-radius: 8px; cursor: pointer;
+    font-size: 0.82rem; font-weight: 600; font-family: inherit; transition: all 0.2s;
+  }
+  .btn-png { background: linear-gradient(135deg, #1F5FA6, #4A90D9); color: white; }
+  .btn-png:hover { opacity: 0.85; transform: translateY(-1px); }
+  .btn-csv { background: linear-gradient(135deg, #059669, #34D399); color: white; }
+  .btn-csv:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  /* ===== UPLOAD PANEL ===== */
+  .upload-section { background: var(--card); border-radius: 12px; padding: 28px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); margin-bottom: 24px; }
+  .upload-section h2 { font-size: 1.1rem; color: var(--cht-dark); margin-bottom: 8px; }
+  .upload-section p { font-size: 0.85rem; color: var(--sub); margin-bottom: 16px; line-height: 1.6; }
+  .upload-dropzone {
+    border: 2px dashed var(--cht-light); border-radius: 10px; padding: 36px;
+    text-align: center; cursor: pointer; transition: all 0.2s; background: #F8FAFF;
+  }
+  .upload-dropzone:hover, .upload-dropzone.drag { border-color: var(--cht-blue); background: #EFF6FF; }
+  .upload-dropzone .icon { font-size: 2.5rem; margin-bottom: 10px; }
+  .upload-dropzone p { color: var(--sub); font-size: 0.9rem; margin: 0; }
+  #fileInput { display: none; }
+  .quarter-list { margin-top: 20px; }
+  .quarter-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px; border-radius: 8px; background: #F8FAFF; border: 1px solid var(--border);
+    margin-bottom: 8px; font-size: 0.85rem;
+  }
+  .quarter-item .q-name { font-weight: 600; color: var(--cht-dark); }
+  .quarter-item .q-date { color: var(--sub); font-size: 0.75rem; }
+  .btn-del { background: none; border: none; color: #CBD5E1; cursor: pointer; font-size: 1.1rem; padding: 2px 6px; }
+  .btn-del:hover { color: var(--warn-red); }
+  .alert { padding: 12px 16px; border-radius: 8px; font-size: 0.85rem; margin-top: 12px; }
+  .alert.info { background: #EFF6FF; color: var(--cht-blue); border: 1px solid #BFDBFE; }
+  .alert.success { background: #DCFCE7; color: #166534; border: 1px solid #BBF7D0; }
+  .alert.error { background: #FEE2E2; color: #991B1B; border: 1px solid #FECACA; }
+
+  /* ===== TREND SECTION ===== */
+  .trend-empty { text-align: center; padding: 48px; color: var(--sub); font-size: 0.9rem; }
+
+  /* ===== BADGE ===== */
+  .section-label {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+  }
+  .section-label h2 { font-size: 1.05rem; font-weight: 700; color: var(--cht-dark); }
+  .pill { background: var(--cht-blue); color: white; font-size: 0.7rem; padding: 2px 10px; border-radius: 20px; }
+
+  @media (max-width: 768px) {
+    .chart-grid { grid-template-columns: 1fr; }
+    .header { flex-direction: column; gap: 8px; text-align: center; }
+    .header-right { text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="header h1" style="font-size:1.4rem;font-weight:700;color:white">📊 彰化營運處 ICT企客成本分析儀表板</div>
+    <div class="subtitle">中華電信彰化營運處 | 企業客戶 ICT 專標案成本率暨追溯調整分析</div>
+  </div>
+  <div class="header-right">
+    <div id="dataLabel">📅 115年 Q1</div>
+    <div style="margin-top:4px;opacity:0.7">單位：百萬元 / 成本率</div>
+  </div>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('overview')">📌 總覽摘要</button>
+  <button class="tab-btn" onclick="switchTab('costrate')">📉 成本率分析</button>
+  <button class="tab-btn" onclick="switchTab('revenue')">💰 K2收入結構</button>
+  <button class="tab-btn" onclick="switchTab('retroadj')">🔄 追溯調整</button>
+  <button class="tab-btn" onclick="switchTab('trend')">📈 季度趨勢</button>
+  <button class="tab-btn" onclick="switchTab('upload')">⬆️ 更新資料</button>
+</div>
+
+<div class="main">
+
+<!-- ========== TAB 1: 總覽 ========== -->
+<div id="tab-overview" class="tab-content active">
+  <div class="kpi-grid">
+    <div class="kpi-card warn">
+      <div class="kpi-label">追溯調整金額</div>
+      <div class="kpi-value">-52.72<span class="kpi-unit">百萬</span></div>
+      <span class="kpi-badge red">⚠ 預算調減</span>
+    </div>
+    <div class="kpi-card good">
+      <div class="kpi-label">考核版標準客戶專案成本</div>
+      <div class="kpi-value">18.31<span class="kpi-unit">百萬</span></div>
+      <span class="kpi-badge green">✓ 實際認列</span>
+    </div>
+    <div class="kpi-card amber">
+      <div class="kpi-label">基本版預算客戶專案成本</div>
+      <div class="kpi-value">71.03<span class="kpi-unit">百萬</span></div>
+      <span class="kpi-badge amber">📋 預算編列</span>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">K2 ICT 實績收入合計</div>
+      <div class="kpi-value">18.21<span class="kpi-unit">百萬</span></div>
+      <span class="kpi-badge green">✓ K2收入</span>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">非K2成本合計</div>
+      <div class="kpi-value">1.38<span class="kpi-unit">百萬</span></div>
+      <span class="kpi-badge amber">📎 非K2</span>
+    </div>
+    <div class="kpi-card warn">
+      <div class="kpi-label">預算達成缺口</div>
+      <div class="kpi-value">74.0<span class="kpi-unit">%</span></div>
+      <span class="kpi-badge red">▼ 成本率偏差</span>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-card-title">🎯 預算 vs 考核版成本比較</div>
+      <div class="chart-card-desc">基本版預算成本 vs 考核版標準成本（K2設算 + 非K2實績）對比</div>
+      <canvas id="chartBudgetVsActual"></canvas>
+      <div class="btn-group">
+        <button class="btn btn-png" onclick="downloadChart('chartBudgetVsActual','預算vs考核版成本')">📥 下載 PNG</button>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-card-title">🔵 成本組成結構 (考核版)</div>
+      <div class="chart-card-desc">K2設算成本、非北南K2成本、無K2成本、非K2實績成本四項結構</div>
+      <canvas id="chartCostPie"></canvas>
+      <div class="btn-group">
+        <button class="btn btn-png" onclick="downloadChart('chartCostPie','成本組成結構')">📥 下載 PNG</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-card" style="margin-bottom:20px">
+    <div class="chart-card-title">📊 各業務別 成本率異常雷達圖</div>
+    <div class="chart-card-desc">彰化實績成本率 vs Blended 標準成本率 — 偏離越大表示成本控制差異越顯著（僅顯示有數據的業務）</div>
+    <canvas id="chartRadar" style="max-height:400px"></canvas>
+    <div class="btn-group">
+      <button class="btn btn-png" onclick="downloadChart('chartRadar','成本率雷達圖')">📥 下載 PNG</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== TAB 2: 成本率分析 ========== -->
+<div id="tab-costrate" class="tab-content">
+  <div class="section-label">
+    <h2>業務別實績成本率 vs 標準成本率比較</h2>
+    <span class="pill">115Q1</span>
+  </div>
+
+  <div class="chart-card" style="margin-bottom:20px">
+    <div class="chart-card-title">📊 各業務別成本率對比（彰化實績 vs Blended 標準）</div>
+    <div class="chart-card-desc">紅色超標：彰化實績成本率 > Blended 標準成本率（成本偏高警示）</div>
+    <canvas id="chartCostRateBar" style="max-height:420px"></canvas>
+    <div class="btn-group">
+      <button class="btn btn-png" onclick="downloadChart('chartCostRateBar','成本率對比')">📥 下載 PNG</button>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-card-title">📋 成本率明細表</div>
+    <div class="chart-card-desc">🔴 紅底 = 彰化實績成本率超過 Blended 標準成本率（需重點關注）</div>
+    <table class="data-table" id="costRateTable">
+      <thead><tr>
+        <th>產品代碼</th><th>項目摘要</th>
+        <th class="num">彰化實績成本率</th>
+        <th class="num">Blended標準成本率</th>
+        <th class="num">偏差</th>
+        <th>狀態</th>
+      </tr></thead>
+      <tbody id="costRateTbody"></tbody>
+      <tfoot id="costRateTfoot"></tfoot>
+    </table>
+    <div class="btn-group">
+      <button class="btn btn-csv" onclick="exportTableCSV('costRateTable','成本率明細')">📄 匯出 CSV</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== TAB 3: K2收入 ========== -->
+<div id="tab-revenue" class="tab-content">
+  <div class="section-label">
+    <h2>K2 ICT 業務別實績收入結構</h2>
+    <span class="pill">115Q1 單位：百萬元</span>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-card-title">💰 各業務別 K2 收入（橫向排行）</div>
+      <div class="chart-card-desc">只顯示收入 > 0 的業務別，依金額由高至低排序</div>
+      <canvas id="chartK2Revenue" style="max-height:380px"></canvas>
+      <div class="btn-group">
+        <button class="btn btn-png" onclick="downloadChart('chartK2Revenue','K2收入排行')">📥 下載 PNG</button>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-card-title">🍩 K2收入業務類別佔比</div>
+      <div class="chart-card-desc">按大類（IDC雲端、資通安全、智慧聯網、其他）加總佔比</div>
+      <canvas id="chartK2Donut"></canvas>
+      <div class="btn-group">
+        <button class="btn btn-png" onclick="downloadChart('chartK2Donut','K2收入類別佔比')">📥 下載 PNG</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-card" style="margin-top:20px">
+    <div class="chart-card-title">📋 K2收入 × K2設算成本明細</div>
+    <table class="data-table" id="k2Table">
+      <thead><tr>
+        <th>產品代碼</th><th>項目摘要</th>
+        <th class="num">K2收入(百萬)</th>
+        <th class="num">K2設算成本(百萬)</th>
+        <th class="num">設算成本率</th>
+      </tr></thead>
+      <tbody id="k2Tbody"></tbody>
+      <tfoot id="k2Tfoot"></tfoot>
+    </table>
+    <div class="btn-group">
+      <button class="btn btn-csv" onclick="exportTableCSV('k2Table','K2收入成本明細')">📄 匯出 CSV</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== TAB 4: 追溯調整 ========== -->
+<div id="tab-retroadj" class="tab-content">
+  <div class="section-label">
+    <h2>客戶專案成本追溯調整分析</h2>
+    <span class="pill">115Q1 彰化 3047</span>
+  </div>
+
+  <div class="kpi-grid" style="grid-template-columns: repeat(auto-fit,minmax(180px,1fr))">
+    <div class="kpi-card good">
+      <div class="kpi-label">K2設算客戶專案成本</div>
+      <div class="kpi-value">11.53<span class="kpi-unit">百萬</span></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">非北南K2客戶專案成本</div>
+      <div class="kpi-value">5.12<span class="kpi-unit">百萬</span></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">無K2收入有K2成本</div>
+      <div class="kpi-value">0.27<span class="kpi-unit">百萬</span></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">非K2實績成本(電信+資通訊)</div>
+      <div class="kpi-value">1.38<span class="kpi-unit">百萬</span></div>
+    </div>
+    <div class="kpi-card good">
+      <div class="kpi-label">考核版標準專案成本 合計</div>
+      <div class="kpi-value">18.31<span class="kpi-unit">百萬</span></div>
+    </div>
+    <div class="kpi-card amber">
+      <div class="kpi-label">基本版預算專案成本</div>
+      <div class="kpi-value">71.03<span class="kpi-unit">百萬</span></div>
+    </div>
+    <div class="kpi-card warn">
+      <div class="kpi-label">追溯調整金額</div>
+      <div class="kpi-value">-52.72<span class="kpi-unit">百萬</span></div>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-card-title">🔄 追溯調整瀑布圖（成本橋接分析）</div>
+      <div class="chart-card-desc">預算成本 → K2設算 + 非K2成本 → 追溯調整後考核版成本</div>
+      <canvas id="chartWaterfall"></canvas>
+      <div class="btn-group">
+        <button class="btn btn-png" onclick="downloadChart('chartWaterfall','追溯調整瀑布圖')">📥 下載 PNG</button>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-card-title">📉 非K2實績成本科目分析</div>
+      <div class="chart-card-desc">電信成本、資通訊成本、銷貨成本、租賃及其他成本</div>
+      <canvas id="chartNonK2Cost"></canvas>
+      <div class="btn-group">
+        <button class="btn btn-png" onclick="downloadChart('chartNonK2Cost','非K2成本科目')">📥 下載 PNG</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-card" style="margin-top:20px">
+    <div class="chart-card-title">📋 追溯調整計算說明</div>
+    <div class="alert info" style="margin-bottom:12px">
+      ℹ️ 追溯調整 = 考核版標準客戶專案成本 − 基本版預算客戶專案成本<br>
+      = [(K2實績收入 × 業務別標準成本率) + 非K2實績成本] − 預算客戶專案成本<br>
+      = 18.305273 − 71.028 = <strong>-52.722727 百萬元</strong>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>項目</th><th>說明</th><th class="num">金額(百萬)</th></tr></thead>
+      <tbody>
+        <tr><td>K2設算成本(彰化簽約)</td><td>實績K2收入 × 業務別標準成本率</td><td class="num">11.5274</td></tr>
+        <tr><td>K2成本(非北南)</td><td>非彰化簽約之K2成本，預算=實績</td><td class="num">5.1234</td></tr>
+        <tr><td>無K2收入有K2成本</td><td>特殊案件，預算=實績</td><td class="num">0.2710</td></tr>
+        <tr><td>非K2實績成本</td><td>電信+資通訊+銷貨+租賃</td><td class="num">1.3835</td></tr>
+        <tr style="font-weight:700"><td colspan="2">考核版標準客戶專案成本 合計</td><td class="num">18.3053</td></tr>
+        <tr style="font-weight:700"><td colspan="2">基本版預算客戶專案成本</td><td class="num">71.0280</td></tr>
+        <tr class="high"><td colspan="2" style="font-weight:700;color:#991B1B">追溯調整金額（成本調減）</td><td class="num over">-52.7227</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ========== TAB 5: 季度趨勢 ========== -->
+<div id="tab-trend" class="tab-content">
+  <div class="section-label">
+    <h2>多季度趨勢分析</h2>
+    <span class="pill" id="trendQuarterCount">1 季資料</span>
+  </div>
+  <div id="trendCharts">
+    <div class="trend-empty">
+      📂 目前僅有 <strong>115Q1</strong> 資料。<br>
+      請前往「⬆️ 更新資料」分頁上傳更多季度 Excel，趨勢圖將自動更新。
+    </div>
+  </div>
+</div>
+
+<!-- ========== TAB 6: 上傳更新 ========== -->
+<div id="tab-upload" class="tab-content">
+  <div class="upload-section">
+    <h2>📤 上傳新季度資料</h2>
+    <p>
+      本儀表板支援每季持續更新。請上傳<strong>與 115Q1 格式相同</strong>的 Excel 檔案（含「成本率彙總」及「QQQA追溯調整金額_4040」工作表）。
+      <br>上傳後系統將自動解析並新增至季度趨勢圖。
+    </p>
+    <div class="upload-dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()"
+      ondragover="event.preventDefault();this.classList.add('drag')"
+      ondragleave="this.classList.remove('drag')"
+      ondrop="handleDrop(event)">
+      <div class="icon">📂</div>
+      <p>點擊選擇 Excel 檔案，或拖曳至此處</p>
+      <p style="margin-top:6px;font-size:0.75rem;opacity:0.6">支援 .xlsx 格式 | 建議命名：彰化Q2企客ICT.xlsx</p>
+    </div>
+    <input type="file" id="fileInput" accept=".xlsx,.xls" onchange="handleFileUpload(event)">
+    <div id="uploadMsg"></div>
+
+    <div class="quarter-list" id="quarterList"></div>
+  </div>
+
+  <div class="upload-section">
+    <h2>📋 欄位對應說明</h2>
+    <table class="data-table">
+      <thead><tr><th>工作表名稱</th><th>關鍵欄位</th><th>說明</th></tr></thead>
+      <tbody>
+        <tr><td>成本率彙總</td><td>產品代碼、項目摘要、彰化(實績成本率)、Blended(標準成本率)</td><td>第1列為標題，第2列為欄位名稱</td></tr>
+        <tr><td>QQQA追溯調整金額_4040</td><td>K2收入、K2設算成本、非K2實績成本、追溯調整合計</td><td>彰化3047機構代號</td></tr>
+      </tbody>
+    </table>
+    <div class="alert info" style="margin-top:12px">
+      💡 提示：工作表名稱「115Q1追溯調整金額_4040」→ 下季改為「115Q2追溯調整金額_4040」，系統會自動辨識季度標籤。
+    </div>
+  </div>
+</div>
+
+</div><!-- end main -->
+
+<script>
+// =====================================================
+// DATA DEFINITION — 115 Q1
+// =====================================================
+const Q1_DATA = {
+  quarter: '115Q1',
+  year: 115,
+  q: 1,
+
+  // 成本率 (只含有彰化實績值的業務)
+  costRates: [
+    { code:'I.A.B', name:'IDC機房租賃',          chActual:0.1486, blended:0.0634 },
+    { code:'I.A.E', name:'hicloud',              chActual:0.7878, blended:0.5555 },
+    { code:'I.A.F', name:'國際公雲',              chActual:0.8383, blended:0.3484 },
+    { code:'I.B.A', name:'消費資安',              chActual:0,      blended:0      },
+    { code:'I.B.B', name:'上網電路安全',           chActual:0,      blended:0.1206 },
+    { code:'I.B.D', name:'資安專業服務',           chActual:0.5720, blended:0.6660 },
+    { code:'I.B.E', name:'資安軟硬體整合',         chActual:0.7441, blended:0.8161 },
+    { code:'I.B.F', name:'企業資通設備租賃',       chActual:0.1082, blended:0.1380 },
+    { code:'I.C.A', name:'ITS(智慧交通)',          chActual:0.1496, blended:0.7415 },
+    { code:'I.C.B', name:'iEN(智慧環境)',          chActual:0.8932, blended:0.8969 },
+    { code:'I.C.C', name:'IVS(智慧安防)',          chActual:0.8653, blended:0.6502 },
+    { code:'I.C.D', name:'Home(智慧建築)',         chActual:0.8592, blended:0.6455 },
+    { code:'I.C.E', name:'智慧醫療',              chActual:0.0031, blended:0.5674 },
+    { code:'I.D.A', name:'M化應用',               chActual:0.3503, blended:0.6242 },
+    { code:'I.E.A', name:'大數據',                chActual:0.7055, blended:0.7542 },
+    { code:'I.F.A', name:'PBX',                   chActual:0.6340, blended:0.5595 },
+    { code:'I.I.B', name:'政府相關專標案',         chActual:0.3570, blended:0.1279 },
+    { code:'I.I.C', name:'商務應用-其他加值業務',   chActual:0.6092, blended:0.0241 },
+  ],
+
+  // K2 收入 + 設算成本（百萬元）
+  k2Items: [
+    { code:'I.A.B', name:'IDC機房租賃',       revenue:0.4213, cost:0.0267 },
+    { code:'I.A.E', name:'hicloud',           revenue:1.0188, cost:0.5659 },
+    { code:'I.A.F', name:'國際公雲',           revenue:0.2767, cost:0.0964 },
+    { code:'I.B.A', name:'消費資安',           revenue:0.0001, cost:0      },
+    { code:'I.B.B', name:'上網電路安全',        revenue:0.1579, cost:0.0190 },
+    { code:'I.B.D', name:'資安專業服務',        revenue:1.5787, cost:1.0515 },
+    { code:'I.B.E', name:'資安軟硬體整合',      revenue:1.6942, cost:1.3826 },
+    { code:'I.B.F', name:'企業資通設備租賃',    revenue:0.4227, cost:0.0583 },
+    { code:'I.C.A', name:'ITS(智慧交通)',       revenue:0.3729, cost:0.2765 },
+    { code:'I.C.B', name:'iEN(智慧環境)',       revenue:3.0503, cost:2.7357 },
+    { code:'I.C.C', name:'IVS(智慧安防)',       revenue:4.2192, cost:2.7432 },
+    { code:'I.C.D', name:'Home(智慧建築)',      revenue:1.0800, cost:0.6972 },
+    { code:'I.C.E', name:'智慧醫療',           revenue:0.3345, cost:0.1898 },
+    { code:'I.D.A', name:'M化應用',            revenue:0.8132, cost:0.5076 },
+    { code:'I.E.A', name:'大數據',             revenue:0.6386, cost:0.4817 },
+    { code:'I.F.A', name:'PBX',               revenue:1.2323, cost:0.6895 },
+    { code:'I.I.B', name:'政府相關專標案',      revenue:0.0271, cost:0.0035 },
+    { code:'I.I.C', name:'商務應用-其他加值',   revenue:0.0900, cost:0.0022 },
+  ],
+
+  // 追溯調整匯總
+  retroAdj: {
+    k2CalcCost:    11.5274,
+    nonNSK2Cost:   5.1234,
+    noK2RevHasCost:0.2710,
+    nonK2ActCost:  1.3835,
+    examVersion:   18.3053,
+    baseVersion:   71.028,
+    adjustAmt:    -52.7227,
+  },
+  nonK2CostDetail: [
+    { name:'電信成本', amt:0.0236 },
+    { name:'資通訊成本', amt:1.3599 },
+    { name:'銷貨成本', amt:0 },
+    { name:'租賃及其他成本', amt:0 },
+  ]
+};
+
+// =====================================================
+// MULTI-QUARTER STORE (localStorage)
+// =====================================================
+let allQuarters = JSON.parse(localStorage.getItem('cht_ict_quarters') || 'null');
+if (!allQuarters) {
+  allQuarters = [Q1_DATA];
+  localStorage.setItem('cht_ict_quarters', JSON.stringify(allQuarters));
+}
+// Always ensure Q1 is present
+if (!allQuarters.find(q => q.quarter === '115Q1')) {
+  allQuarters.unshift(Q1_DATA);
+  saveQuarters();
+}
+
+function saveQuarters() {
+  localStorage.setItem('cht_ict_quarters', JSON.stringify(allQuarters));
+}
+
+// =====================================================
+// CHART REGISTRY
+// =====================================================
+const charts = {};
+
+function destroyChart(id) {
+  if (charts[id]) { charts[id].destroy(); delete charts[id]; }
+}
+
+// =====================================================
+// TAB SWITCHING
+// =====================================================
+function switchTab(name) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if (name === 'trend') renderTrend();
+  if (name === 'upload') renderQuarterList();
+}
+
+// =====================================================
+// CHART: Overview — Budget vs Actual
+// =====================================================
+function renderBudgetVsActual() {
+  const ctx = document.getElementById('chartBudgetVsActual').getContext('2d');
+  const ra = Q1_DATA.retroAdj;
+  charts['chartBudgetVsActual'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['基本版預算成本', '考核版標準成本', '追溯調整金額'],
+      datasets: [{
+        data: [ra.baseVersion, ra.examVersion, Math.abs(ra.adjustAmt)],
+        backgroundColor: ['#F59E0B','#16A34A','#E53935'],
+        borderRadius: 6, borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        datalabels: {
+          color: '#fff', font: { weight: 'bold', size: 13 },
+          formatter: v => v.toFixed(2) + '百萬'
+        }
+      },
+      scales: {
+        y: { ticks: { callback: v => v + '百萬' }, grid: { color: '#F1F5F9' } }
+      }
+    },
+    plugins: [ChartDataLabels]
+  });
+}
+
+// =====================================================
+// CHART: Overview — Cost Pie
+// =====================================================
+function renderCostPie() {
+  const ctx = document.getElementById('chartCostPie').getContext('2d');
+  const ra = Q1_DATA.retroAdj;
+  charts['chartCostPie'] = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['K2設算成本(彰化)', '非北南K2成本', '無K2收入有K2成本', '非K2實績成本'],
+      datasets: [{
+        data: [ra.k2CalcCost, ra.nonNSK2Cost, ra.noK2RevHasCost, ra.nonK2ActCost],
+        backgroundColor: ['#1F5FA6','#4A90D9','#60A5FA','#93C5FD'],
+        borderWidth: 2, borderColor: '#fff'
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 12 } } },
+        datalabels: {
+          color: '#fff', font: { weight: 'bold', size: 11 },
+          formatter: (v, ctx) => {
+            const total = ctx.dataset.data.reduce((a,b) => a+b, 0);
+            return (v/total*100).toFixed(1) + '%';
+          }
+        }
+      }
+    },
+    plugins: [ChartDataLabels]
+  });
+}
+
+// =====================================================
+// CHART: Overview — Radar
+// =====================================================
+function renderRadar() {
+  const ctx = document.getElementById('chartRadar').getContext('2d');
+  const items = Q1_DATA.costRates.filter(d => d.chActual > 0 || d.blended > 0).slice(0, 12);
+  charts['chartRadar'] = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: items.map(d => d.name),
+      datasets: [
+        { label:'彰化實績成本率', data: items.map(d => d.chActual), borderColor:'#E53935', backgroundColor:'rgba(229,57,53,0.15)', pointBackgroundColor:'#E53935', borderWidth:2 },
+        { label:'Blended標準成本率', data: items.map(d => d.blended), borderColor:'#1F5FA6', backgroundColor:'rgba(31,95,166,0.1)', pointBackgroundColor:'#1F5FA6', borderWidth:2 }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'bottom' }, datalabels: { display: false } },
+      scales: { r: { min: 0, max: 1, ticks: { callback: v => (v*100).toFixed(0)+'%' }, pointLabels: { font: { size: 11 } } } }
+    }
+  });
+}
+
+// =====================================================
+// CHART: Cost Rate Bar
+// =====================================================
+function renderCostRateBar() {
+  const ctx = document.getElementById('chartCostRateBar').getContext('2d');
+  const items = Q1_DATA.costRates.filter(d => d.chActual > 0 || d.blended > 0);
+  const colors = items.map(d => d.chActual > d.blended ? 'rgba(229,57,53,0.85)' : 'rgba(31,95,166,0.85)');
+  charts['chartCostRateBar'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: items.map(d => d.name),
+      datasets: [
+        { label:'彰化實績', data: items.map(d => d.chActual), backgroundColor: colors, borderRadius:4 },
+        { label:'Blended標準', data: items.map(d => d.blended), backgroundColor:'rgba(100,116,139,0.4)', borderRadius:4 }
+      ]
+    },
+    options: {
+      indexAxis: 'y', responsive: true,
+      plugins: {
+        legend: { position:'bottom' },
+        datalabels: {
+          color: '#333', font:{ size: 10 },
+          formatter: v => (v*100).toFixed(1)+'%',
+          anchor:'end', align:'end', clamp:true
+        }
+      },
+      scales: {
+        x: { ticks: { callback: v => (v*100).toFixed(0)+'%' }, max: 1, grid:{color:'#F1F5F9'} }
+      }
+    },
+    plugins: [ChartDataLabels]
+  });
+}
+
+// Fill cost rate table
+function fillCostRateTable() {
+  const tbody = document.getElementById('costRateTbody');
+  const tfoot = document.getElementById('costRateTfoot');
+
+  let sumActual = 0, sumBlended = 0, overCount = 0;
+
+  Q1_DATA.costRates.forEach(d => {
+    const diff = d.chActual - d.blended;
+    const isOver = diff > 0.05;
+    if (isOver) overCount++;
+    sumActual  += d.chActual;
+    sumBlended += d.blended;
+
+    const tr = document.createElement('tr');
+    if (isOver) tr.classList.add('high');
+    tr.innerHTML = `
+      <td>${d.code}</td>
+      <td>${d.name}</td>
+      <td class="num ${isOver?'over':''}">${(d.chActual*100).toFixed(2)}%</td>
+      <td class="num">${(d.blended*100).toFixed(2)}%</td>
+      <td class="num ${diff>0?'over':'under'}">${diff>=0?'+':''}${(diff*100).toFixed(2)}%</td>
+      <td>${isOver ? '🔴 超標' : diff < -0.05 ? '🟢 節省' : '⚪ 正常'}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // 合計列
+  const n = Q1_DATA.costRates.length;
+  const avgActual  = sumActual  / n;
+  const avgBlended = sumBlended / n;
+  const avgDiff    = avgActual  - avgBlended;
+  tfoot.innerHTML = `
+    <tr>
+      <td colspan="2">📊 合計 / 平均（共 ${n} 項業務，超標 ${overCount} 項）</td>
+      <td class="num">${(avgActual*100).toFixed(2)}%</td>
+      <td class="num">${(avgBlended*100).toFixed(2)}%</td>
+      <td class="num ${avgDiff>0?'over':'under'}">${avgDiff>=0?'+':''}${(avgDiff*100).toFixed(2)}%</td>
+      <td>平均偏差</td>
+    </tr>
+  `;
+}
+
+// =====================================================
+// CHART: K2 Revenue Bar
+// =====================================================
+function renderK2Revenue() {
+  const ctx = document.getElementById('chartK2Revenue').getContext('2d');
+  const items = Q1_DATA.k2Items.filter(d => d.revenue > 0).sort((a,b) => b.revenue - a.revenue);
+  charts['chartK2Revenue'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: items.map(d => d.name),
+      datasets: [{
+        label:'K2實績收入(百萬)',
+        data: items.map(d => d.revenue),
+        backgroundColor: '#1F5FA6', borderRadius: 5
+      },{
+        label:'K2設算成本(百萬)',
+        data: items.map(d => d.cost),
+        backgroundColor: '#E53935', borderRadius: 5
+      }]
+    },
+    options: {
+      indexAxis: 'y', responsive: true,
+      plugins: {
+        legend: { position:'bottom' },
+        datalabels: {
+          color:'#fff', font:{size:10,weight:'bold'},
+          formatter: v => v > 0.05 ? v.toFixed(2) : '',
+        }
+      },
+      scales: { x: { grid:{color:'#F1F5F9'}, ticks:{callback:v=>v+'百萬'} } }
+    },
+    plugins: [ChartDataLabels]
+  });
+}
+
+// K2 Donut by category
+function renderK2Donut() {
+  const ctx = document.getElementById('chartK2Donut').getContext('2d');
+  const cats = { 'IDC雲端':0, '資通安全':0, '智慧聯網':0, '其他':0 };
+  Q1_DATA.k2Items.forEach(d => {
+    if (d.code.startsWith('I.A')) cats['IDC雲端'] += d.revenue;
+    else if (d.code.startsWith('I.B')) cats['資通安全'] += d.revenue;
+    else if (d.code.startsWith('I.C')) cats['智慧聯網'] += d.revenue;
+    else cats['其他'] += d.revenue;
+  });
+  charts['chartK2Donut'] = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: Object.keys(cats),
+      datasets: [{ data: Object.values(cats), backgroundColor:['#1F5FA6','#E53935','#16A34A','#F59E0B'], borderWidth:2, borderColor:'#fff' }]
+    },
+    options: {
+      responsive:true,
+      plugins: {
+        legend:{position:'bottom'},
+        datalabels:{
+          color:'#fff', font:{weight:'bold',size:12},
+          formatter:(v,ctx)=>{
+            const total=ctx.dataset.data.reduce((a,b)=>a+b,0);
+            return (v/total*100).toFixed(1)+'%\n'+v.toFixed(2)+'M';
+          }
+        }
+      }
+    },
+    plugins:[ChartDataLabels]
+  });
+}
+
+function fillK2Table() {
+  const tbody = document.getElementById('k2Tbody');
+  const tfoot = document.getElementById('k2Tfoot');
+
+  // include ALL items (even zero revenue) for complete product code list
+  const allItems = Q1_DATA.k2Items;
+  const items = allItems.filter(d => d.revenue > 0).sort((a,b) => b.revenue - a.revenue);
+  const zeroItems = allItems.filter(d => d.revenue === 0);
+
+  let totalRev = 0, totalCost = 0;
+
+  // Non-zero revenue rows (sorted by revenue desc)
+  items.forEach(d => {
+    const impliedRate = d.revenue > 0 ? d.cost / d.revenue : 0;
+    totalRev  += d.revenue;
+    totalCost += d.cost;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${d.code}</td><td>${d.name}</td>
+      <td class="num">${d.revenue.toFixed(4)}</td>
+      <td class="num">${d.cost.toFixed(4)}</td>
+      <td class="num">${(impliedRate*100).toFixed(1)}%</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // Zero-revenue rows (greyed out)
+  zeroItems.forEach(d => {
+    const tr = document.createElement('tr');
+    tr.style.opacity = '0.45';
+    tr.innerHTML = `
+      <td>${d.code}</td><td>${d.name}</td>
+      <td class="num">0.0000</td>
+      <td class="num">${d.cost.toFixed(4)}</td>
+      <td class="num">—</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // 合計列
+  const totalRate = totalRev > 0 ? totalCost / totalRev : 0;
+  const totalItems = allItems.length;
+  const activeItems = items.length;
+  tfoot.innerHTML = `
+    <tr>
+      <td colspan="2">📊 合計（共 ${totalItems} 項業務，有收入 ${activeItems} 項）</td>
+      <td class="num">${totalRev.toFixed(4)}</td>
+      <td class="num">${totalCost.toFixed(4)}</td>
+      <td class="num">${(totalRate*100).toFixed(1)}%</td>
+    </tr>
+  `;
+}
+
+// =====================================================
+// CHART: Waterfall
+// =====================================================
+function renderWaterfall() {
+  const ctx = document.getElementById('chartWaterfall').getContext('2d');
+  const ra = Q1_DATA.retroAdj;
+  charts['chartWaterfall'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['基本版預算', 'K2設算成本', '非北南K2', '無K2收入', '非K2實績', '考核版成本'],
+      datasets: [
+        { label:'金額(百萬)', data:[ra.baseVersion, ra.k2CalcCost, ra.nonNSK2Cost, ra.noK2RevHasCost, ra.nonK2ActCost, ra.examVersion],
+          backgroundColor:['#F59E0B','#1F5FA6','#4A90D9','#60A5FA','#93C5FD','#16A34A'], borderRadius:5 }
+      ]
+    },
+    options: {
+      responsive:true,
+      plugins:{
+        legend:{display:false},
+        datalabels:{color:'#fff',font:{weight:'bold',size:12},formatter:v=>v.toFixed(2)}
+      },
+      scales:{y:{ticks:{callback:v=>v+'百萬'},grid:{color:'#F1F5F9'}}}
+    },
+    plugins:[ChartDataLabels]
+  });
+}
+
+function renderNonK2Cost() {
+  const ctx = document.getElementById('chartNonK2Cost').getContext('2d');
+  const items = Q1_DATA.nonK2CostDetail.filter(d => d.amt > 0);
+  charts['chartNonK2Cost'] = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: items.map(d => d.name),
+      datasets:[{ data:items.map(d=>d.amt), backgroundColor:['#1F5FA6','#4A90D9','#E53935','#F59E0B'], borderWidth:2, borderColor:'#fff' }]
+    },
+    options:{
+      responsive:true,
+      plugins:{
+        legend:{position:'bottom'},
+        datalabels:{color:'#fff',font:{weight:'bold',size:13},formatter:v=>v.toFixed(4)+'百萬'}
+      }
+    },
+    plugins:[ChartDataLabels]
+  });
+}
+
+// =====================================================
+// TREND
+// =====================================================
+function renderTrend() {
+  const container = document.getElementById('trendCharts');
+  const count = allQuarters.length;
+  document.getElementById('trendQuarterCount').textContent = count + ' 季資料';
+
+  if (count < 2) {
+    container.innerHTML = '<div class="trend-empty">📂 目前僅有 <strong>' + allQuarters[0].quarter + '</strong> 資料。<br>請前往「⬆️ 更新資料」分頁上傳更多季度 Excel，趨勢圖將自動更新。</div>';
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="chart-grid single">
+      <div class="chart-card">
+        <div class="chart-card-title">📈 追溯調整金額趨勢</div>
+        <canvas id="trendAdjChart"></canvas>
+        <div class="btn-group"><button class="btn btn-png" onclick="downloadChart('trendAdjChart','追溯調整趨勢')">📥 下載 PNG</button></div>
+      </div>
+    </div>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <div class="chart-card-title">📊 考核版 vs 預算版成本趨勢</div>
+        <canvas id="trendCostChart"></canvas>
+        <div class="btn-group"><button class="btn btn-png" onclick="downloadChart('trendCostChart','成本版本趨勢')">📥 下載 PNG</button></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-title">💰 K2收入趨勢</div>
+        <canvas id="trendRevChart"></canvas>
+        <div class="btn-group"><button class="btn btn-png" onclick="downloadChart('trendRevChart','K2收入趨勢')">📥 下載 PNG</button></div>
+      </div>
+    </div>
+  `;
+
+  const qs = allQuarters.map(q => q.quarter);
+  const adj = allQuarters.map(q => q.retroAdj.adjustAmt);
+  const exam = allQuarters.map(q => q.retroAdj.examVersion);
+  const base = allQuarters.map(q => q.retroAdj.baseVersion);
+  const k2rev = allQuarters.map(q => q.k2Items.reduce((s,i) => s+i.revenue, 0));
+
+  destroyChart('trendAdjChart');
+  charts['trendAdjChart'] = new Chart(document.getElementById('trendAdjChart').getContext('2d'), {
+    type:'line',
+    data:{ labels:qs, datasets:[{ label:'追溯調整金額(百萬)', data:adj, borderColor:'#E53935', backgroundColor:'rgba(229,57,53,0.1)', tension:0.3, pointRadius:6, fill:true }]},
+    options:{ responsive:true, plugins:{legend:{position:'bottom'},datalabels:{color:'#333',font:{size:11},formatter:v=>v.toFixed(2)}}, scales:{y:{ticks:{callback:v=>v+'M'},grid:{color:'#F1F5F9'}}} },
+    plugins:[ChartDataLabels]
+  });
+
+  destroyChart('trendCostChart');
+  charts['trendCostChart'] = new Chart(document.getElementById('trendCostChart').getContext('2d'), {
+    type:'bar',
+    data:{ labels:qs, datasets:[
+      { label:'考核版', data:exam, backgroundColor:'#1F5FA6', borderRadius:4 },
+      { label:'預算版', data:base, backgroundColor:'#F59E0B', borderRadius:4 }
+    ]},
+    options:{ responsive:true, plugins:{legend:{position:'bottom'},datalabels:{color:'#fff',font:{size:10,weight:'bold'},formatter:v=>v.toFixed(1)}}, scales:{y:{ticks:{callback:v=>v+'M'},grid:{color:'#F1F5F9'}}} },
+    plugins:[ChartDataLabels]
+  });
+
+  destroyChart('trendRevChart');
+  charts['trendRevChart'] = new Chart(document.getElementById('trendRevChart').getContext('2d'), {
+    type:'line',
+    data:{ labels:qs, datasets:[{ label:'K2收入合計(百萬)', data:k2rev, borderColor:'#16A34A', backgroundColor:'rgba(22,163,74,0.1)', tension:0.3, pointRadius:6, fill:true }]},
+    options:{ responsive:true, plugins:{legend:{position:'bottom'},datalabels:{color:'#333',font:{size:11},formatter:v=>v.toFixed(2)}}, scales:{y:{ticks:{callback:v=>v+'M'},grid:{color:'#F1F5F9'}}} },
+    plugins:[ChartDataLabels]
+  });
+}
+
+// =====================================================
+// UPLOAD & PARSE XLSX
+// =====================================================
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('dropzone').classList.remove('drag');
+  const file = e.dataTransfer.files[0];
+  if (file) processFile(file);
+}
+function handleFileUpload(e) {
+  const file = e.target.files[0];
+  if (file) processFile(file);
+}
+
+function processFile(file) {
+  const msg = document.getElementById('uploadMsg');
+  msg.innerHTML = '<div class="alert info">⏳ 解析中...</div>';
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const wb = XLSX.read(e.target.result, { type:'array' });
+      // Detect quarter from sheet name
+      const adjSheet = wb.SheetNames.find(n => n.includes('追溯調整') || n.includes('4040'));
+      const costSheet = wb.SheetNames.find(n => n.includes('成本率'));
+      if (!adjSheet || !costSheet) {
+        msg.innerHTML = '<div class="alert error">❌ 找不到必要工作表（需含「成本率彙總」及「追溯調整金額_4040」）</div>';
+        return;
+      }
+      // Parse quarter from sheet name e.g. 115Q2追溯
+      const qMatch = adjSheet.match(/(\d+)(Q\d)/i);
+      const quarterLabel = qMatch ? qMatch[1]+'年'+qMatch[2] : file.name.replace('.xlsx','').slice(-4);
+      const qKey = qMatch ? qMatch[1]+qMatch[2].toUpperCase() : quarterLabel;
+
+      if (allQuarters.find(q => q.quarter === qKey)) {
+        msg.innerHTML = '<div class="alert error">⚠️ 「' + qKey + '」資料已存在，請勿重複上傳。</div>';
+        return;
+      }
+
+      // Parse cost rates
+      const costWs = wb.Sheets[costSheet];
+      const costArr = XLSX.utils.sheet_to_json(costWs, { header:1, defval:'' });
+      const costRates = [];
+      for (let i = 2; i < costArr.length; i++) {
+        const row = costArr[i];
+        if (!row[0] || row[0] === '產品代碼') continue;
+        if (typeof row[4] === 'number') {
+          costRates.push({ code:row[0], name:String(row[3]).split('.').slice(-1)[0], chActual:row[4]||0, blended:row[5]||0 });
+        }
+      }
+
+      // Parse K2 revenue (rows 12-43 from adj sheet, cols 1-5)
+      const adjWs = wb.Sheets[adjSheet];
+      const adjArr = XLSX.utils.sheet_to_json(adjWs, { header:1, defval:'' });
+      const k2Items = [];
+      for (let i = 12; i < 44; i++) {
+        const row = adjArr[i];
+        if (!row || !row[1] || row[1]==='產品代碼') continue;
+        const rev = typeof row[5] === 'number' ? row[5] : 0;
+        if (rev > 0) {
+          k2Items.push({ code:String(row[1]), name:String(row[4]).split('.').slice(-1)[0], revenue:rev, cost:0 });
+        }
+      }
+
+      // Parse summary values
+      const examRow = adjArr.find(r => r && String(r[1]).includes('考核版'));
+      const baseRow = adjArr.find(r => r && String(r[1]).includes('基本版'));
+      const adjRow  = adjArr.find(r => r && String(r[4]).includes('追溯調整金額'));
+      const examVersion = examRow ? (typeof examRow[5]==='number' ? examRow[5] : 0) : 0;
+      const baseVersion = baseRow ? (typeof baseRow[5]==='number' ? baseRow[5] : 0) : 0;
+      const adjustAmt   = adjRow  ? (typeof adjRow[5]==='number'  ? adjRow[5]  : 0) : 0;
+
+      const newQ = {
+        quarter: qKey,
+        costRates, k2Items,
+        retroAdj: { k2CalcCost:0, nonNSK2Cost:0, noK2RevHasCost:0, nonK2ActCost:0, examVersion, baseVersion, adjustAmt },
+        nonK2CostDetail: []
+      };
+      allQuarters.push(newQ);
+      allQuarters.sort((a,b) => a.quarter.localeCompare(b.quarter));
+      saveQuarters();
+      msg.innerHTML = '<div class="alert success">✅ 「' + qKey + '」資料上傳成功！已加入季度趨勢分析。</div>';
+      renderQuarterList();
+    } catch(err) {
+      msg.innerHTML = '<div class="alert error">❌ 解析失敗：' + err.message + '</div>';
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function renderQuarterList() {
+  const list = document.getElementById('quarterList');
+  list.innerHTML = '<div style="font-size:0.85rem;font-weight:600;color:#64748B;margin-bottom:10px">已載入季度資料：</div>';
+  allQuarters.forEach((q, idx) => {
+    const div = document.createElement('div');
+    div.className = 'quarter-item';
+    div.innerHTML = `
+      <div><span class="q-name">📅 ${q.quarter}</span> &nbsp; <span class="q-date">K2收入合計 ${q.k2Items.reduce((s,i)=>s+i.revenue,0).toFixed(2)} 百萬</span></div>
+      ${idx === 0 ? '<span style="font-size:0.75rem;color:#94A3B8">（內建）</span>' : '<button class="btn-del" onclick="deleteQuarter('+idx+')">🗑</button>'}
+    `;
+    list.appendChild(div);
+  });
+}
+
+function deleteQuarter(idx) {
+  if (!confirm('確定刪除「' + allQuarters[idx].quarter + '」的資料？')) return;
+  allQuarters.splice(idx, 1);
+  saveQuarters();
+  renderQuarterList();
+}
+
+// =====================================================
+// DOWNLOAD
+// =====================================================
+function downloadChart(id, name) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  const hr = document.createElement('canvas');
+  hr.width = canvas.width * 4;
+  hr.height = canvas.height * 4;
+  const ctx = hr.getContext('2d');
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 0, hr.width, hr.height);
+  ctx.scale(4, 4);
+  ctx.drawImage(canvas, 0, 0);
+  const a = document.createElement('a');
+  a.download = name + '_115Q1.png';
+  a.href = hr.toDataURL('image/png', 1.0);
+  a.click();
+}
+
+function exportTableCSV(tableId, name) {
+  const table = document.getElementById(tableId);
+  let csv = '';
+  for (const row of table.querySelectorAll('tr')) {
+    const cols = Array.from(row.querySelectorAll('th,td')).map(c => '"' + c.textContent.trim() + '"');
+    csv += cols.join(',') + '\n';
+  }
+  const a = document.createElement('a');
+  a.download = name + '_115Q1.csv';
+  a.href = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csv);
+  a.click();
+}
+
+// =====================================================
+// INIT
+// =====================================================
+window.addEventListener('load', () => {
+  Chart.register(ChartDataLabels);
+  renderBudgetVsActual();
+  renderCostPie();
+  renderRadar();
+  renderCostRateBar();
+  fillCostRateTable();
+  renderK2Revenue();
+  renderK2Donut();
+  fillK2Table();
+  renderWaterfall();
+  renderNonK2Cost();
+  renderQuarterList();
+});
+</script>
+</body>
+</html>
