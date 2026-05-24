@@ -80,7 +80,8 @@
   canvas { max-height: 340px; }
 
   /* ===== TABLE ===== */
-  .data-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-top: 16px; }
+  .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; }
+  .data-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-top: 16px; min-width: 480px; }
   .data-table th { background: var(--cht-blue); color: white; padding: 8px 10px; text-align: left; }
   .data-table td { padding: 7px 10px; border-bottom: 1px solid var(--border); }
   .data-table tr:hover td { background: #EFF6FF; }
@@ -144,6 +145,19 @@
     .chart-grid { grid-template-columns: 1fr; }
     .header { flex-direction: column; gap: 8px; text-align: center; }
     .header-right { text-align: center; }
+  }
+
+  /* ===== 手機響應式 ===== */
+  @media (max-width: 640px) {
+    .header { padding: 14px 16px; }
+    .header h1 { font-size: 1.1rem; }
+    .main { padding: 16px 10px; }
+    .data-table { font-size: 0.75rem; }
+    .data-table th, .data-table td { padding: 6px 7px; }
+    .chart-grid { grid-template-columns: 1fr; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .kpi-value { font-size: 1.4rem; }
+    .tab-btn { padding: 10px 14px; font-size: 0.82rem; }
   }
 </style>
 </head>
@@ -254,6 +268,7 @@
   <div class="chart-card">
     <div class="chart-card-title">📋 成本率明細表</div>
     <div class="chart-card-desc">🔴 紅底 = 彰化實績成本率超過 Blended 標準成本率（需重點關注）</div>
+    <div class="table-responsive">
     <table class="data-table" id="costRateTable">
       <thead><tr>
         <th>產品代碼</th><th>項目摘要</th>
@@ -265,6 +280,7 @@
       <tbody id="costRateTbody"></tbody>
       <tfoot id="costRateTfoot"></tfoot>
     </table>
+    </div>
     <div class="btn-group">
       <button class="btn btn-csv" onclick="exportTableCSV('costRateTable','成本率明細')">📄 匯出 CSV</button>
     </div>
@@ -299,6 +315,7 @@
 
   <div class="chart-card" style="margin-top:20px">
     <div class="chart-card-title">📋 K2收入 × K2設算成本明細</div>
+    <div class="table-responsive">
     <table class="data-table" id="k2Table">
       <thead><tr>
         <th>產品代碼</th><th>項目摘要</th>
@@ -309,6 +326,7 @@
       <tbody id="k2Tbody"></tbody>
       <tfoot id="k2Tfoot"></tfoot>
     </table>
+    </div>
     <div class="btn-group">
       <button class="btn btn-csv" onclick="exportTableCSV('k2Table','K2收入成本明細')">📄 匯出 CSV</button>
     </div>
@@ -379,6 +397,7 @@
       = [(K2實績收入 × 業務別標準成本率) + 非K2實績成本] − 預算客戶專案成本<br>
       = 18.305273 − 71.028 = <strong>-52.722727 百萬元</strong>
     </div>
+    <div class="table-responsive">
     <table class="data-table">
       <thead><tr><th>項目</th><th>說明</th><th class="num">金額(百萬)</th></tr></thead>
       <tbody>
@@ -391,6 +410,7 @@
         <tr class="high"><td colspan="2" style="font-weight:700;color:#991B1B">追溯調整金額（成本調減）</td><td class="num over">-52.7227</td></tr>
       </tbody>
     </table>
+    </div>
   </div>
 </div>
 
@@ -432,6 +452,7 @@
 
   <div class="upload-section">
     <h2>📋 欄位對應說明</h2>
+    <div class="table-responsive">
     <table class="data-table">
       <thead><tr><th>工作表名稱</th><th>關鍵欄位</th><th>說明</th></tr></thead>
       <tbody>
@@ -439,6 +460,7 @@
         <tr><td>QQQA追溯調整金額_4040</td><td>K2收入、K2設算成本、非K2實績成本、追溯調整合計</td><td>彰化3047機構代號</td></tr>
       </tbody>
     </table>
+    </div>
     <div class="alert info" style="margin-top:12px">
       💡 提示：工作表名稱「115Q1追溯調整金額_4040」→ 下季改為「115Q2追溯調整金額_4040」，系統會自動辨識季度標籤。
     </div>
