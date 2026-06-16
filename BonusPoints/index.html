@@ -136,7 +136,71 @@
   .filter-btn{padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:white;font-size:12px;cursor:pointer;font-weight:500;transition:all .2s}
   .filter-btn.active{background:var(--cht-blue);color:white;border-color:var(--cht-blue)}
   .footer{background:var(--navy);color:rgba(255,255,255,.5);text-align:center;padding:14px;font-size:11px;margin-top:28px}
-  @media(max-width:700px){.grid-2,.grid-3,.comparison-grid{grid-template-columns:1fr}.header{padding:14px}.main{padding:12px}.flow-step::after{display:none}.flow-step+.flow-step{margin-left:0;margin-top:8px}.flow{flex-direction:column}}
+  @media(max-width:700px){
+  .grid-2,.grid-3,.comparison-grid{grid-template-columns:1fr}
+  .header{padding:10px 12px;flex-wrap:wrap;gap:10px}
+  .header-title h1{font-size:16px}
+  .header-badges{gap:5px}
+  .main{padding:8px}
+  .flow-step::after{display:none}
+  .flow-step+.flow-step{margin-left:0;margin-top:8px}
+  .flow{flex-direction:column}
+  .card{padding:12px 10px}
+
+  /* 手機版 Tab bar 字縮小，允許兩行換行 */
+  .tab-bar{padding:0 4px;gap:0}
+  .tab-btn{padding:8px 8px;font-size:11px;white-space:nowrap}
+
+  /* 所有表格：強制 overflow 橫向捲動 */
+  .rule-table,.data-table,.month-table,.map-table,.flex-budget-table{
+    display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;
+    font-size:11px;white-space:nowrap
+  }
+  /* 商品對照表、積點對照表：欄位縮小+允許換行 */
+  .map-table{white-space:normal;font-size:11px}
+  .map-table th,.map-table td{padding:5px 7px;font-size:11px}
+  .map-table .cat-tag{font-size:10px;padding:1px 5px}
+  .acct-code{font-size:10px;padding:1px 5px}
+
+  /* 考核版分月：橫向捲動容器已有 overflow-x:auto，月份欄縮小 */
+  .month-table th,.month-table td{padding:5px 6px;font-size:10px}
+  .month-table .label-td{min-width:90px!important;white-space:normal;font-size:10px}
+
+  /* data-table 欄位 */
+  .data-table th,.data-table td{padding:6px 7px;font-size:11px}
+
+  /* rule-table */
+  .rule-table th,.rule-table td{padding:6px 7px;font-size:10px}
+
+  /* KPI boxes：2欄排列 */
+  .kpi-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .kpi-value{font-size:17px}
+
+  /* scenario grid：單欄 */
+  .scenario-grid{grid-template-columns:1fr}
+
+  /* summary KPI */
+  .summary-kpi{grid-template-columns:1fr 1fr 1fr}
+  .summary-kpi-value{font-size:13px}
+
+  /* inst-tab-bar 換行 */
+  .inst-tab-bar{flex-wrap:wrap}
+  .inst-tab-btn{font-size:11px;padding:6px 10px}
+
+  /* header logo 縮小 */
+  .header-logo{width:34px;height:34px;font-size:14px}
+
+  /* flow steps 文字縮小 */
+  .flow-step{padding:8px 10px}
+  .flow-step-title{font-size:11px}
+  .flow-step-desc{font-size:10px}
+
+  /* info-box */
+  .info-box{font-size:12px;padding:10px 12px}
+
+  /* chart box */
+  .chart-box{height:200px}
+}
 </style>
 </head>
 <body>
@@ -560,7 +624,7 @@
 
 <!-- ========== TAB 5: 商品對照表 ========== -->
 <div id="tab-product-map" class="tab-panel">
-  <div class="info-box blue">市售商品科目對照表（收入會科 4111 / 成本會科 5111）· 兩機構相同</div>
+  <div class="info-box blue">市售商品科目對照表（收入會科 4111 / 成本會科 5111）· 兩機構相同 · <span style="font-size:10px;opacity:.8">👈 左右滑動</span></div>
   <div class="card">
     <div class="card-title"><span class="dot"></span>市售商品 CPE 類別 ─ 明細帳對照（收入 ↔ 成本）</div>
     <table class="map-table">
@@ -604,7 +668,7 @@
 
 <!-- ========== TAB 6: 積點對照表 ========== -->
 <div id="tab-points-map" class="tab-panel">
-  <div class="info-box blue">紅利積點科目對照表（收入會科 4609.350X / 成本會科 5609.3321X）· 兩機構相同</div>
+  <div class="info-box blue">紅利積點科目對照表（收入會科 4609.350X / 成本會科 5609.3321X）· 兩機構相同<span id="scroll-hint" style="display:none;font-size:10px;opacity:.7"> · 👈 左右滑動查看完整表格</span></div>
   <div class="card">
     <div class="card-title"><span class="dot"></span>紅利積點 ─ 業務別明細帳對照（收入 ↔ 成本）</div>
     <table class="map-table">
@@ -1122,6 +1186,11 @@ function setAIScope(scope, btn) {
 }
 
 function initAI() {}
+// Show mobile scroll hint
+if(window.innerWidth <= 700) {
+  const sh = document.getElementById('scroll-hint');
+  if(sh) sh.style.display = 'inline';
+}
 
 async function runAIAnalysis() {
   const status = document.getElementById('ai-status');
