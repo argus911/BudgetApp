@@ -137,7 +137,16 @@
   .filter-btn.active{background:var(--cht-blue);color:white;border-color:var(--cht-blue)}
   .footer{background:var(--navy);color:rgba(255,255,255,.5);text-align:center;padding:14px;font-size:11px;margin-top:28px}
   @media(max-width:700px){
-  .grid-2,.grid-3,.comparison-grid{grid-template-columns:1fr}
+  .grid-3{grid-template-columns:1fr}
+  /* comparison-grid & grid-2 維持兩欄，縮小卡片內距讓並排顯示 */
+  .comparison-grid,.grid-2{grid-template-columns:1fr 1fr;gap:8px}
+  .comparison-grid .card,.grid-2 .card{padding:9px 7px}
+  .comparison-grid .summary-kpi-value{font-size:12px}
+  .comparison-grid .summary-kpi-label{font-size:9px}
+  .comparison-grid .summary-kpi-box{padding:7px 4px}
+  .comparison-grid .inst-header-2040,.comparison-grid .inst-header-4040{font-size:11px;padding:7px 9px}
+  .comparison-grid .data-table{font-size:10px}
+  .comparison-grid .data-table th,.comparison-grid .data-table td{padding:4px 4px}
   .header{padding:10px 12px;flex-wrap:wrap;gap:10px}
   .header-title h1{font-size:16px}
   .header-badges{gap:5px}
