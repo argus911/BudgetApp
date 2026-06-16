@@ -160,8 +160,8 @@
   <button class="tab-btn" onclick="showTab('tab-points-map',this)">🎯 積點對照表</button>
   <button class="tab-btn" onclick="showTab('tab-flexible',this)">⚙️ 彈性預算</button>
   <button class="tab-btn" onclick="showTab('tab-import',this)">📥 匯入 Excel</button>
-  <button class="tab-btn" onclick="showTab('tab-charts',this)">📊 視覺化圖表</button>
-  <button class="tab-btn" onclick="showTab('tab-ai',this);initAI()">🤖 AI 摘要分析</button>
+  <button class="tab-btn" onclick="showTab('tab-charts',this);setTimeout(initCharts,100)">📊 視覺化圖表</button>
+  <button class="tab-btn" onclick="showTab('tab-ai',this)">🤖 AI 摘要分析</button>
 </div>
 <div class="main">
 
@@ -1191,12 +1191,7 @@ function copyAIResult() {
   alert('✅ 已複製到剪貼簿');
 }
 
-// Hook charts init to tab switch
-const _origShowTab = showTab;
-function showTab(id, btn) {
-  _origShowTab(id, btn);
-  if(id==='tab-charts') setTimeout(initCharts, 100);
-}
+// Charts init is triggered inline via onclick
 </script>
 </body>
 </html>
