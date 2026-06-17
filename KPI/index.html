@@ -377,6 +377,15 @@ function applyUploadedMonth(newMonth, fileName, msg){
   if(typeof renderCompareChart==='function') renderCompareChart();
   if(typeof renderTrendChart==='function') renderTrendChart();
   if(typeof renderTrendControls==='function') renderTrendControls();
+
+  // ★ v5.37: 通知 PyQt「有新 KPI 月份資料」，Python 端再用 runJavaScript 讀取並寫回 HTML
+  try{
+    // window.location.href 觸發 acceptNavigationRequest（無 payload，避免 URL 長度限制）
+    // PyQt 收到後呼叫 _flush_kpi_history_to_html()
+    if(typeof window.__in_pyqt__ !== 'undefined' && window.__in_pyqt__){
+      window.location.href = 'pyqtapp://save_kpi_history';
+    }
+  }catch(e){ /* 非 PyQt 環境略過 */ }
 }
 
 /* ── 顯示已上傳清單 ── */
