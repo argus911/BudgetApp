@@ -877,7 +877,7 @@ main{padding:12px 12px 24px}
     <div class="hero-rank">
       <div>
         <div class="big" id="heroScore">—</div>
-        <div class="lbl">115/4 累計得分</div>
+        <div class="lbl" id="heroLabel">115/4 累計得分</div>
       </div>
       <div class="info">
         <div class="row"><b id="heroRank">—</b><span class="sub">/ 17 處</span></div>
@@ -1085,6 +1085,12 @@ function renderDashboard(){
   document.getElementById('heroRank').textContent = '#'+me.rank;
   document.getElementById('heroGRank').textContent = '#'+me.group_rank;
   document.getElementById('heroPeriod').textContent = `📅 ${ACTUAL.period} · 滿分 ${ACTUAL.max_score} 分`;
+  // ★ 動態更新「115/X 累計得分」標籤（舊版硬編碼，上傳新月份後不會自動更新）
+  const _lbl = document.getElementById('heroLabel');
+  if(_lbl){
+    const _pm = (ACTUAL.period||'').match(/(\d+)\s*年\s*(\d+)\s*月/);
+    _lbl.textContent = _pm ? `${_pm[1]}/${_pm[2]} 累計得分` : (ACTUAL.period||'累計得分');
+  }
 
   // ★ 紅燈警示:按各 KPI 的 scoring_base 動態判斷
   const badItems = KPI.filter(k=>{
