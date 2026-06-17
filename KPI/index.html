@@ -40,6 +40,13 @@ function mergeUploadedOnLoad(){
       HISTORY.months.sort((a,b)=>a.month-b.month);
     }
   });
+  // ★ 同步更新 ACTUAL 為最新月份（讓儀表板/比較頁在重新整理後也顯示最新資料）
+  const valid = HISTORY.months.filter(m=>!m.placeholder && m.records && m.records.length>0);
+  if(valid.length>0){
+    const latest = valid.reduce((a,b)=>(parseInt(b.month)>parseInt(a.month)?b:a));
+    ACTUAL = latest;
+    if(typeof DATA!=='undefined') DATA.actual = latest;
+  }
 }
 
 /* ── 拖放 / 選擇檔案 ── */
@@ -354,8 +361,20 @@ function applyUploadedMonth(newMonth, fileName, msg){
     彰化得分：<b>${me?me.annual:'—'}</b>｜排名：<b>${me&&me.rank?me.rank:'—'}</b>／17
   </div>`;
 
+  // ★ 更新 ACTUAL → 讓儀表板、比較頁也能看到最新資料
+  // 找 HISTORY 中最新月份（month 最大且非 placeholder）作為新的 ACTUAL
+  const validMonths = HISTORY.months.filter(m=>!m.placeholder && m.records && m.records.length>0);
+  if(validMonths.length>0){
+    const latest = validMonths.reduce((a,b)=> (parseInt(b.month)>parseInt(a.month)?b:a));
+    ACTUAL = latest;
+    DATA.actual = latest;  // 同步 DATA.actual
+  }
+
+  // 重繪所有頁籤
   renderKpiHistoryList();
-  // 重新繪製趨勢（若已在趨勢頁）
+  if(typeof renderDashboard==='function') renderDashboard();
+  if(typeof renderCompareControls==='function') renderCompareControls();
+  if(typeof renderCompareChart==='function') renderCompareChart();
   if(typeof renderTrendChart==='function') renderTrendChart();
   if(typeof renderTrendControls==='function') renderTrendControls();
 }
@@ -1028,7 +1047,7 @@ document.querySelectorAll('.tab').forEach(t=>{
 
 /* ──────────────── Tab 1: 實績儀表板 (v1.1) ──────────────── */
 const MY_OFFICE = DATA.my_office || '彰化';
-const ACTUAL = DATA.actual;
+let ACTUAL = DATA.actual;  // ★ 上傳新月份時會動態更新
 
 function getMyRecord(){
   return ACTUAL.records.find(r=>r.office===MY_OFFICE);
@@ -1266,7 +1285,7 @@ function officeGroup(office){
 function renderCompareControls(){
   // KPI 下拉:預設「年度合併得分」
   const sel = document.getElementById('cmpKpi');
-  let opts = '<option value="annual">年度合併得分(累計至 4 月)</option>';
+  let opts = `<option value="annual">年度合併得分（${ACTUAL.period||'累計得分'}）</option>`;
   KPI.forEach(k=>{
     opts += `<option value="${k.id}">${k.id} · ${k.name}</option>`;
   });
