@@ -1548,9 +1548,8 @@
         {
           "office": "台北",
           "rank": 5,
-          "groupRank": 3,
           "annual": 77.06,
-          "kpis": {
+          "scores": {
             "O1": 96.66,
             "O2": 100.0,
             "L1": 87.15,
@@ -1565,14 +1564,14 @@
             "M6": 89.29,
             "M7": 98.7,
             "E": null
-          }
+          },
+          "group_rank": 3
         },
         {
           "office": "新北",
           "rank": 2,
-          "groupRank": 1,
           "annual": 77.75,
-          "kpis": {
+          "scores": {
             "O1": 97.56,
             "O2": 99.98,
             "L1": 90.74,
@@ -1587,14 +1586,14 @@
             "M6": 89.77,
             "M7": 100.0,
             "E": null
-          }
+          },
+          "group_rank": 1
         },
         {
           "office": "基隆",
           "rank": 8,
-          "groupRank": 2,
           "annual": 76.78,
-          "kpis": {
+          "scores": {
             "O1": 96.8,
             "O2": 100.0,
             "L1": 89.5,
@@ -1609,14 +1608,14 @@
             "M6": 75.0,
             "M7": 100.0,
             "E": null
-          }
+          },
+          "group_rank": 2
         },
         {
           "office": "桃園",
           "rank": 13,
-          "groupRank": 6,
           "annual": 75.25,
-          "kpis": {
+          "scores": {
             "O1": 93.88,
             "O2": 99.63,
             "L1": 92.93,
@@ -1631,14 +1630,14 @@
             "M6": 100.0,
             "M7": 100.0,
             "E": null
-          }
+          },
+          "group_rank": 6
         },
         {
           "office": "新竹",
           "rank": 1,
-          "groupRank": 1,
           "annual": 78.97,
-          "kpis": {
+          "scores": {
             "O1": 100.0,
             "O2": 100.0,
             "L1": 101.0,
@@ -1653,14 +1652,14 @@
             "M6": 100.0,
             "M7": 100.0,
             "E": null
-          }
+          },
+          "group_rank": 1
         },
         {
           "office": "苗栗",
           "rank": 4,
-          "groupRank": 1,
           "annual": 77.37,
-          "kpis": {
+          "scores": {
             "O1": 99.78,
             "O2": 100.0,
             "L1": 100.11,
@@ -1675,14 +1674,14 @@
             "M6": 100.0,
             "M7": 75.0,
             "E": null
-          }
+          },
+          "group_rank": 1
         },
         {
           "office": "花蓮",
           "rank": 9,
-          "groupRank": 3,
           "annual": 76.78,
-          "kpis": {
+          "scores": {
             "O1": 95.26,
             "O2": 99.96,
             "L1": 96.85,
@@ -1697,14 +1696,14 @@
             "M6": 75.0,
             "M7": 100.0,
             "E": null
-          }
+          },
+          "group_rank": 3
         },
         {
           "office": "宜蘭",
           "rank": 6,
-          "groupRank": 2,
           "annual": 76.96,
-          "kpis": {
+          "scores": {
             "O1": 97.71,
             "O2": 100.0,
             "L1": 96.61,
@@ -1719,14 +1718,14 @@
             "M6": 100.0,
             "M7": 82.77,
             "E": null
-          }
+          },
+          "group_rank": 2
         },
         {
           "office": "台中",
           "rank": 3,
-          "groupRank": 2,
           "annual": 77.44,
-          "kpis": {
+          "scores": {
             "O1": 96.44,
             "O2": 99.5,
             "L1": 91.86,
@@ -1741,14 +1740,14 @@
             "M6": 100.0,
             "M7": 100.0,
             "E": null
-          }
+          },
+          "group_rank": 2
         },
         {
           "office": "彰化",
           "rank": 16,
-          "groupRank": 5,
           "annual": 73.91,
-          "kpis": {
+          "scores": {
             "O1": 93.8,
             "O2": 99.12,
             "L1": 93.1,
@@ -1763,14 +1762,14 @@
             "M6": 75.0,
             "M7": 79.4,
             "E": null
-          }
+          },
+          "group_rank": 5
         },
         {
           "office": "南投",
           "rank": 15,
-          "groupRank": 5,
           "annual": 75.07,
-          "kpis": {
+          "scores": {
             "O1": 97.19,
             "O2": 99.58,
             "L1": 93.21,
@@ -1785,14 +1784,14 @@
             "M6": 100.0,
             "M7": 84.13,
             "E": null
-          }
+          },
+          "group_rank": 5
         },
         {
           "office": "雲林",
           "rank": 14,
-          "groupRank": 4,
           "annual": 75.08,
-          "kpis": {
+          "scores": {
             "O1": 94.17,
             "O2": 100.0,
             "L1": 94.48,
@@ -1807,14 +1806,14 @@
             "M6": 100.0,
             "M7": 76.54,
             "E": null
-          }
+          },
+          "group_rank": 4
         },
         {
           "office": "嘉義",
           "rank": 11,
-          "groupRank": 3,
           "annual": 76.06,
-          "kpis": {
+          "scores": {
             "O1": 95.05,
             "O2": 98.73,
             "L1": 93.76,
@@ -1829,14 +1828,14 @@
             "M6": 100.0,
             "M7": 75.68,
             "E": null
-          }
+          },
+          "group_rank": 3
         },
         {
           "office": "台南",
           "rank": 10,
-          "groupRank": 5,
           "annual": 76.29,
-          "kpis": {
+          "scores": {
             "O1": 96.12,
             "O2": 99.96,
             "L1": 98.04,
@@ -1851,14 +1850,14 @@
             "M6": 92.93,
             "M7": 79.4,
             "E": null
-          }
+          },
+          "group_rank": 5
         },
         {
           "office": "高雄",
           "rank": 7,
-          "groupRank": 4,
           "annual": 76.79,
-          "kpis": {
+          "scores": {
             "O1": 95.11,
             "O2": 100.0,
             "L1": 91.5,
@@ -1873,14 +1872,14 @@
             "M6": 100.0,
             "M7": 100.0,
             "E": null
-          }
+          },
+          "group_rank": 4
         },
         {
           "office": "屏東",
           "rank": 17,
-          "groupRank": 6,
           "annual": 73.87,
-          "kpis": {
+          "scores": {
             "O1": 94.47,
             "O2": 99.44,
             "L1": 92.84,
@@ -1895,14 +1894,14 @@
             "M6": 75.0,
             "M7": 81.63,
             "E": null
-          }
+          },
+          "group_rank": 6
         },
         {
           "office": "台東",
           "rank": 12,
-          "groupRank": 4,
           "annual": 75.94,
-          "kpis": {
+          "scores": {
             "O1": 95.37,
             "O2": 100.0,
             "L1": 99.86,
@@ -1917,7 +1916,8 @@
             "M6": 88.55,
             "M7": 100.0,
             "E": null
-          }
+          },
+          "group_rank": 4
         }
       ]
     }
