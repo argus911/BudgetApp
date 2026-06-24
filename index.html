@@ -12,106 +12,109 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f4f0;color:#1a2e1a;min-height:100vh}
-header{position:sticky;top:0;z-index:100;background:linear-gradient(135deg,#0d6e3f,#1a9e5e);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,100,50,.3)}
-header h1{font-size:17px;font-weight:700;letter-spacing:.5px}
-header .badge{background:rgba(255,255,255,.25);border-radius:20px;padding:3px 10px;font-size:13px;font-weight:600}
-.tab-bar{display:flex;background:#fff;border-bottom:1.5px solid #e0ebe5;position:sticky;top:52px;z-index:99;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.header{background:linear-gradient(135deg,#0d6e40 0%,#128048 60%,#1a9a5a 100%);color:#fff;padding:12px 16px 8px;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,80,40,.25)}
+.header-row{display:flex;align-items:center;gap:8px}
+.header h1{font-size:18px;font-weight:700;flex:1}
+.badge{background:rgba(255,255,255,.22);border-radius:12px;padding:2px 10px;font-size:12px;font-weight:600}
+.header-sub{font-size:11px;opacity:.8;margin-top:2px}
+.tab-bar{background:#fff;display:flex;overflow-x:auto;position:sticky;top:56px;z-index:190;border-bottom:1.5px solid #e8f5e9;scrollbar-width:none}
 .tab-bar::-webkit-scrollbar{display:none}
-.tab-btn{flex:0 0 auto;padding:10px 14px;font-size:13px;font-weight:600;color:#666;border:none;background:none;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s}
+.tab-btn{flex:none;padding:10px 14px;font-size:13px;font-weight:600;border:none;background:none;color:#666;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;transition:.2s}
 .tab-btn.active{color:#128048;border-bottom-color:#128048}
-.tab-content{display:none;padding:12px 14px 80px}
+.tab-content{display:none;padding:12px 12px 80px}
 .tab-content.active{display:block}
-.filter-card{background:#fff;border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 6px rgba(0,80,40,.08)}
-.filter-card h3{font-size:13px;color:#666;margin-bottom:8px;font-weight:600}
-input[type=text]{width:100%;padding:10px 14px;border:1.5px solid #d0e8d8;border-radius:10px;font-size:14px;outline:none;transition:border .2s}
-input[type=text]:focus{border-color:#128048}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.chip{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid #cde8d6;background:#f5fbf7;color:#128048;transition:all .15s;white-space:nowrap}
+.filter-card{background:#fff;border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,80,40,.08)}
+.filter-card label{font-size:12px;color:#666;margin-bottom:4px;display:block;font-weight:600}
+.search-box{width:100%;border:1.5px solid #c8e6c9;border-radius:10px;padding:9px 12px;font-size:14px;outline:none;background:#f9fffe}
+.search-box:focus{border-color:#128048}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;border:1.5px solid #c8e6c9;background:#f1f8f4;color:#128048;cursor:pointer;transition:.15s}
 .chip.active{background:#128048;color:#fff;border-color:#128048}
-.active-filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-.filter-pill{padding:4px 10px;border-radius:14px;font-size:11px;font-weight:600}
-.filter-pill.kw{background:#e8f5e9;color:#2e7d32}
-.filter-pill.cat{background:#e3f2fd;color:#1565c0}
-.filter-pill.unit{background:#fff3e0;color:#e65100}
-.notice{background:#fff8e1;border-left:4px solid #f9a825;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:12px;line-height:1.6;color:#5d4037}
-.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.stat-card{background:#fff;border-radius:14px;padding:14px;box-shadow:0 1px 6px rgba(0,80,40,.08);text-align:center}
-.stat-card .label{font-size:11px;color:#888;margin-bottom:4px}
-.stat-card .value{font-size:18px;font-weight:700;color:#128048}
-.result-count{font-size:13px;color:#666;margin-bottom:8px;font-weight:600}
-.cards-list{display:flex;flex-direction:column;gap:10px}
-.budget-card{background:#fff;border-radius:16px;padding:14px;box-shadow:0 1px 8px rgba(0,80,40,.08);border-left:4px solid #cde8d6;cursor:pointer;transition:transform .1s,box-shadow .1s;-webkit-user-select:none}
-.budget-card:active{transform:scale(.98);box-shadow:0 1px 4px rgba(0,80,40,.06)}
-.card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
-.card-header .acc{font-size:12px;color:#888;font-weight:600}
-.card-header .badges{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
-.cat-badge{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700}
-.unit-badge{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700}
-.card-name{font-size:15px;font-weight:700;color:#1a2e1a;margin-bottom:10px;line-height:1.4}
-.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px}
-.card-item .lbl{color:#888;font-size:11px;margin-bottom:2px}
-.card-item .val{font-weight:700;font-size:14px}
-.val-blue{color:#1565c0}
-.val-green{color:#128048}
-.val-red{color:#c62828}
-.val-orange{color:#e07b00}
-.progress-bar{height:6px;background:#e8f5e9;border-radius:3px;margin-top:8px;overflow:hidden}
+.active-filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.filter-pill{padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700;color:#fff}
+.notice{background:#fff8e1;border-left:4px solid #f9a825;padding:10px 12px;font-size:12px;border-radius:0 8px 8px 0;margin-bottom:10px;line-height:1.5}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.stat-card{background:#fff;border-radius:14px;padding:12px;box-shadow:0 1px 4px rgba(0,80,40,.08);text-align:center}
+.stat-label{font-size:10px;color:#888;margin-bottom:4px}
+.stat-value{font-size:15px;font-weight:700;color:#0d6e40}
+.result-count{font-size:12px;color:#666;margin-bottom:8px;padding:0 2px}
+.item-card{background:#fff;border-radius:16px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,80,40,.08);overflow:hidden;cursor:pointer;transition:.15s;border:1.5px solid #e8f5e9}
+.item-card:active{opacity:.85;transform:scale(.99)}
+.card-header{padding:12px 14px 8px;border-bottom:1px solid #f0f4f0;display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap}
+.card-acc{font-size:12px;font-weight:700;color:#555;background:#f0f4f0;padding:2px 7px;border-radius:6px;white-space:nowrap}
+.card-name{font-size:14px;font-weight:700;color:#1a2e1a;flex:1;min-width:0;line-height:1.3}
+.badges{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;width:100%}
+.cat-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;color:#fff}
+.unit-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px}
+.card-body{padding:10px 14px}
+.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.card-field{font-size:11px;color:#888}
+.card-val{font-size:15px;font-weight:700;margin-top:2px}
+.progress-wrap{margin-top:6px}
+.progress-label{display:flex;justify-content:space-between;font-size:11px;color:#888;margin-bottom:3px}
+.progress-bar{height:6px;background:#e8f5e9;border-radius:3px;overflow:hidden}
 .progress-fill{height:100%;border-radius:3px;transition:width .3s}
-.progress-green{background:#128048}
-.progress-orange{background:#e07b00}
-.progress-red{background:#c62828}
-.page-btns{display:flex;gap:8px;justify-content:center;margin-top:16px;padding:4px 0}
-.page-btn{padding:8px 18px;border-radius:10px;border:1.5px solid #cde8d6;background:#fff;color:#128048;font-weight:700;font-size:14px;cursor:pointer}
+.pagination{display:flex;justify-content:center;gap:8px;margin-top:12px;flex-wrap:wrap}
+.page-btn{padding:7px 14px;border:1.5px solid #c8e6c9;border-radius:10px;background:#fff;color:#128048;font-size:13px;font-weight:600;cursor:pointer}
 .page-btn.active{background:#128048;color:#fff;border-color:#128048}
-.summary-card{background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 1px 6px rgba(0,80,40,.08)}
-.summary-card h3{font-size:14px;font-weight:700;color:#1a2e1a;margin-bottom:12px}
-.summary-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0f4f0}
-.summary-row:last-child{border-bottom:none}
-.summary-label{font-size:13px;color:#555}
-.summary-value{font-size:13px;font-weight:700}
-.bar-row{margin-bottom:10px}
-.bar-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-size:12px}
-.bar-track{height:18px;background:#f0f4f0;border-radius:9px;overflow:hidden}
-.bar-fill{height:100%;border-radius:9px;display:flex;align-items:center;padding-left:6px;font-size:10px;font-weight:700;color:#fff;min-width:24px;transition:width .4s}
-.overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.45);align-items:flex-end}
-.overlay.open{display:flex}
-.sheet{background:#fff;border-radius:22px 22px 0 0;padding:20px 18px 36px;width:100%;max-height:82vh;overflow-y:auto;box-shadow:0 -4px 24px rgba(0,80,40,.18)}
-.sheet-handle{width:40px;height:5px;background:#ddd;border-radius:3px;margin:0 auto 18px}
-.sheet h2{font-size:18px;font-weight:700;margin-bottom:6px;color:#1a2e1a}
-.sheet-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
-.sheet-section{background:#f5fbf7;border-radius:12px;padding:12px;margin-bottom:12px}
-.sheet-section h4{font-size:12px;color:#888;margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
-.sheet-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.sheet-item .lbl{font-size:11px;color:#888;margin-bottom:2px}
-.sheet-item .val{font-size:15px;font-weight:700}
-.warn-card{background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 1px 6px rgba(0,80,40,.08);border-left:4px solid #e07b00}
-.warn-card.high{border-left-color:#c62828}
-.info-card{background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 1px 6px rgba(0,80,40,.08)}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0);z-index:500;pointer-events:none;transition:background .25s}
+.overlay.open{background:rgba(0,0,0,.45);pointer-events:all}
+.bottom-sheet{position:fixed;bottom:0;left:0;right:0;background:#fff;border-radius:24px 24px 0 0;padding:0 16px 40px;max-height:85vh;overflow-y:auto;transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);z-index:501}
+.overlay.open .bottom-sheet{transform:translateY(0)}
+.sheet-handle{width:40px;height:4px;background:#ddd;border-radius:2px;margin:12px auto 16px}
+.sheet-title{font-size:16px;font-weight:700;margin-bottom:12px;color:#0d6e40}
+.sheet-section{margin-bottom:16px}
+.sheet-section-title{font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.sheet-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f5f5f5;font-size:14px}
+.sheet-row:last-child{border-bottom:none}
+.sheet-label{color:#666}
+.sheet-val{font-weight:700}
+.summary-card{background:#fff;border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,80,40,.08)}
+.summary-card h3{font-size:14px;font-weight:700;color:#0d6e40;margin-bottom:12px}
+.summary-overview{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.overview-item{text-align:center}
+.overview-label{font-size:10px;color:#888}
+.overview-value{font-size:14px;font-weight:700;color:#0d6e40;margin-top:2px}
+.cat-bar-wrap{margin-bottom:10px}
+.cat-bar-name{font-size:12px;font-weight:600;color:#444;margin-bottom:3px;display:flex;justify-content:space-between}
+.cat-bar-track{height:10px;background:#f0f4f0;border-radius:5px;overflow:hidden}
+.cat-bar-fill{height:100%;border-radius:5px}
+.warning-card{background:#fff;border-radius:14px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,80,40,.08);padding:12px 14px;border-left:4px solid #e07b00}
+.warning-card.red{border-left-color:#c62828}
+.warning-card .w-name{font-size:13px;font-weight:700;color:#1a2e1a;margin-bottom:4px}
+.warning-card .w-rate{font-size:20px;font-weight:700}
+.warning-card .w-sub{font-size:11px;color:#888;margin-top:4px}
+.info-card{background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,80,40,.08)}
+.info-card h3{font-size:14px;font-weight:700;color:#0d6e40;margin-bottom:10px}
 .info-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #f5f5f5;font-size:13px}
 .info-row:last-child{border-bottom:none}
-.info-row .label{color:#666}
-.info-row .val{font-weight:700;color:#1a2e1a}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1.5px solid #e0ebe5;display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
-.bottom-nav .tab-btn{flex:1;padding:8px 4px 10px;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:2px;border-bottom:none;border-top:3px solid transparent}
-.bottom-nav .tab-btn.active{color:#128048;border-top-color:#128048}
-.bottom-nav .tab-btn .icon{font-size:20px}
-.charts-kpi{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
-.charts-kpi .kpi-card{background:#fff;border-radius:14px;padding:14px;box-shadow:0 1px 6px rgba(0,80,40,.08);text-align:center}
-.charts-kpi .kpi-card.full{grid-column:1/-1}
-.kpi-card .k-label{font-size:11px;color:#888;margin-bottom:4px}
-.kpi-card .k-value{font-size:19px;font-weight:700}
-.chart-block{background:#fff;border-radius:14px;padding:14px;margin-bottom:14px;box-shadow:0 1px 6px rgba(0,80,40,.08)}
-.chart-block h3{font-size:13px;font-weight:700;color:#555;margin-bottom:10px}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e8f5e9;display:flex;z-index:300;padding-bottom:env(safe-area-inset-bottom)}
+.nav-btn{flex:1;padding:10px 4px 8px;font-size:10px;font-weight:600;border:none;background:none;color:#888;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+.nav-btn.active{color:#128048}
+.nav-icon{font-size:20px;line-height:1}
+.chart-section{background:#fff;border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,80,40,.08)}
+.chart-section h3{font-size:14px;font-weight:700;color:#0d6e40;margin-bottom:12px}
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px}
+.kpi-card{background:#f0f9f4;border-radius:12px;padding:10px;text-align:center;border:1.5px solid #c8e6c9}
+.kpi-card.warn{background:#fff8e1;border-color:#ffe082}
+.kpi-card.danger{background:#ffebee;border-color:#ef9a9a}
+.kpi-label{font-size:10px;color:#666;margin-bottom:4px}
+.kpi-value{font-size:13px;font-weight:700;color:#0d6e40}
+.kpi-card.warn .kpi-value{color:#e07b00}
+.kpi-card.danger .kpi-value{color:#c62828}
 .chart-canvas-wrap{position:relative;width:100%}
 .chart-canvas-wrap canvas{width:100%!important;height:100%!important;display:block}
 </style>
 </head>
 <body>
 
-<header>
-  <h1>💰 預算管理 ｜ 彰化營運處</h1>
-  <span class="badge" id="totalBadge">— 筆</span>
-</header>
+<div class="header">
+  <div class="header-row">
+    <h1>💰 彰化營運處 預算管理</h1>
+    <span class="badge" id="totalBadge">— 筆</span>
+  </div>
+  <div class="header-sub">115 年 6 月份數據・中華電信</div>
+</div>
 
 <div class="tab-bar" id="topTabBar">
   <button class="tab-btn active" data-tab="query">🔍 預算查詢</button>
@@ -123,19 +126,19 @@ input[type=text]:focus{border-color:#128048}
 
 <div class="tab-content active" id="tab-query">
   <div class="filter-card">
-    <h3>🔍 關鍵字搜尋</h3>
-    <input type="text" id="kwInput" placeholder="搜尋明細帳代碼或會計項目名稱…">
-    <h3 style="margin-top:12px">費用分類</h3>
+    <label>關鍵字搜尋（明細帳 / 科目名稱）</label>
+    <input type="search" class="search-box" id="searchBox" placeholder="輸入關鍵字…">
+    <label style="margin-top:10px">費用分類</label>
     <div class="chips" id="catChips"></div>
-    <h3 style="margin-top:12px">預算主管單位</h3>
+    <label style="margin-top:10px">預算主管單位</label>
     <div class="chips" id="unitChips"></div>
   </div>
   <div class="active-filters" id="activeFilters"></div>
   <div class="notice">⚠️ <strong>本月餘額（累計）</strong>為 TAIS 帳務系統之<strong>累計帳務餘額</strong>，非本月預算減本月動支。</div>
   <div class="stats-grid" id="statsGrid"></div>
   <div class="result-count" id="resultCount"></div>
-  <div class="cards-list" id="cardsList"></div>
-  <div class="page-btns" id="pageBtns"></div>
+  <div id="itemList"></div>
+  <div class="pagination" id="pagination"></div>
 </div>
 
 <div class="tab-content" id="tab-summary">
@@ -148,22 +151,20 @@ input[type=text]:focus{border-color:#128048}
 
 <div class="tab-content" id="tab-info">
   <div class="info-card">
-    <div style="font-size:16px;font-weight:700;margin-bottom:14px">📋 資料來源資訊</div>
-    <div class="info-row"><span class="label">年度</span><span class="val">115 年</span></div>
-    <div class="info-row"><span class="label">月份</span><span class="val">6 月</span></div>
-    <div class="info-row"><span class="label">總筆數</span><span class="val">343 筆</span></div>
-    <div class="info-row"><span class="label">資料來源</span><span class="val">TAIS/AS400 匯出</span></div>
-    <div class="info-row"><span class="label">GitHub Pages</span><span class="val" style="font-size:11px">argus911.github.io/BudgetApp</span></div>
-    <div class="info-row"><span class="label">版本</span><span class="val">v8 (115/6)</span></div>
+    <h3>📋 資料來源資訊</h3>
+    <div class="info-row"><span class="info-label">年度</span><span style="font-weight:700">115 年</span></div>
+    <div class="info-row"><span class="info-label">月份</span><span style="font-weight:700">6 月</span></div>
+    <div class="info-row"><span class="info-label">總筆數</span><span style="font-weight:700">343 筆</span></div>
+    <div class="info-row"><span class="info-label">來源系統</span><span style="font-weight:700">TAIS / AS400</span></div>
+    <div class="info-row"><span class="info-label">App 版本</span><span style="font-weight:700">v8.0（圖表分析）</span></div>
   </div>
   <div class="info-card">
-    <div style="font-size:16px;font-weight:700;margin-bottom:14px">📱 加入 iPhone 主畫面</div>
-    <div style="font-size:13px;color:#555;line-height:1.8">
-      1. 用 Safari 開啟此頁<br>
-      2. 點下方「分享」按鈕 ⬆️<br>
-      3. 選擇「加入主畫面」<br>
-      4. 點右上角「加入」完成
-    </div>
+    <h3>📖 欄位說明</h3>
+    <div class="info-row"><span class="info-label">本月餘額（累計）</span><span style="font-weight:700;color:#1565c0">TAIS 累計帳務餘額</span></div>
+    <div class="info-row"><span class="info-label">本月動支數</span><span style="font-weight:700">本月動支增減</span></div>
+    <div class="info-row"><span class="info-label">剩餘可動支數</span><span style="font-weight:700">年度剩餘額度</span></div>
+    <div class="info-row"><span class="info-label">累計動支率</span><span style="font-weight:700">至本月累計/累計預算</span></div>
+    <div class="info-row"><span class="info-label">年度動支率</span><span style="font-weight:700">累計動支/年度預算</span></div>
   </div>
 </div>
 
@@ -172,445 +173,582 @@ input[type=text]:focus{border-color:#128048}
 </div>
 
 <div class="overlay" id="overlay">
-  <div class="sheet" id="sheet">
+  <div class="bottom-sheet" id="bottomSheet">
     <div class="sheet-handle"></div>
-    <h2 id="sheetTitle"></h2>
-    <div class="sheet-badges" id="sheetBadges"></div>
     <div id="sheetBody"></div>
   </div>
 </div>
 
 <div class="bottom-nav" id="bottomNav">
-  <button class="tab-btn active" data-tab="query"><span class="icon">🔍</span>查詢</button>
-  <button class="tab-btn" data-tab="summary"><span class="icon">📊</span>摘要</button>
-  <button class="tab-btn" data-tab="warning"><span class="icon">⚠️</span>預警</button>
-  <button class="tab-btn" data-tab="info"><span class="icon">ℹ️</span>資訊</button>
-  <button class="tab-btn" data-tab="charts"><span class="icon">📈</span>圖表</button>
+  <button class="nav-btn active" data-tab="query"><span class="nav-icon">🔍</span>查詢</button>
+  <button class="nav-btn" data-tab="summary"><span class="nav-icon">📊</span>摘要</button>
+  <button class="nav-btn" data-tab="warning"><span class="nav-icon">⚠️</span>預警</button>
+  <button class="nav-btn" data-tab="info"><span class="nav-icon">ℹ️</span>資訊</button>
+  <button class="nav-btn" data-tab="charts"><span class="nav-icon">📈</span>圖表</button>
 </div>
 
 <script>
-var RAW = [{"明細帳":"A201","會計項目":"市話接續費－市話","本月動支數":0,"本月餘額":103144,"本月預算數":50000,"至本月預算數累計":292000,"累計動支率":35.32,"本年度預算":590000,"年度動支率":17.48,"剩餘可動支數":486856,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.05"},{"明細帳":"A202","會計項目":"市話接續費－長話","本月動支數":0,"本月餘額":200849,"本月預算數":35000,"至本月預算數累計":208000,"累計動支率":96.56,"本年度預算":419000,"年度動支率":47.94,"剩餘可動支數":218151,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.05"},{"明細帳":"A207","會計項目":"市話接續費－公話","本月動支數":0,"本月餘額":369,"本月預算數":0,"至本月預算數累計":1000,"累計動支率":36.9,"本年度預算":1000,"年度動支率":36.9,"剩餘可動支數":631,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.05"},{"明細帳":"A212","會計項目":"公用電話攤分費－公話撥叫行動電話攤分費","本月動支數":0,"本月餘額":30318,"本月預算數":5000,"至本月預算數累計":30000,"累計動支率":101.06,"本年度預算":57000,"年度動支率":53.19,"剩餘可動支數":26682,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.05"},{"明細帳":"A261","會計項目":"Ｅ.１６４用戶號碼網路電話接續費－市話","本月動支數":0,"本月餘額":911,"本月預算數":0,"至本月預算數累計":1000,"累計動支率":91.1,"本年度預算":1000,"年度動支率":91.1,"剩餘可動支數":89,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.05"},{"明細帳":"A288","會計項目":"行動接續費─市話","本月動支數":0,"本月餘額":2074914,"本月預算數":399000,"至本月預算數累計":2326000,"累計動支率":89.21,"本年度預算":4622000,"年度動支率":44.89,"剩餘可動支數":2547086,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.05"},{"明細帳":"A289","會計項目":"行動接續費─ＩＮ","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":0,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.05"},{"明細帳":"R25","會計項目":"修理保養及材料費(重分類使用)","本月動支數":"","本月餘額":"","本月預算數":-758000,"至本月預算數累計":-4548000,"累計動支率":"","本年度預算":-9096000,"年度動支率":"","剩餘可動支數":"","預算主管單位":"","費用分類":"設備及折舊","分類代碼":"E.3.4"},{"明細帳":"1131","會計項目":"員工薪金－職階待遇","本月動支數":30266189,"本月餘額":187269007,"本月預算數":32232000,"至本月預算數累計":191506000,"累計動支率":97.79,"本年度預算":379233000,"年度動支率":49.38,"剩餘可動支數":191963993,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1132","會計項目":"員工薪金－職務待遇","本月動支數":3742071,"本月餘額":22358250,"本月預算數":3737000,"至本月預算數累計":22276000,"累計動支率":100.37,"本年度預算":44203000,"年度動支率":50.58,"剩餘可動支數":21844750,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"122","會計項目":"臨時職員薪金","本月動支數":0,"本月餘額":99130,"本月預算數":75000,"至本月預算數累計":449000,"累計動支率":22.08,"本年度預算":888000,"年度動支率":11.16,"剩餘可動支數":788870,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"123","會計項目":"臨時人員獎金","本月動支數":0,"本月餘額":0,"本月預算數":1000,"至本月預算數累計":4000,"累計動支率":0,"本年度預算":5000,"年度動支率":0,"剩餘可動支數":5000,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1311","會計項目":"加班誤餐費－一般加班費","本月動支數":-440414,"本月餘額":2609499,"本月預算數":584000,"至本月預算數累計":4332000,"累計動支率":60.24,"本年度預算":8663000,"年度動支率":30.12,"剩餘可動支數":6053501,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1312","會計項目":"加班誤餐費－員工不休假加班費","本月動支數":690194,"本月餘額":4362916,"本月預算數":820000,"至本月預算數累計":4889000,"累計動支率":89.24,"本年度預算":10113000,"年度動支率":43.14,"剩餘可動支數":5750084,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1313","會計項目":"加班誤餐費－員工不休假加班費－保留休假","本月動支數":0,"本月餘額":1749676,"本月預算數":342000,"至本月預算數累計":2031000,"累計動支率":86.15,"本年度預算":4427000,"年度動支率":39.52,"剩餘可動支數":2677324,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1314","會計項目":"加班誤餐費－補休未休畢加班費","本月動支數":-459805,"本月餘額":98534,"本月預算數":38000,"至本月預算數累計":361000,"累計動支率":27.29,"本年度預算":616000,"年度動支率":16,"剩餘可動支數":517466,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"142","會計項目":"主管津貼","本月動支數":0,"本月餘額":527166,"本月預算數":122000,"至本月預算數累計":720000,"累計動支率":73.22,"本年度預算":1424000,"年度動支率":37.02,"剩餘可動支數":896834,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"144","會計項目":"育嬰留職停薪津貼","本月動支數":45800,"本月餘額":229739,"本月預算數":30000,"至本月預算數累計":180000,"累計動支率":127.63,"本年度預算":358000,"年度動支率":64.17,"剩餘可動支數":128261,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"145","會計項目":"伙食津貼","本月動支數":1368610,"本月餘額":8424383,"本月預算數":1429000,"至本月預算數累計":8516000,"累計動支率":98.92,"本年度預算":17130000,"年度動支率":49.18,"剩餘可動支數":8705617,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"147","會計項目":"交通津貼","本月動支數":1140516,"本月餘額":6801485,"本月預算數":1158000,"至本月預算數累計":6891000,"累計動支率":98.7,"本年度預算":13890000,"年度動支率":48.97,"剩餘可動支數":7088515,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1481","會計項目":"出納津貼－經管銀錢津貼","本月動支數":0,"本月餘額":7020,"本月預算數":1000,"至本月預算數累計":6000,"累計動支率":117,"本年度預算":10000,"年度動支率":70.2,"剩餘可動支數":2980,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1491","會計項目":"其他津貼－兼任駕駛津貼","本月動支數":0,"本月餘額":1585184,"本月預算數":399000,"至本月預算數累計":2389000,"累計動支率":66.35,"本年度預算":4728000,"年度動支率":33.53,"剩餘可動支數":3142816,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1511","會計項目":"績效獎金－績效獎金","本月動支數":7388766,"本月餘額":45046735,"本月預算數":7890000,"至本月預算數累計":47071000,"累計動支率":95.7,"本年度預算":93412000,"年度動支率":48.22,"剩餘可動支數":48365265,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"153","會計項目":"企業化特別獎金","本月動支數":6952681,"本月餘額":42720830,"本月預算數":6652000,"至本月預算數累計":39912000,"累計動支率":107.04,"本年度預算":79818000,"年度動支率":53.52,"剩餘可動支數":37097170,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1541","會計項目":"考核獎金－考核折發獎金","本月動支數":147194,"本月餘額":883244,"本月預算數":155000,"至本月預算數累計":921000,"累計動支率":95.9,"本年度預算":1824000,"年度動支率":48.42,"剩餘可動支數":940756,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"155","會計項目":"年節獎金","本月動支數":3651277,"本月餘額":27232487,"本月預算數":4763000,"至本月預算數累計":28420000,"累計動支率":95.82,"本年度預算":56396000,"年度動支率":48.29,"剩餘可動支數":29163513,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"156","會計項目":"全勤獎金","本月動支數":0,"本月餘額":5842146,"本月預算數":1200000,"至本月預算數累計":7162000,"累計動支率":81.57,"本年度預算":14212000,"年度動支率":41.11,"剩餘可動支數":8369854,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"157","會計項目":"員工酬勞","本月動支數":4125934,"本月餘額":25350088,"本月預算數":3811000,"至本月預算數累計":22866000,"累計動支率":110.86,"本年度預算":45742000,"年度動支率":55.42,"剩餘可動支數":20391912,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1592","會計項目":"其他獎金－久任人員獎勵金","本月動支數":51036,"本月餘額":304513,"本月預算數":76000,"至本月預算數累計":449000,"累計動支率":67.82,"本年度預算":886000,"年度動支率":34.37,"剩餘可動支數":581487,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1599","會計項目":"其他獎金－其他","本月動支數":0,"本月餘額":0,"本月預算數":4000,"至本月預算數累計":22000,"累計動支率":0,"本年度預算":44000,"年度動支率":0,"剩餘可動支數":44000,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1611","會計項目":"退休金－舊制","本月動支數":1464983,"本月餘額":9081018,"本月預算數":1265000,"至本月預算數累計":7590000,"累計動支率":119.64,"本年度預算":15180000,"年度動支率":59.82,"剩餘可動支數":6098982,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1612","會計項目":"退休金－新制","本月動支數":7980,"本月餘額":6286249,"本月預算數":1206000,"至本月預算數累計":7197000,"累計動支率":87.35,"本年度預算":14277000,"年度動支率":44.03,"剩餘可動支數":7990751,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"163","會計項目":"卹償金","本月動支數":246911,"本月餘額":1463368,"本月預算數":306000,"至本月預算數累計":1822000,"累計動支率":80.32,"本年度預算":3615000,"年度動支率":40.48,"剩餘可動支數":2151632,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"165","會計項目":"確定福利計畫利息費用","本月動支數":-286235,"本月餘額":-1689989,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"18111","會計項目":"分擔員工保險費－分擔員工勞保費","本月動支數":4008,"本月餘額":9596598,"本月預算數":2036000,"至本月預算數累計":12149000,"累計動支率":78.99,"本年度預算":24108000,"年度動支率":39.81,"剩餘可動支數":14511402,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"18112","會計項目":"分擔員工保險費－分擔員工一般健保費","本月動支數":2332,"本月餘額":5953302,"本月預算數":1235000,"至本月預算數累計":7372000,"累計動支率":80.76,"本年度預算":14628000,"年度動支率":40.7,"剩餘可動支數":8674698,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1812","會計項目":"分擔員工及眷屬保險費－分擔員工眷屬一般健保費","本月動支數":1306,"本月餘額":3393165,"本月預算數":697000,"至本月預算數累計":4161000,"累計動支率":81.55,"本年度預算":8259000,"年度動支率":41.08,"剩餘可動支數":4865835,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1813","會計項目":"全民健保雇主補充保險費","本月動支數":-895402,"本月餘額":2128844,"本月預算數":562000,"至本月預算數累計":3356000,"累計動支率":63.43,"本年度預算":6655000,"年度動支率":31.99,"剩餘可動支數":4526156,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"183","會計項目":"傷病醫藥費","本月動支數":0,"本月餘額":0,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"183A","會計項目":"傷病醫藥費－健康檢查","本月動支數":0,"本月餘額":0,"本月預算數":7000,"至本月預算數累計":91000,"累計動支率":0,"本年度預算":1926000,"年度動支率":0,"剩餘可動支數":1926000,"預算主管單位":"職業安全衛生科","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"183B","會計項目":"傷病醫藥費－健康促進","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":3000,"累計動支率":0,"本年度預算":94000,"年度動支率":0,"剩餘可動支數":94000,"預算主管單位":"職業安全衛生科","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"183C","會計項目":"傷病醫藥費－諮詢","本月動支數":0,"本月餘額":0,"本月預算數":20000,"至本月預算數累計":120000,"累計動支率":0,"本年度預算":240000,"年度動支率":0,"剩餘可動支數":240000,"預算主管單位":"職業安全衛生科","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"183D","會計項目":"傷病醫藥費－其他","本月動支數":0,"本月餘額":2857,"本月預算數":0,"至本月預算數累計":240000,"累計動支率":1.19,"本年度預算":240000,"年度動支率":1.19,"剩餘可動支數":237143,"預算主管單位":"職業安全衛生科","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1851","會計項目":"提撥福利金－按營收提撥數","本月動支數":558412,"本月餘額":3599117,"本月預算數":615000,"至本月預算數累計":3671000,"累計動支率":98.04,"本年度預算":7289000,"年度動支率":49.38,"剩餘可動支數":3689883,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"186","會計項目":"體育活動費","本月動支數":0,"本月餘額":125761,"本月預算數":31000,"至本月預算數累計":186000,"累計動支率":67.61,"本年度預算":380000,"年度動支率":33.1,"剩餘可動支數":254239,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1891","會計項目":"其他福利費－退休人員慰問金","本月動支數":0,"本月餘額":970800,"本月預算數":1000,"至本月預算數累計":928000,"累計動支率":104.61,"本年度預算":1017000,"年度動支率":95.46,"剩餘可動支數":46200,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1894","會計項目":"其他福利費－休假補助費","本月動支數":8735,"本月餘額":2104292,"本月預算數":516000,"至本月預算數累計":3081000,"累計動支率":68.3,"本年度預算":6115000,"年度動支率":34.41,"剩餘可動支數":4010708,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1895","會計項目":"其他福利費－員工持股信託獎勵金","本月動支數":1071570,"本月餘額":6510941,"本月預算數":1124000,"至本月預算數累計":6707000,"累計動支率":97.08,"本年度預算":13306000,"年度動支率":48.93,"剩餘可動支數":6795059,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1896","會計項目":"其他福利費－員工子女教育補助費","本月動支數":63047,"本月餘額":378282,"本月預算數":81000,"至本月預算數累計":486000,"累計動支率":77.84,"本年度預算":961000,"年度動支率":39.36,"剩餘可動支數":582718,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"18981","會計項目":"其他福利費－留才增給金-持股信託","本月動支數":760717,"本月餘額":4589959,"本月預算數":728000,"至本月預算數累計":4343000,"累計動支率":105.69,"本年度預算":8619000,"年度動支率":53.25,"剩餘可動支數":4029041,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"18982","會計項目":"其他福利費－留才增給金-福利儲蓄","本月動支數":5438,"本月餘額":32628,"本月預算數":6000,"至本月預算數累計":36000,"累計動支率":90.63,"本年度預算":73000,"年度動支率":44.7,"剩餘可動支數":40372,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1899","會計項目":"其他福利費－其他","本月動支數":142000,"本月餘額":603000,"本月預算數":144000,"至本月預算數累計":860000,"累計動支率":70.12,"本年度預算":1704000,"年度動支率":35.39,"剩餘可動支數":1101000,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"201A1","會計項目":"行銷推廣費－CPE業務","本月動支數":0,"本月餘額":16937,"本月預算數":3000,"至本月預算數累計":31000,"累計動支率":54.64,"本年度預算":62000,"年度動支率":27.32,"剩餘可動支數":45063,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"201T1","會計項目":"行銷推廣費－OTT業務","本月動支數":0,"本月餘額":0,"本月預算數":1000,"至本月預算數累計":6000,"累計動支率":0,"本年度預算":24000,"年度動支率":0,"剩餘可動支數":24000,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"20101","會計項目":"ＭＯＤ業務－ＭＯＤ業務","本月動支數":0,"本月餘額":25777,"本月預算數":2000,"至本月預算數累計":42000,"累計動支率":61.37,"本年度預算":98000,"年度動支率":26.3,"剩餘可動支數":72223,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"20112","會計項目":"市話業務－市話電子帳單","本月動支數":0,"本月餘額":98026,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"2013G","會計項目":"行銷推廣費－行動電話業務－行動寬頻業務（不劃帳）","本月動支數":0,"本月餘額":14124,"本月預算數":5000,"至本月預算數累計":30000,"累計動支率":47.08,"本年度預算":98000,"年度動支率":14.41,"剩餘可動支數":83876,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"20130","會計項目":"行銷推廣費－行動電話業務－Disney 行動促案","本月動支數":0,"本月餘額":29967,"本月預算數":7000,"至本月預算數累計":36000,"累計動支率":83.24,"本年度預算":94000,"年度動支率":31.88,"剩餘可動支數":64033,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"20139","會計項目":"行動電話業務－行動電話業務－Netflix行動促案","本月動支數":0,"本月餘額":1254849,"本月預算數":141000,"至本月預算數累計":1034000,"累計動支率":121.36,"本年度預算":1880000,"年度動支率":66.75,"剩餘可動支數":625151,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"20153","會計項目":"電路出租業務－ＷiFi業務","本月動支數":0,"本月餘額":-72564,"本月預算數":1000,"至本月預算數累計":6000,"累計動支率":-1209.4,"本年度預算":24000,"年度動支率":-302.35,"剩餘可動支數":96564,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"20154","會計項目":"電路出租業務－ＦＴＴｘ","本月動支數":0,"本月餘額":34535,"本月預算數":5000,"至本月預算數累計":30000,"累計動支率":115.12,"本年度預算":92000,"年度動支率":37.54,"剩餘可動支數":57465,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"20181","會計項目":"行銷推廣費－數據業務－Netflix固網促案","本月動支數":0,"本月餘額":225008,"本月預算數":12000,"至本月預算數累計":219000,"累計動支率":102.74,"本年度預算":295000,"年度動支率":76.27,"剩餘可動支數":69992,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"20182","會計項目":"行銷推廣費－數據業務－Disney 固網促案","本月動支數":0,"本月餘額":5850,"本月預算數":3000,"至本月預算數累計":16000,"累計動支率":36.56,"本年度預算":42000,"年度動支率":13.93,"剩餘可動支數":36150,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"20194","會計項目":"行銷推廣費－企業形象推廣","本月動支數":"","本月餘額":"","本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":"","預算主管單位":"","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"20195","會計項目":"行銷推廣費－ESG活動","本月動支數":35927,"本月餘額":35927,"本月預算數":9000,"至本月預算數累計":54000,"累計動支率":66.53,"本年度預算":111000,"年度動支率":32.37,"剩餘可動支數":75073,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"20199","會計項目":"行銷推廣費－其他－其他","本月動支數":0,"本月餘額":66225,"本月預算數":4000,"至本月預算數累計":24000,"累計動支率":275.94,"本年度預算":65000,"年度動支率":101.88,"剩餘可動支數":-1225,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"2021","會計項目":"客製化產品行銷推廣費－市話網路","本月動支數":0,"本月餘額":1598,"本月預算數":0,"至本月預算數累計":2000,"累計動支率":79.9,"本年度預算":2000,"年度動支率":79.9,"剩餘可動支數":402,"預算主管單位":"企業客戶科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"2029","會計項目":"客製化產品行銷推廣費－其他","本月動支數":0,"本月餘額":90000,"本月預算數":0,"至本月預算數累計":25000,"累計動支率":360,"本年度預算":135000,"年度動支率":66.67,"剩餘可動支數":45000,"預算主管單位":"企業客戶科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"2031A","會計項目":"行銷業務推廣激勵獎金－銷售商品","本月動支數":820,"本月餘額":2985,"本月預算數":2000,"至本月預算數累計":2000,"累計動支率":149.25,"本年度預算":4000,"年度動支率":74.63,"剩餘可動支數":1015,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"20319","會計項目":"行銷業務推廣激勵獎金－其他","本月動支數":7140,"本月餘額":20480,"本月預算數":17000,"至本月預算數累計":102000,"累計動支率":20.08,"本年度預算":200000,"年度動支率":10.24,"剩餘可動支數":179520,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"2041B","會計項目":"行銷業務推廣代理佣金－行動寬頻5G","本月動支數":0,"本月餘額":17312,"本月預算數":6000,"至本月預算數累計":36000,"累計動支率":48.09,"本年度預算":71000,"年度動支率":24.38,"剩餘可動支數":53688,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"2041C","會計項目":"行銷業務推廣代理佣金－行動寬頻","本月動支數":0,"本月餘額":8508,"本月預算數":6000,"至本月預算數累計":36000,"累計動支率":23.63,"本年度預算":70000,"年度動支率":12.15,"剩餘可動支數":61492,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"2041E","會計項目":"行銷業務推廣代理佣金－WiFi商務","本月動支數":0,"本月餘額":61524,"本月預算數":31000,"至本月預算數累計":77000,"累計動支率":79.9,"本年度預算":107000,"年度動支率":57.5,"剩餘可動支數":45476,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"2041F","會計項目":"行銷業務推廣代理佣金－ＦＴＴｘ","本月動支數":0,"本月餘額":268465,"本月預算數":7000,"至本月預算數累計":167000,"累計動支率":160.76,"本年度預算":223000,"年度動支率":120.39,"剩餘可動支數":-45465,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"2041K","會計項目":"行銷業務推廣代理佣金─其他","本月動支數":-13096,"本月餘額":680560,"本月預算數":24000,"至本月預算數累計":506000,"累計動支率":134.5,"本年度預算":535000,"年度動支率":127.21,"剩餘可動支數":-145560,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"2041P","會計項目":"行銷業務推廣代理佣金─承攬門市業務","本月動支數":-77802,"本月餘額":9876563,"本月預算數":216000,"至本月預算數累計":7940000,"累計動支率":124.39,"本年度預算":8964000,"年度動支率":110.18,"剩餘可動支數":-912563,"預算主管單位":"行銷科","費用分類":"業務外包","分類代碼":"B.3"},{"明細帳":"2041T","會計項目":"行銷業務推廣代理佣金－OTT","本月動支數":0,"本月餘額":0,"本月預算數":2000,"至本月預算數累計":12000,"累計動支率":0,"本年度預算":22000,"年度動支率":0,"剩餘可動支數":22000,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"2041W","會計項目":"行銷業務推廣代理佣金─WiFi","本月動支數":0,"本月餘額":0,"本月預算數":2000,"至本月預算數累計":12000,"累計動支率":0,"本年度預算":22000,"年度動支率":0,"剩餘可動支數":22000,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"20411","會計項目":"行銷業務推廣代理佣金－ＭＯＤ","本月動支數":0,"本月餘額":35870,"本月預算數":10000,"至本月預算數累計":86000,"累計動支率":41.71,"本年度預算":151000,"年度動支率":23.75,"剩餘可動支數":115130,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"20412","會計項目":"行銷業務推廣代理佣金－市話","本月動支數":0,"本月餘額":28,"本月預算數":2000,"至本月預算數累計":12000,"累計動支率":0.23,"本年度預算":25000,"年度動支率":0.11,"剩餘可動支數":24972,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"20415","會計項目":"行銷業務推廣代理佣金－網際網路及加值","本月動支數":0,"本月餘額":118845,"本月預算數":8000,"至本月預算數累計":116000,"累計動支率":102.45,"本年度預算":159000,"年度動支率":74.75,"剩餘可動支數":40155,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"20417","會計項目":"行銷業務推廣代理佣金－公話","本月動支數":0,"本月餘額":59301,"本月預算數":4000,"至本月預算數累計":25000,"累計動支率":237.2,"本年度預算":53000,"年度動支率":111.89,"剩餘可動支數":-6301,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"20418","會計項目":"行銷業務推廣代理佣金－銷售商品","本月動支數":57195,"本月餘額":366798,"本月預算數":8000,"至本月預算數累計":156000,"累計動支率":235.13,"本年度預算":215000,"年度動支率":170.6,"剩餘可動支數":-151798,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"2042F","會計項目":"客製化產品業務推廣代理佣金－ＦＴＴｘ","本月動支數":0,"本月餘額":-9,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":42000,"年度動支率":-0.02,"剩餘可動支數":42009,"預算主管單位":"企業客戶科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"205A1","會計項目":"點數行銷推廣費－CPE業務","本月動支數":-92701,"本月餘額":102573,"本月預算數":0,"至本月預算數累計":192000,"累計動支率":53.42,"本年度預算":192000,"年度動支率":53.42,"剩餘可動支數":89427,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"20501","會計項目":"點數行銷推廣費─ＭＯＤ業務－ＭＯＤ業務","本月動支數":0,"本月餘額":-1,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"20537","會計項目":"點數行銷推廣費─行動電話業務－銷售商品","本月動支數":0,"本月餘額":15,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"2059","會計項目":"點數行銷推廣費－其他","本月動支數":0,"本月餘額":-1,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"2072C","會計項目":"取得合約增額成本攤銷-客戶合約佣金-行動寬頻（行銷）","本月動支數":0,"本月餘額":885834,"本月預算數":0,"至本月預算數累計":469000,"累計動支率":188.88,"本年度預算":469000,"年度動支率":188.88,"剩餘可動支數":-416834,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"2072D","會計項目":"取得合約增額成本攤銷-客戶合約佣金- MOD","本月動支數":0,"本月餘額":387179,"本月預算數":0,"至本月預算數累計":229000,"累計動支率":169.07,"本年度預算":229000,"年度動支率":169.07,"剩餘可動支數":-158179,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"2072F","會計項目":"取得合約增額成本攤銷-客戶合約佣金-電路出租","本月動支數":"","本月餘額":"","本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":"","預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"2072G","會計項目":"取得合約增額成本攤銷-客戶合約佣金-網際網路及加值","本月動支數":"","本月餘額":"","本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":"","預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"2072I","會計項目":"取得合約增額成本攤銷-客戶合約佣金- FTTX","本月動支數":0,"本月餘額":2562792,"本月預算數":0,"至本月預算數累計":1476000,"累計動支率":173.63,"本年度預算":1476000,"年度動支率":173.63,"剩餘可動支數":-1086792,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"2072J","會計項目":"取得合約增額成本攤銷-客戶合約佣金- WIFI","本月動支數":"","本月餘額":"","本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":"","預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"2072T","會計項目":"取得合約增額成本攤銷-客戶合約佣金-行動寬頻5G（行銷）","本月動支數":0,"本月餘額":617019,"本月預算數":0,"至本月預算數累計":169000,"累計動支率":365.1,"本年度預算":169000,"年度動支率":365.1,"剩餘可動支數":-448019,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"2111","會計項目":"動力費－契約電費","本月動支數":0,"本月餘額":1789051,"本月預算數":411000,"至本月預算數累計":2312000,"累計動支率":77.38,"本年度預算":5614000,"年度動支率":31.87,"剩餘可動支數":3824949,"預算主管單位":"網路維運中心","費用分類":"設備及折舊","分類代碼":"E.4"},{"明細帳":"2112","會計項目":"動力費－流動電費","本月動支數":11291,"本月餘額":20117375,"本月預算數":3598000,"至本月預算數累計":23810000,"累計動支率":84.49,"本年度預算":54964000,"年度動支率":36.6,"剩餘可動支數":34846625,"預算主管單位":"網路維運中心","費用分類":"設備及折舊","分類代碼":"E.4"},{"明細帳":"2119","會計項目":"動力費－其他","本月動支數":0,"本月餘額":1964,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"網路維運中心","費用分類":"設備及折舊","分類代碼":"E.4"},{"明細帳":"2121","會計項目":"工作場所電費－基本電費","本月動支數":0,"本月餘額":359765,"本月預算數":91000,"至本月預算數累計":495000,"累計動支率":72.68,"本年度預算":1104000,"年度動支率":32.59,"剩餘可動支數":744235,"預算主管單位":"行政管理科","費用分類":"設備及折舊","分類代碼":"E.4"},{"明細帳":"2122","會計項目":"工作場所電費－流動電費","本月動支數":-224311,"本月餘額":1598822,"本月預算數":524000,"至本月預算數累計":2644000,"累計動支率":60.47,"本年度預算":5822000,"年度動支率":27.46,"剩餘可動支數":4223178,"預算主管單位":"行政管理科","費用分類":"設備及折舊","分類代碼":"E.4"},{"明細帳":"2129","會計項目":"工作場所電費－其他","本月動支數":0,"本月餘額":121,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"行政管理科","費用分類":"設備及折舊","分類代碼":"E.4"},{"明細帳":"2141","會計項目":"工作場所水費－基本水費","本月動支數":0,"本月餘額":36648,"本月預算數":6000,"至本月預算數累計":40000,"累計動支率":91.62,"本年度預算":80000,"年度動支率":45.81,"剩餘可動支數":43352,"預算主管單位":"行政管理科","費用分類":"設備及折舊","分類代碼":"E.4"},{"明細帳":"2142","會計項目":"工作場所水費－流動水費","本月動支數":-3336,"本月餘額":116287,"本月預算數":13000,"至本月預算數累計":138000,"累計動支率":84.27,"本年度預算":320000,"年度動支率":36.34,"剩餘可動支數":203713,"預算主管單位":"行政管理科","費用分類":"設備及折舊","分類代碼":"E.4"},{"明細帳":"2149","會計項目":"工作場所水費－其他","本月動支數":0,"本月餘額":50391,"本月預算數":7000,"至本月預算數累計":59000,"累計動支率":85.41,"本年度預算":136000,"年度動支率":37.05,"剩餘可動支數":85609,"預算主管單位":"行政管理科","費用分類":"設備及折舊","分類代碼":"E.4"},{"明細帳":"2211","會計項目":"郵費－一般公務用郵費","本月動支數":15987,"本月餘額":89182,"本月預算數":20000,"至本月預算數累計":117000,"累計動支率":76.22,"本年度預算":233000,"年度動支率":38.28,"剩餘可動支數":143818,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"2213","會計項目":"郵費－行銷業務用郵費","本月動支數":6308,"本月餘額":29765,"本月預算數":8000,"至本月預算數累計":51000,"累計動支率":58.36,"本年度預算":98000,"年度動支率":30.37,"剩餘可動支數":68235,"預算主管單位":"行銷科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"2219","會計項目":"郵費－其他","本月動支數":0,"本月餘額":84,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":-84,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"2221","會計項目":"電話費－公務電話費","本月動支數":0,"本月餘額":0,"本月預算數":3000,"至本月預算數累計":14000,"累計動支率":0,"本年度預算":32000,"年度動支率":0,"剩餘可動支數":32000,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"2311","會計項目":"臺澎金馬地區旅費－員工公務臺澎金馬地區旅費","本月動支數":70321,"本月餘額":417853,"本月預算數":110000,"至本月預算數累計":620000,"累計動支率":67.4,"本年度預算":1411000,"年度動支率":29.61,"剩餘可動支數":993147,"預算主管單位":"人發駐點","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"2312","會計項目":"臺澎金馬地區旅費－工會臺澎金馬地區旅費","本月動支數":0,"本月餘額":34823,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"人發駐點","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"2313","會計項目":"臺澎金馬地區旅費－職工福利會臺澎金馬地區旅費","本月動支數":0,"本月餘額":0,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"人發駐點","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"2342","會計項目":"專力費－公文遞送費","本月動支數":0,"本月餘額":203570,"本月預算數":63000,"至本月預算數累計":371000,"累計動支率":54.87,"本年度預算":745000,"年度動支率":27.32,"剩餘可動支數":541430,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"2351","會計項目":"一般物品運費","本月動支數":10476,"本月餘額":16476,"本月預算數":7000,"至本月預算數累計":38000,"累計動支率":43.36,"本年度預算":77000,"年度動支率":21.4,"剩餘可動支數":60524,"預算主管單位":"供應科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"2412","會計項目":"印刷及裝訂費－法令帳冊表報印刷費","本月動支數":0,"本月餘額":45780,"本月預算數":19000,"至本月預算數累計":104000,"累計動支率":44.02,"本年度預算":290000,"年度動支率":15.79,"剩餘可動支數":244220,"預算主管單位":"供應科","費用分類":"管銷費用","分類代碼":"F.3.2"},{"明細帳":"2414","會計項目":"印刷及裝訂費－複製費","本月動支數":6857,"本月餘額":89234,"本月預算數":16000,"至本月預算數累計":108000,"累計動支率":82.62,"本年度預算":215000,"年度動支率":41.5,"剩餘可動支數":125766,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.2"},{"明細帳":"251","會計項目":"土地改良物維護費","本月動支數":5655,"本月餘額":240510,"本月預算數":55000,"至本月預算數累計":330000,"累計動支率":72.88,"本年度預算":686000,"年度動支率":35.06,"剩餘可動支數":445490,"預算主管單位":"行政管理科","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"25211","會計項目":"一般房屋修護費－修繕費","本月動支數":496356,"本月餘額":4378091,"本月預算數":1468000,"至本月預算數累計":7396000,"累計動支率":59.2,"本年度預算":14758000,"年度動支率":29.67,"剩餘可動支數":10379909,"預算主管單位":"行政管理科","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"25212","會計項目":"一般房屋修護費－清潔費","本月動支數":0,"本月餘額":1544206,"本月預算數":326000,"至本月預算數累計":1956000,"累計動支率":78.95,"本年度預算":3918000,"年度動支率":39.41,"剩餘可動支數":2373794,"預算主管單位":"行政管理科","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"253","會計項目":"資訊設備修護費","本月動支數":5751,"本月餘額":66988,"本月預算數":56000,"至本月預算數累計":336000,"累計動支率":19.94,"本年度預算":662000,"年度動支率":10.12,"剩餘可動支數":595012,"預算主管單位":"資通科","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"2541A","會計項目":"電信線路設備修護費－ＡＤＳＬ移機發包費","本月動支數":0,"本月餘額":170767,"本月預算數":35000,"至本月預算數累計":206000,"累計動支率":82.9,"本年度預算":430000,"年度動支率":39.71,"剩餘可動支數":259233,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"2541B","會計項目":"電信線路設備修護費－ＡＤＳＬ裝機發包費","本月動支數":0,"本月餘額":278665,"本月預算數":306000,"至本月預算數累計":1797000,"累計動支率":15.51,"本年度預算":3721000,"年度動支率":7.49,"剩餘可動支數":3442335,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"2541E","會計項目":"電信線路設備修護費－圖資維護費","本月動支數":0,"本月餘額":2054469,"本月預算數":450000,"至本月預算數累計":2700000,"累計動支率":76.09,"本年度預算":5400000,"年度動支率":38.05,"剩餘可動支數":3345531,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"2541F","會計項目":"電信線路設備修護費－ＦＴＴＸ移機發包費","本月動支數":0,"本月餘額":1489074,"本月預算數":307000,"至本月預算數累計":1805000,"累計動支率":82.5,"本年度預算":3740000,"年度動支率":39.81,"剩餘可動支數":2250926,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"2541G","會計項目":"電信線路設備修護費－ＦＴＴＸ裝機發包費","本月動支數":0,"本月餘額":10384141,"本月預算數":2153000,"至本月預算數累計":12650000,"累計動支率":82.09,"本年度預算":26199000,"年度動支率":39.64,"剩餘可動支數":15814859,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"2541K","會計項目":"電信線路設備修護費－ＭＯＤ移機發包費","本月動支數":0,"本月餘額":333531,"本月預算數":75000,"至本月預算數累計":440000,"累計動支率":75.8,"本年度預算":909000,"年度動支率":36.69,"剩餘可動支數":575469,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"2541L","會計項目":"電信線路設備修護費－ＭＯＤ裝機發包費","本月動支數":0,"本月餘額":1163684,"本月預算數":272000,"至本月預算數累計":1596000,"累計動支率":72.91,"本年度預算":3306000,"年度動支率":35.2,"剩餘可動支數":2142316,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"2541P","會計項目":"電信線路設備修護費－客戶端設備及其附屬設備查修交付承攬費","本月動支數":0,"本月餘額":32725189,"本月預算數":6682000,"至本月預算數累計":40049000,"累計動支率":81.71,"本年度預算":80210000,"年度動支率":40.8,"剩餘可動支數":47484811,"預算主管單位":"第一客戶網路中心","費用分類":"業務外包","分類代碼":"B.1"},{"明細帳":"2541Q","會計項目":"電信線路設備修護費－管道維護工程發包費","本月動支數":28547,"本月餘額":8494806,"本月預算數":1721000,"至本月預算數累計":7255000,"累計動支率":117.09,"本年度預算":18298000,"年度動支率":46.42,"剩餘可動支數":9803194,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"2541T","會計項目":"電信線路設備修護費－測量台工作交付承攬費","本月動支數":0,"本月餘額":4040216,"本月預算數":938000,"至本月預算數累計":5077000,"累計動支率":79.58,"本年度預算":10705000,"年度動支率":37.74,"剩餘可動支數":6664784,"預算主管單位":"第一客戶網路中心","費用分類":"業務外包","分類代碼":"B.1"},{"明細帳":"25411","會計項目":"電信線路設備修護費－纜線維護工程發包費","本月動支數":162238,"本月餘額":7425789,"本月預算數":2091000,"至本月預算數累計":12217000,"累計動支率":60.78,"本年度預算":24604000,"年度動支率":30.18,"剩餘可動支數":17178211,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"25412","會計項目":"電信線路設備修護費－纜線維護食宿費","本月動支數":239125,"本月餘額":1288786,"本月預算數":272000,"至本月預算數累計":1411000,"累計動支率":91.34,"本年度預算":3131000,"年度動支率":41.16,"剩餘可動支數":1842214,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"25413","會計項目":"電信線路設備修護費－運屯費","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":3000,"累計動支率":0,"本年度預算":6000,"年度動支率":0,"剩餘可動支數":6000,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"25414","會計項目":"電信線路設備修護費－移機發包費","本月動支數":0,"本月餘額":971957,"本月預算數":284000,"至本月預算數累計":1667000,"累計動支率":58.31,"本年度預算":3450000,"年度動支率":28.17,"剩餘可動支數":2478043,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"25415","會計項目":"電信線路設備修護費－裝機發包費","本月動支數":0,"本月餘額":662170,"本月預算數":181000,"至本月預算數累計":1063000,"累計動支率":62.29,"本年度預算":2200000,"年度動支率":30.1,"剩餘可動支數":1537830,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"25418","會計項目":"電信線路設備修護費－線路人員服裝洗燙費","本月動支數":0,"本月餘額":148887,"本月預算數":38000,"至本月預算數累計":213000,"累計動支率":69.9,"本年度預算":493000,"年度動支率":30.2,"剩餘可動支數":344113,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"25419","會計項目":"電信線路設備修護費－纜線－其他","本月動支數":69239,"本月餘額":1000971,"本月預算數":207000,"至本月預算數累計":1194000,"累計動支率":83.83,"本年度預算":2311000,"年度動支率":43.31,"剩餘可動支數":1310029,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"25422","會計項目":"電信機械設備修護費－維護機械食宿費","本月動支數":70563,"本月餘額":463416,"本月預算數":79000,"至本月預算數累計":475000,"累計動支率":97.56,"本年度預算":956000,"年度動支率":48.47,"剩餘可動支數":492584,"預算主管單位":"網路維運中心","費用分類":"設備及折舊","分類代碼":"E.3.2"},{"明細帳":"25423","會計項目":"電信機械設備修護費－運屯費","本月動支數":0,"本月餘額":0,"本月預算數":10000,"至本月預算數累計":60000,"累計動支率":0,"本年度預算":120000,"年度動支率":0,"剩餘可動支數":120000,"預算主管單位":"網路維運中心","費用分類":"設備及折舊","分類代碼":"E.3.2"},{"明細帳":"25424","會計項目":"電信機械設備修護費－電信機具維護費","本月動支數":33739,"本月餘額":1201267,"本月預算數":425000,"至本月預算數累計":2550000,"累計動支率":47.11,"本年度預算":5100000,"年度動支率":23.55,"剩餘可動支數":3898733,"預算主管單位":"網路維運中心","費用分類":"設備及折舊","分類代碼":"E.3.2"},{"明細帳":"25425","會計項目":"電信機械設備修護費－公務用交換設備維護費","本月動支數":45402,"本月餘額":5229252,"本月預算數":990000,"至本月預算數累計":5940000,"累計動支率":88.03,"本年度預算":11880000,"年度動支率":44.02,"剩餘可動支數":6650748,"預算主管單位":"網路維運中心","費用分類":"設備及折舊","分類代碼":"E.3.2"},{"明細帳":"25426","會計項目":"電信機械設備修護費－機房人員服裝洗燙費","本月動支數":0,"本月餘額":4720,"本月預算數":3000,"至本月預算數累計":18000,"累計動支率":26.22,"本年度預算":36000,"年度動支率":13.11,"剩餘可動支數":31280,"預算主管單位":"網路維運中心","費用分類":"設備及折舊","分類代碼":"E.3.2"},{"明細帳":"25427","會計項目":"電信機械設備修護費－數據設備維護費","本月動支數":119381,"本月餘額":3290825,"本月預算數":846000,"至本月預算數累計":5076000,"累計動支率":64.83,"本年度預算":10152000,"年度動支率":32.42,"剩餘可動支數":6861175,"預算主管單位":"網路維運中心","費用分類":"設備及折舊","分類代碼":"E.3.2"},{"明細帳":"25428","會計項目":"電信機械設備修護費－客戶端交換設備維護費","本月動支數":0,"本月餘額":19048,"本月預算數":26000,"至本月預算數累計":105000,"累計動支率":18.14,"本年度預算":227000,"年度動支率":8.39,"剩餘可動支數":207952,"預算主管單位":"資通科","費用分類":"設備及折舊","分類代碼":"E.3.2"},{"明細帳":"25429","會計項目":"電信機械設備修護費－其他","本月動支數":398,"本月餘額":191953,"本月預算數":130000,"至本月預算數累計":750000,"累計動支率":25.59,"本年度預算":1480000,"年度動支率":12.97,"剩餘可動支數":1288047,"預算主管單位":"網路維運中心","費用分類":"設備及折舊","分類代碼":"E.3.2"},{"明細帳":"25471","會計項目":"公用電話維護費－公話維護食宿費","本月動支數":12710,"本月餘額":59906,"本月預算數":17000,"至本月預算數累計":104000,"累計動支率":57.6,"本年度預算":210000,"年度動支率":28.53,"剩餘可動支數":150094,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"25472","會計項目":"公用電話維護費－公話裝移機工什費","本月動支數":0,"本月餘額":0,"本月預算數":1000,"至本月預算數累計":7000,"累計動支率":0,"本年度預算":11000,"年度動支率":0,"剩餘可動支數":11000,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"25473","會計項目":"公用電話維護費－數幣機維護等費","本月動支數":0,"本月餘額":4600,"本月預算數":1000,"至本月預算數累計":5000,"累計動支率":92,"本年度預算":10000,"年度動支率":46,"剩餘可動支數":5400,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"25474","會計項目":"公用電話維護費－公用電話機及附屬設備修護費","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":250000,"年度動支率":0,"剩餘可動支數":250000,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"25476","會計項目":"公用電話維護費－公話用電費","本月動支數":0,"本月餘額":2004,"本月預算數":1000,"至本月預算數累計":2000,"累計動支率":100.2,"本年度預算":4000,"年度動支率":50.1,"剩餘可動支數":1996,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.4"},{"明細帳":"25477","會計項目":"公用電話維護費－公話人員服裝洗燙費","本月動支數":0,"本月餘額":4115,"本月預算數":2000,"至本月預算數累計":8000,"累計動支率":51.44,"本年度預算":17000,"年度動支率":24.21,"剩餘可動支數":12885,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"25479","會計項目":"公用電話維護費－其他","本月動支數":0,"本月餘額":6000,"本月預算數":1000,"至本月預算數累計":5000,"累計動支率":120,"本年度預算":10000,"年度動支率":60,"剩餘可動支數":4000,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"255","會計項目":"運輸設備修護費","本月動支數":167973,"本月餘額":902380,"本月預算數":181000,"至本月預算數累計":1030000,"累計動支率":87.61,"本年度預算":2101000,"年度動支率":42.95,"剩餘可動支數":1198620,"預算主管單位":"供應科","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"2561","會計項目":"其他設備修護費－事務","本月動支數":10200,"本月餘額":19629,"本月預算數":27000,"至本月預算數累計":161000,"累計動支率":12.19,"本年度預算":323000,"年度動支率":6.08,"剩餘可動支數":303371,"預算主管單位":"行政管理科","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"2562","會計項目":"其他設備修護費－維運機具","本月動支數":0,"本月餘額":58740,"本月預算數":21000,"至本月預算數累計":174000,"累計動支率":33.76,"本年度預算":367000,"年度動支率":16.01,"剩餘可動支數":308260,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"2592","會計項目":"保固及售後服務費用－採購","本月動支數":0,"本月餘額":0,"本月預算數":7000,"至本月預算數累計":42000,"累計動支率":0,"本年度預算":84000,"年度動支率":0,"剩餘可動支數":84000,"預算主管單位":"供應科","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"2621","會計項目":"一般房屋保險費－一般房屋保險費","本月動支數":0,"本月餘額":13029,"本月預算數":6000,"至本月預算數累計":36000,"累計動支率":36.19,"本年度預算":72000,"年度動支率":18.1,"剩餘可動支數":58971,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"264","會計項目":"電信設備保險費","本月動支數":0,"本月餘額":5299,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":14000,"年度動支率":37.85,"剩餘可動支數":8701,"預算主管單位":"網路維運中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"265","會計項目":"運輸設備保險費","本月動支數":350155,"本月餘額":371965,"本月預算數":120000,"至本月預算數累計":566000,"累計動支率":65.72,"本年度預算":1140000,"年度動支率":32.63,"剩餘可動支數":768035,"預算主管單位":"供應科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"2672","會計項目":"現金及貨物保險費－銀錢竊盜保險費","本月動支數":0,"本月餘額":1557,"本月預算數":0,"至本月預算數累計":2000,"累計動支率":77.85,"本年度預算":2000,"年度動支率":77.85,"剩餘可動支數":443,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"268","會計項目":"責任保險費","本月動支數":4300,"本月餘額":9850,"本月預算數":5000,"至本月預算數累計":10000,"累計動支率":98.5,"本年度預算":20000,"年度動支率":49.25,"剩餘可動支數":10150,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"271","會計項目":"棧儲費","本月動支數":0,"本月餘額":1200,"本月預算數":3000,"至本月預算數累計":18000,"累計動支率":6.67,"本年度預算":40000,"年度動支率":3,"剩餘可動支數":38800,"預算主管單位":"供應科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"273","會計項目":"公證費","本月動支數":0,"本月餘額":18700,"本月預算數":0,"至本月預算數累計":30000,"累計動支率":62.33,"本年度預算":48000,"年度動支率":38.96,"剩餘可動支數":29300,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"2761","會計項目":"佣金、匯費及手續費－代辦電信業務服務費","本月動支數":0,"本月餘額":40171,"本月預算數":9000,"至本月預算數累計":53000,"累計動支率":75.79,"本年度預算":113000,"年度動支率":35.55,"剩餘可動支數":72829,"預算主管單位":"服務中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"2763","會計項目":"佣金、匯費及手續費－代收電信資費手續費","本月動支數":0,"本月餘額":9321477,"本月預算數":1853000,"至本月預算數累計":11380000,"累計動支率":81.91,"本年度預算":22781000,"年度動支率":40.92,"剩餘可動支數":13459523,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.08"},{"明細帳":"2765","會計項目":"佣金、匯費及手續費－代管公話服務費","本月動支數":0,"本月餘額":62247,"本月預算數":13000,"至本月預算數累計":78000,"累計動支率":79.8,"本年度預算":156000,"年度動支率":39.9,"剩餘可動支數":93753,"預算主管單位":"第一客戶網路中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"2769","會計項目":"佣金、匯費及手續費－匯費及手續費","本月動支數":1005,"本月餘額":276777,"本月預算數":83000,"至本月預算數累計":509000,"累計動支率":54.38,"本年度預算":1044000,"年度動支率":26.51,"剩餘可動支數":767223,"預算主管單位":"行政管理科","費用分類":"業務成本","分類代碼":"C.09"},{"明細帳":"28032","會計項目":"委外製播費－委外製播費","本月動支數":0,"本月餘額":16620,"本月預算數":4000,"至本月預算數累計":24000,"累計動支率":69.25,"本年度預算":44000,"年度動支率":37.77,"剩餘可動支數":27380,"預算主管單位":"規劃設計科","費用分類":"管銷費用","分類代碼":"F.1.7"},{"明細帳":"2807A","會計項目":"委外費－客服業務","本月動支數":0,"本月餘額":26932032,"本月預算數":5913000,"至本月預算數累計":34462000,"累計動支率":78.15,"本年度預算":59035000,"年度動支率":45.62,"剩餘可動支數":32102968,"預算主管單位":"服務中心","費用分類":"業務外包","分類代碼":"B.2"},{"明細帳":"2821","會計項目":"法律事務費－律師服務費","本月動支數":0,"本月餘額":0,"本月預算數":20000,"至本月預算數累計":80000,"累計動支率":0,"本年度預算":249000,"年度動支率":0,"剩餘可動支數":249000,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.1.5"},{"明細帳":"2822","會計項目":"法律事務費－訴訟行政費","本月動支數":74990,"本月餘額":368901,"本月預算數":100000,"至本月預算數累計":520000,"累計動支率":70.94,"本年度預算":1040000,"年度動支率":35.47,"剩餘可動支數":671099,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.1.5"},{"明細帳":"28301","會計項目":"工程及管理諮詢服務費-非專標案","本月動支數":0,"本月餘額":28000,"本月預算數":8000,"至本月預算數累計":142000,"累計動支率":19.72,"本年度預算":352000,"年度動支率":7.95,"剩餘可動支數":324000,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.1.5"},{"明細帳":"2841","會計項目":"講課鐘點及稿費－講課鐘點費","本月動支數":4800,"本月餘額":4800,"本月預算數":0,"至本月預算數累計":12000,"累計動支率":40,"本年度預算":25000,"年度動支率":19.2,"剩餘可動支數":20200,"預算主管單位":"人發駐點","費用分類":"管銷費用","分類代碼":"F.1.7"},{"明細帳":"2853","會計項目":"委託調查研究費－顧問及專家報酬","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":30000,"累計動支率":0,"本年度預算":60000,"年度動支率":0,"剩餘可動支數":60000,"預算主管單位":"規劃設計科","費用分類":"管銷費用","分類代碼":"F.1.4"},{"明細帳":"286","會計項目":"委託檢驗試驗費","本月動支數":0,"本月餘額":20572,"本月預算數":4000,"至本月預算數累計":29000,"累計動支率":70.94,"本年度預算":68000,"年度動支率":30.25,"剩餘可動支數":47428,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.1.7"},{"明細帳":"28711","會計項目":"委託國內考選訓練費－勞教經費","本月動支數":0,"本月餘額":0,"本月預算數":4000,"至本月預算數累計":16000,"累計動支率":0,"本年度預算":38000,"年度動支率":0,"剩餘可動支數":38000,"預算主管單位":"人發駐點","費用分類":"管銷費用","分類代碼":"F.1.7"},{"明細帳":"28712","會計項目":"委託國內考選訓練費－就學進修費","本月動支數":0,"本月餘額":95658,"本月預算數":0,"至本月預算數累計":45000,"累計動支率":212.57,"本年度預算":105000,"年度動支率":91.1,"剩餘可動支數":9342,"預算主管單位":"人發駐點","費用分類":"管銷費用","分類代碼":"F.1.7"},{"明細帳":"28713","會計項目":"委託國內考選訓練費－訓練班費用","本月動支數":0,"本月餘額":2742,"本月預算數":14000,"至本月預算數累計":46000,"累計動支率":5.96,"本年度預算":106000,"年度動支率":2.59,"剩餘可動支數":103258,"預算主管單位":"人發駐點","費用分類":"管銷費用","分類代碼":"F.1.7"},{"明細帳":"28719","會計項目":"委託國內考選訓練費－其他","本月動支數":0,"本月餘額":41766,"本月預算數":4000,"至本月預算數累計":53000,"累計動支率":78.8,"本年度預算":90000,"年度動支率":46.41,"剩餘可動支數":48234,"預算主管單位":"人發駐點","費用分類":"管銷費用","分類代碼":"F.1.7"},{"明細帳":"28821","會計項目":"電腦軟體服務費－價購軟體費－自用","本月動支數":7293,"本月餘額":43758,"本月預算數":8000,"至本月預算數累計":48000,"累計動支率":91.16,"本年度預算":98000,"年度動支率":44.65,"剩餘可動支數":54242,"預算主管單位":"資通科","費用分類":"管銷費用","分類代碼":"F.1.3"},{"明細帳":"2883","會計項目":"電腦軟體服務費－軟體使用費","本月動支數":4281,"本月餘額":25686,"本月預算數":6000,"至本月預算數累計":36000,"累計動支率":71.35,"本年度預算":73000,"年度動支率":35.19,"剩餘可動支數":47314,"預算主管單位":"資通科","費用分類":"管銷費用","分類代碼":"F.1.3"},{"明細帳":"2891","會計項目":"保全費用－駐衛保全費","本月動支數":-2048,"本月餘額":2401867,"本月預算數":492000,"至本月預算數累計":2964000,"累計動支率":81.03,"本年度預算":5885000,"年度動支率":40.81,"剩餘可動支數":3483133,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.1.6"},{"明細帳":"2892","會計項目":"保全費用－機械保全費","本月動支數":0,"本月餘額":426132,"本月預算數":129000,"至本月預算數累計":770000,"累計動支率":55.34,"本年度預算":1544000,"年度動支率":27.6,"剩餘可動支數":1117868,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.1.6"},{"明細帳":"291","會計項目":"公共關係費－一般","本月動支數":23750,"本月餘額":96098,"本月預算數":38000,"至本月預算數累計":228000,"累計動支率":42.15,"本年度預算":466000,"年度動支率":20.62,"剩餘可動支數":369902,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"2922","會計項目":"公共關係費－企客","本月動支數":0,"本月餘額":91761,"本月預算數":8000,"至本月預算數累計":153000,"累計動支率":59.97,"本年度預算":350000,"年度動支率":26.22,"剩餘可動支數":258239,"預算主管單位":"企業客戶科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"312","會計項目":"設備維運備品費","本月動支數":0,"本月餘額":33697710.16,"本月預算數":6118000,"至本月預算數累計":36238000,"累計動支率":92.99,"本年度預算":75698000,"年度動支率":44.52,"剩餘可動支數":42000289.84,"預算主管單位":"供應科","費用分類":"設備及折舊","分類代碼":"E.3.5"},{"明細帳":"313","會計項目":"燃料費","本月動支數":0,"本月餘額":1579187,"本月預算數":356000,"至本月預算數累計":2138000,"累計動支率":73.86,"本年度預算":4328000,"年度動支率":36.49,"剩餘可動支數":2748813,"預算主管單位":"供應科","費用分類":"設備及折舊","分類代碼":"E.3.5"},{"明細帳":"321","會計項目":"辦公（事務）用品","本月動支數":60708,"本月餘額":186770,"本月預算數":57000,"至本月預算數累計":342000,"累計動支率":54.61,"本年度預算":691000,"年度動支率":27.03,"剩餘可動支數":504230,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"322","會計項目":"報章什誌","本月動支數":0,"本月餘額":0,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"325A","會計項目":"服裝－勞安人員工作服裝","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":18000,"年度動支率":0,"剩餘可動支數":18000,"預算主管單位":"職業安全衛生科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"3251","會計項目":"服裝－倉儲作業人員工作服裝","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":9000,"年度動支率":0,"剩餘可動支數":9000,"預算主管單位":"供應科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"3253","會計項目":"服裝－數據外勤人員工作服裝","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":228000,"年度動支率":0,"剩餘可動支數":228000,"預算主管單位":"網路維運中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"3254","會計項目":"服裝－機務外勤人員工作服裝","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":1030000,"年度動支率":0,"剩餘可動支數":1030000,"預算主管單位":"網路維運中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"32551","會計項目":"服裝－線路外勤人員工作服裝－正職人員","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":2103000,"年度動支率":0,"剩餘可動支數":2103000,"預算主管單位":"第一客戶網路中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"3256","會計項目":"服裝－機報話房防塵工作服裝","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":171000,"年度動支率":0,"剩餘可動支數":171000,"預算主管單位":"網路維運中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"32571","會計項目":"營業人員工作服裝─正職人員","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":1000000,"年度動支率":0,"剩餘可動支數":1000000,"預算主管單位":"服務中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"3258","會計項目":"服裝－企客人員工作服裝","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":658000,"年度動支率":0,"剩餘可動支數":658000,"預算主管單位":"企業客戶科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"326","會計項目":"食　品","本月動支數":55420,"本月餘額":285756,"本月預算數":56000,"至本月預算數累計":338000,"累計動支率":84.54,"本年度預算":692000,"年度動支率":41.29,"剩餘可動支數":406244,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"32912","會計項目":"洗燙費－營業人員服裝洗燙費","本月動支數":0,"本月餘額":-78,"本月預算數":2000,"至本月預算數累計":14000,"累計動支率":-0.56,"本年度預算":32000,"年度動支率":-0.24,"剩餘可動支數":32078,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"32919","會計項目":"洗燙費－其他洗燙費","本月動支數":0,"本月餘額":4460,"本月預算數":4000,"至本月預算數累計":24000,"累計動支率":18.58,"本年度預算":47000,"年度動支率":9.49,"剩餘可動支數":42540,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"32921","會計項目":"其他用品消耗－獎品費","本月動支數":0,"本月餘額":97200,"本月預算數":6000,"至本月預算數累計":44000,"累計動支率":220.91,"本年度預算":80000,"年度動支率":121.5,"剩餘可動支數":-17200,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"32922","會計項目":"其他用品消耗－工務競賽獎品費","本月動支數":0,"本月餘額":-330,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"第一客戶網路中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"3294","會計項目":"其他用品消耗－年節活動費","本月動支數":0,"本月餘額":585600,"本月預算數":0,"至本月預算數累計":859000,"累計動支率":68.17,"本年度預算":974000,"年度動支率":60.12,"剩餘可動支數":388400,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"3299","會計項目":"其他用品消耗－其他","本月動支數":10000,"本月餘額":358259,"本月預算數":111000,"至本月預算數累計":573000,"累計動支率":62.52,"本年度預算":1161000,"年度動支率":30.86,"剩餘可動支數":802741,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"3311B","會計項目":"手機配件成本","本月動支數":0,"本月餘額":11990954,"本月預算數":2048000,"至本月預算數累計":14453000,"累計動支率":82.97,"本年度預算":30964000,"年度動支率":38.73,"剩餘可動支數":18973046,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.04"},{"明細帳":"3311C","會計項目":"商品成本─國際衛星手機及配件","本月動支數":0,"本月餘額":144173,"本月預算數":4000,"至本月預算數累計":24000,"累計動支率":600.72,"本年度預算":46000,"年度動支率":313.42,"剩餘可動支數":-98173,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.04"},{"明細帳":"3311D","會計項目":"商品成本－電話機","本月動支數":0,"本月餘額":860406,"本月預算數":170000,"至本月預算數累計":1048000,"累計動支率":82.1,"本年度預算":2271000,"年度動支率":37.89,"剩餘可動支數":1410594,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.04"},{"明細帳":"3311F","會計項目":"商品成本－節能週邊商品","本月動支數":105808,"本月餘額":23609185,"本月預算數":2353000,"至本月預算數累計":13681000,"累計動支率":172.57,"本年度預算":27168000,"年度動支率":86.9,"剩餘可動支數":3558815,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.04"},{"明細帳":"33111","會計項目":"商品成本－手機成本","本月動支數":0,"本月餘額":1118886,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":-1118886,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.04"},{"明細帳":"33114","會計項目":"商品成本－喇叭組成本","本月動支數":0,"本月餘額":748503,"本月預算數":64000,"至本月預算數累計":378000,"累計動支率":198.02,"本年度預算":748000,"年度動支率":100.07,"剩餘可動支數":-503,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.04"},{"明細帳":"33117","會計項目":"商品成本－高畫質電視機","本月動支數":0,"本月餘額":1228106,"本月預算數":279000,"至本月預算數累計":1847000,"累計動支率":66.49,"本年度預算":3630000,"年度動支率":33.83,"剩餘可動支數":2401894,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.04"},{"明細帳":"33130","會計項目":"商品成本─Apple Watch","本月動支數":"","本月餘額":"","本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":"","預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.04"},{"明細帳":"33131","會計項目":"商品成本─平板電腦","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":80000,"累計動支率":0,"本年度預算":135000,"年度動支率":0,"剩餘可動支數":135000,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.04"},{"明細帳":"33133","會計項目":"商品成本─3C週邊商品","本月動支數":0,"本月餘額":1648326,"本月預算數":164000,"至本月預算數累計":1378000,"累計動支率":119.62,"本年度預算":2503000,"年度動支率":65.85,"剩餘可動支數":854674,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.04"},{"明細帳":"33138","會計項目":"商品成本－投影機","本月動支數":0,"本月餘額":0,"本月預算數":9000,"至本月預算數累計":55000,"累計動支率":0,"本年度預算":109000,"年度動支率":0,"剩餘可動支數":109000,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.04"},{"明細帳":"3317","會計項目":"商品成本─居家生活用品","本月動支數":0,"本月餘額":202600,"本月預算數":46000,"至本月預算數累計":297000,"累計動支率":68.22,"本年度預算":651000,"年度動支率":31.12,"剩餘可動支數":448400,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.04"},{"明細帳":"3318","會計項目":"商品成本─健康保養產品","本月動支數":0,"本月餘額":924410,"本月預算數":64000,"至本月預算數累計":468000,"累計動支率":197.52,"本年度預算":1103000,"年度動支率":83.81,"剩餘可動支數":178590,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.04"},{"明細帳":"3320","會計項目":"商品成本─智慧音箱─行分","本月動支數":"","本月餘額":"","本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":"","預算主管單位":"","費用分類":"業務成本","分類代碼":"C.04"},{"明細帳":"3321A","會計項目":"其他營業成本－紅利積點成本－市長話","本月動支數":-286,"本月餘額":1229,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"行銷科","費用分類":"管銷費用","分類代碼":"F.3.1"},{"明細帳":"3321B","會計項目":"其他營業成本－紅利積點成本－HiNet上網","本月動支數":-329748,"本月餘額":2373564,"本月預算數":546000,"至本月預算數累計":3193000,"累計動支率":74.34,"本年度預算":6934000,"年度動支率":34.23,"剩餘可動支數":4560436,"預算主管單位":"行銷科","費用分類":"管銷費用","分類代碼":"F.3.1"},{"明細帳":"3321C","會計項目":"其他營業成本－紅利積點成本－寬頻接取","本月動支數":-263359,"本月餘額":1944326,"本月預算數":399000,"至本月預算數累計":2398000,"累計動支率":81.08,"本年度預算":4936000,"年度動支率":39.39,"剩餘可動支數":2991674,"預算主管單位":"行銷科","費用分類":"管銷費用","分類代碼":"F.3.1"},{"明細帳":"3321D","會計項目":"其他營業成本－紅利積點成本－MOD業務","本月動支數":-96026,"本月餘額":274536,"本月預算數":42000,"至本月預算數累計":247000,"累計動支率":111.15,"本年度預算":634000,"年度動支率":43.3,"剩餘可動支數":359464,"預算主管單位":"行銷科","費用分類":"管銷費用","分類代碼":"F.3.1"},{"明細帳":"3321F","會計項目":"其他營業成本－紅利積點成本－加值業務","本月動支數":-879440,"本月餘額":5385672,"本月預算數":1841000,"至本月預算數累計":10770000,"累計動支率":50.01,"本年度預算":22549000,"年度動支率":23.88,"剩餘可動支數":17163328,"預算主管單位":"行銷科","費用分類":"管銷費用","分類代碼":"F.3.1"},{"明細帳":"3321K","會計項目":"其他營業成本－紅利積點成本－點數外賣","本月動支數":"","本月餘額":"","本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":"","預算主管單位":"","費用分類":"管銷費用","分類代碼":"F.3.1"},{"明細帳":"3321L","會計項目":"其他營業成本－紅利積點成本－OTT影視業務","本月動支數":-5973,"本月餘額":21356,"本月預算數":56000,"至本月預算數累計":130000,"累計動支率":16.43,"本年度預算":260000,"年度動支率":8.21,"剩餘可動支數":238644,"預算主管單位":"行銷科","費用分類":"管銷費用","分類代碼":"F.3.1"},{"明細帳":"411A","會計項目":"土地使用費","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":0,"預算主管單位":"行政管理科","費用分類":"設備及折舊","分類代碼":"E.5"},{"明細帳":"4212A","會計項目":"電信室使用費","本月動支數":0,"本月餘額":42444,"本月預算數":7000,"至本月預算數累計":42000,"累計動支率":101.06,"本年度預算":84000,"年度動支率":50.53,"剩餘可動支數":41556,"預算主管單位":"行政管理科","費用分類":"設備及折舊","分類代碼":"E.5"},{"明細帳":"442A","會計項目":"電桿附掛費","本月動支數":11581,"本月餘額":58371,"本月預算數":11000,"至本月預算數累計":57000,"累計動支率":102.41,"本年度預算":114000,"年度動支率":51.2,"剩餘可動支數":55629,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.5"},{"明細帳":"443A","會計項目":"中高軌衛星電路服務使用費","本月動支數":0,"本月餘額":0,"本月預算數":21000,"至本月預算數累計":126000,"累計動支率":0,"本年度預算":255000,"年度動支率":0,"剩餘可動支數":255000,"預算主管單位":"企業客戶科","費用分類":"設備及折舊","分類代碼":"E.5"},{"明細帳":"443C","會計項目":"低軌衛星電路服務使用費","本月動支數":0,"本月餘額":0,"本月預算數":82000,"至本月預算數累計":493000,"累計動支率":0,"本年度預算":1068000,"年度動支率":0,"剩餘可動支數":1068000,"預算主管單位":"企業客戶科","費用分類":"設備及折舊","分類代碼":"E.5"},{"明細帳":"445A","會計項目":"管道使用費","本月動支數":49843,"本月餘額":388643,"本月預算數":68000,"至本月預算數累計":408000,"累計動支率":95.26,"本年度預算":816000,"年度動支率":47.63,"剩餘可動支數":427357,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.5"},{"明細帳":"461A","會計項目":"其他設備使用費","本月動支數":0,"本月餘額":103376,"本月預算數":33000,"至本月預算數累計":198000,"累計動支率":52.21,"本年度預算":407000,"年度動支率":25.4,"剩餘可動支數":303624,"預算主管單位":"行政管理科","費用分類":"設備及折舊","分類代碼":"E.5"},{"明細帳":"479","會計項目":"其他利息","本月動支數":0,"本月餘額":54271,"本月預算數":0,"至本月預算數累計":60000,"累計動支率":90.45,"本年度預算":60000,"年度動支率":90.45,"剩餘可動支數":5729,"預算主管單位":"行政管理科","費用分類":"設備及折舊","分類代碼":"E.5"},{"明細帳":"5A07","會計項目":"使用權資產折舊費用－公務車","本月動支數":0,"本月餘額":55242,"本月預算數":26000,"至本月預算數累計":52000,"累計動支率":106.23,"本年度預算":384000,"年度動支率":14.39,"剩餘可動支數":328758,"預算主管單位":"會計駐點","費用分類":"設備及折舊","分類代碼":"E.1"},{"明細帳":"5A10","會計項目":"使用權資產折舊費用－土地上含自有建物","本月動支數":0,"本月餘額":2555349,"本月預算數":481000,"至本月預算數累計":2883000,"累計動支率":88.64,"本年度預算":5769000,"年度動支率":44.29,"剩餘可動支數":3213651,"預算主管單位":"會計駐點","費用分類":"設備及折舊","分類代碼":"E.1"},{"明細帳":"5A11","會計項目":"使用權資產折舊費用－工程車","本月動支數":0,"本月餘額":652925,"本月預算數":742000,"至本月預算數累計":2008000,"累計動支率":32.52,"本年度預算":9308000,"年度動支率":7.01,"剩餘可動支數":8655075,"預算主管單位":"會計駐點","費用分類":"設備及折舊","分類代碼":"E.1"},{"明細帳":"521","會計項目":"一般房屋折舊","本月動支數":0,"本月餘額":12080265,"本月預算數":2984000,"至本月預算數累計":17857000,"累計動支率":67.65,"本年度預算":35847000,"年度動支率":33.7,"剩餘可動支數":23766735,"預算主管單位":"會計駐點","費用分類":"設備及折舊","分類代碼":"E.1"},{"明細帳":"522","會計項目":"其他建築折舊","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":0,"預算主管單位":"會計駐點","費用分類":"設備及折舊","分類代碼":"E.1"},{"明細帳":"524","會計項目":"自用出租房屋折舊","本月動支數":0,"本月餘額":2641560,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"會計駐點","費用分類":"設備及折舊","分類代碼":"E.1"},{"明細帳":"531","會計項目":"資訊設備折舊","本月動支數":0,"本月餘額":3105115,"本月預算數":580000,"至本月預算數累計":3465000,"累計動支率":89.61,"本年度預算":7170000,"年度動支率":43.31,"剩餘可動支數":4064885,"預算主管單位":"會計駐點","費用分類":"設備及折舊","分類代碼":"E.1"},{"明細帳":"541","會計項目":"電信線路設備折舊","本月動支數":0,"本月餘額":132712071,"本月預算數":26817000,"至本月預算數累計":158122000,"累計動支率":83.93,"本年度預算":319607000,"年度動支率":41.52,"剩餘可動支數":186894929,"預算主管單位":"會計駐點","費用分類":"設備及折舊","分類代碼":"E.1"},{"明細帳":"542","會計項目":"電信機械設備折舊","本月動支數":0,"本月餘額":55213855,"本月預算數":11271000,"至本月預算數累計":68651000,"累計動支率":80.43,"本年度預算":136558000,"年度動支率":40.43,"剩餘可動支數":81344145,"預算主管單位":"會計駐點","費用分類":"設備及折舊","分類代碼":"E.1"},{"明細帳":"551","會計項目":"運輸設備折舊","本月動支數":0,"本月餘額":3111040,"本月預算數":648000,"至本月預算數累計":3776000,"累計動支率":82.39,"本年度預算":8428000,"年度動支率":36.91,"剩餘可動支數":5316960,"預算主管單位":"會計駐點","費用分類":"設備及折舊","分類代碼":"E.1"},{"明細帳":"561","會計項目":"其他設備折舊","本月動支數":0,"本月餘額":2962301,"本月預算數":583000,"至本月預算數累計":3507000,"累計動支率":84.47,"本年度預算":12048000,"年度動支率":24.59,"剩餘可動支數":9085699,"預算主管單位":"會計駐點","費用分類":"設備及折舊","分類代碼":"E.1"},{"明細帳":"5611","會計項目":"太陽光電系統設備折舊","本月動支數":0,"本月餘額":897110,"本月預算數":187000,"至本月預算數累計":1122000,"累計動支率":79.96,"本年度預算":2249000,"年度動支率":39.89,"剩餘可動支數":1351890,"預算主管單位":"會計駐點","費用分類":"設備及折舊","分類代碼":"E.1"},{"明細帳":"592","會計項目":"攤銷電腦軟體","本月動支數":0,"本月餘額":3600,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":9000,"年度動支率":40,"剩餘可動支數":5400,"預算主管單位":"資通科","費用分類":"設備及折舊","分類代碼":"E.2"},{"明細帳":"612","會計項目":"一般土地地價稅","本月動支數":0,"本月餘額":6689644,"本月預算數":1338000,"至本月預算數累計":8028000,"累計動支率":83.33,"本年度預算":16452000,"年度動支率":40.66,"剩餘可動支數":9762356,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.2"},{"明細帳":"631","會計項目":"一般房屋稅","本月動支數":0,"本月餘額":2590593,"本月預算數":529000,"至本月預算數累計":3080000,"累計動支率":84.11,"本年度預算":6250000,"年度動支率":41.45,"剩餘可動支數":3659407,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.2"},{"明細帳":"6421","會計項目":"印花稅－營收現金貼用","本月動支數":0,"本月餘額":694802,"本月預算數":120000,"至本月預算數累計":870000,"累計動支率":79.86,"本年度預算":1800000,"年度動支率":38.6,"剩餘可動支數":1105198,"預算主管單位":"服務中心","費用分類":"管銷費用","分類代碼":"F.2"},{"明細帳":"6422","會計項目":"印花稅－合約貼用","本月動支數":0,"本月餘額":101146,"本月預算數":19000,"至本月預算數累計":100000,"累計動支率":101.15,"本年度預算":218000,"年度動支率":46.4,"剩餘可動支數":116854,"預算主管單位":"供應科","費用分類":"管銷費用","分類代碼":"F.2"},{"明細帳":"6429","會計項目":"印花稅－其他","本月動支數":0,"本月餘額":41864,"本月預算數":6000,"至本月預算數累計":37000,"累計動支率":113.15,"本年度預算":75000,"年度動支率":55.82,"剩餘可動支數":33136,"預算主管單位":"供應科","費用分類":"管銷費用","分類代碼":"F.2"},{"明細帳":"643","會計項目":"使用牌照稅","本月動支數":0,"本月餘額":313327,"本月預算數":60000,"至本月預算數累計":384000,"累計動支率":81.6,"本年度預算":754000,"年度動支率":41.56,"剩餘可動支數":440673,"預算主管單位":"供應科","費用分類":"管銷費用","分類代碼":"F.2"},{"明細帳":"657","會計項目":"頻率使用費－衛星通信","本月動支數":0,"本月餘額":0,"本月預算數":4000,"至本月預算數累計":24000,"累計動支率":0,"本年度預算":48000,"年度動支率":0,"剩餘可動支數":48000,"預算主管單位":"企業客戶科","費用分類":"管銷費用","分類代碼":"F.2"},{"明細帳":"6712","會計項目":"電信行政規費－電信監理規費","本月動支數":"","本月餘額":"","本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":"","預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.2"},{"明細帳":"6713","會計項目":"電信行政規費－道路使用費","本月動支數":0,"本月餘額":3824531,"本月預算數":752000,"至本月預算數累計":4512000,"累計動支率":84.76,"本年度預算":9024000,"年度動支率":42.38,"剩餘可動支數":5199469,"預算主管單位":"第二客戶網路中心","費用分類":"管銷費用","分類代碼":"F.2"},{"明細帳":"67151","會計項目":"電信號碼使用費－市內網路","本月動支數":0,"本月餘額":43978,"本月預算數":10000,"至本月預算數累計":69000,"累計動支率":63.74,"本年度預算":129000,"年度動支率":34.09,"剩餘可動支數":85022,"預算主管單位":"行銷科","費用分類":"管銷費用","分類代碼":"F.2"},{"明細帳":"67152","會計項目":"電信號碼使用費－長途網路","本月動支數":0,"本月餘額":1,"本月預算數":0,"至本月預算數累計":1000,"累計動支率":0.1,"本年度預算":1000,"年度動支率":0.1,"剩餘可動支數":999,"預算主管單位":"行銷科","費用分類":"管銷費用","分類代碼":"F.2"},{"明細帳":"67155","會計項目":"電信號碼使用費－行動寬頻","本月動支數":0,"本月餘額":9130,"本月預算數":17000,"至本月預算數累計":144000,"累計動支率":6.34,"本年度預算":263000,"年度動支率":3.47,"剩餘可動支數":253870,"預算主管單位":"行銷科","費用分類":"管銷費用","分類代碼":"F.2"},{"明細帳":"672","會計項目":"汽車燃料使用費","本月動支數":0,"本月餘額":470835,"本月預算數":118000,"至本月預算數累計":558000,"累計動支率":84.38,"本年度預算":1178000,"年度動支率":39.97,"剩餘可動支數":707165,"預算主管單位":"供應科","費用分類":"管銷費用","分類代碼":"F.2"},{"明細帳":"679","會計項目":"其他行政規費","本月動支數":7536,"本月餘額":91200,"本月預算數":27000,"至本月預算數累計":155000,"累計動支率":58.84,"本年度預算":307000,"年度動支率":29.71,"剩餘可動支數":215800,"預算主管單位":"供應科","費用分類":"管銷費用","分類代碼":"F.2"},{"明細帳":"713","會計項目":"職業團體會費","本月動支數":0,"本月餘額":39000,"本月預算數":0,"至本月預算數累計":64000,"累計動支率":60.94,"本年度預算":83000,"年度動支率":46.99,"剩餘可動支數":44000,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"721","會計項目":"捐助個人","本月動支數":0,"本月餘額":3600,"本月預算數":1000,"至本月預算數累計":5000,"累計動支率":72,"本年度預算":6000,"年度動支率":60,"剩餘可動支數":2400,"預算主管單位":"服務中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"722","會計項目":"捐助社團","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":6000,"年度動支率":0,"剩餘可動支數":6000,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"7252","會計項目":"公益支出－公益支出","本月動支數":0,"本月餘額":10000,"本月預算數":0,"至本月預算數累計":85000,"累計動支率":11.76,"本年度預算":165000,"年度動支率":6.06,"剩餘可動支數":155000,"預算主管單位":"規劃設計科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"8121U","會計項目":"預期信用減損損失－應收帳款及催收款項－專標案－未達營收認列時點","本月動支數":"","本月餘額":"","本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":"","預算主管單位":"企業客戶科","費用分類":"業務成本","分類代碼":"C.10.1"},{"明細帳":"8121Z","會計項目":"預期信用減損損失－應收帳款及催收款項－專標案","本月動支數":0,"本月餘額":-65619,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":65619,"預算主管單位":"企業客戶科","費用分類":"業務成本","分類代碼":"C.10.1"},{"明細帳":"81747","會計項目":"災害損失－搶修設備－纜線","本月動支數":0,"本月餘額":566142.89,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"第一客戶網路中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"81749","會計項目":"災害損失－搶修設備－其他","本月動支數":0,"本月餘額":18124,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":-18124,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"926","會計項目":"其他費用-太陽能光電躉售電費業務成本","本月動支數":0,"本月餘額":264179,"本月預算數":0,"至本月預算數累計":7000,"累計動支率":3773.99,"本年度預算":34000,"年度動支率":777,"剩餘可動支數":-230179,"預算主管單位":"企業客戶科","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"92853","會計項目":"資訊與通信產品業務成本－AWS公有雲業務－非專標案","本月動支數":0,"本月餘額":0,"本月預算數":2232000,"至本月預算數累計":11828000,"累計動支率":0,"本年度預算":30790000,"年度動支率":0,"剩餘可動支數":30790000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.2"},{"明細帳":"92854","會計項目":"資訊與通信產品業務成本－Azure公有雲業務－非專標案","本月動支數":0,"本月餘額":0,"本月預算數":161000,"至本月預算數累計":854000,"累計動支率":0,"本年度預算":2221000,"年度動支率":0,"剩餘可動支數":2221000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.2"},{"明細帳":"92855","會計項目":"資訊與通信產品業務成本－GCP公有雲業務－非專標案","本月動支數":0,"本月餘額":0,"本月預算數":449000,"至本月預算數累計":2377000,"累計動支率":0,"本年度預算":6187000,"年度動支率":0,"剩餘可動支數":6187000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.2"},{"明細帳":"92856","會計項目":"資訊與通信產品業務成本－M365公有雲業務－非專標案","本月動支數":0,"本月餘額":0,"本月預算數":468000,"至本月預算數累計":2481000,"累計動支率":0,"本年度預算":6459000,"年度動支率":0,"剩餘可動支數":6459000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.2"},{"明細帳":"92882","會計項目":"其他企業客戶專案成本－維護企業客戶設備費－非專標案","本月動支數":0,"本月餘額":0,"本月預算數":60000,"至本月預算數累計":320000,"累計動支率":0,"本年度預算":834000,"年度動支率":0,"剩餘可動支數":834000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.2"},{"明細帳":"92889","會計項目":"其他企業客戶專案成本－其他－非專標案","本月動支數":0,"本月餘額":0,"本月預算數":212000,"至本月預算數累計":1178000,"累計動支率":0,"本年度預算":2788000,"年度動支率":0,"剩餘可動支數":2788000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.2"},{"明細帳":"929A","會計項目":"其他費用－IDC專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":3163000,"至本月預算數累計":16761000,"累計動支率":0,"本年度預算":43632000,"年度動支率":0,"剩餘可動支數":43632000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"929AB","會計項目":"其他費用－AI機房專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":320000,"至本月預算數累計":1696000,"累計動支率":0,"本年度預算":4415000,"年度動支率":0,"剩餘可動支數":4415000,"預算主管單位":"","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"929BE","會計項目":"其他費用－企業通訊及內容整合專案建置成本－商務應用整合專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":15000,"至本月預算數累計":79000,"累計動支率":0,"本年度預算":208000,"年度動支率":0,"剩餘可動支數":208000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"929BG","會計項目":"其他費用－企業通訊及內容整合專案建置成本－視訊會議專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"929BH","會計項目":"其他費用－企業通訊及內容整合專案建置成本－數位經濟多元支付專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":17000,"至本月預算數累計":89000,"累計動支率":0,"本年度預算":233000,"年度動支率":0,"剩餘可動支數":233000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"929E6","會計項目":"其他費用－大數據業務－大數據平台專案建置成本","本月動支數":0,"本月餘額":450448,"本月預算數":1492000,"至本月預算數累計":7907000,"累計動支率":5.7,"本年度預算":20583000,"年度動支率":2.19,"剩餘可動支數":20132552,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"929E7","會計項目":"其他費用－大數據業務－智慧網管(EyeSee)專案建置成本","本月動支數":0,"本月餘額":4066690,"本月預算數":192000,"至本月預算數累計":1017000,"累計動支率":399.87,"本年度預算":2650000,"年度動支率":153.46,"剩餘可動支數":-1416690,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"929F","會計項目":"其他營業成本－海外ICT整合服務專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":203000,"至本月預算數累計":1074000,"累計動支率":0,"本年度預算":2797000,"年度動支率":0,"剩餘可動支數":2797000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"929H","會計項目":"其他費用－市內/數據/國際IDC機房客戶設備代管專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"929IC","會計項目":"其他費用－衛星ICT整合服務專案建置成本－低軌相關","本月動支數":0,"本月餘額":0,"本月預算數":177000,"至本月預算數累計":936000,"累計動支率":0,"本年度預算":2437000,"年度動支率":0,"剩餘可動支數":2437000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"929JB","會計項目":"其他費用－AI業務-雲端AIGC應用專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":128000,"至本月預算數累計":678000,"累計動支率":0,"本年度預算":1765000,"年度動支率":0,"剩餘可動支數":1765000,"預算主管單位":"","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"929JC","會計項目":"其他費用－AI業務-AI開發分析平台專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":93000,"至本月預算數累計":493000,"累計動支率":0,"本年度預算":1281000,"年度動支率":0,"剩餘可動支數":1281000,"預算主管單位":"","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"929JD","會計項目":"其他費用－AI業務-其他專案建置成本","本月動支數":0,"本月餘額":3553810,"本月預算數":67000,"至本月預算數累計":355000,"累計動支率":1001.07,"本年度預算":927000,"年度動支率":383.37,"剩餘可動支數":-2626810,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9291","會計項目":"其他費用－客戶專案建置成本","本月動支數":0,"本月餘額":12205,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9292H","會計項目":"政府業務產品成本－公路監理專案及加值服務專案建置","本月動支數":0,"本月餘額":0,"本月預算數":40000,"至本月預算數累計":212000,"累計動支率":0,"本年度預算":555000,"年度動支率":0,"剩餘可動支數":555000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9292K","會計項目":"政府業務產品成本－政府電子採購服務專案建置","本月動支數":0,"本月餘額":0,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294A","會計項目":"資訊與通信產品業務成本－智慧建築（IGB ) 產品成本－綜合佈線工程專案建置成本","本月動支數":0,"本月餘額":6293,"本月預算數":73000,"至本月預算數累計":389000,"累計動支率":1.62,"本年度預算":1012000,"年度動支率":0.62,"剩餘可動支數":1005707,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294D","會計項目":"資訊與通信產品業務成本－企業健康雲系統(HCS)－遠距醫療平台專案建置","本月動支數":0,"本月餘額":3406,"本月預算數":124000,"至本月預算數累計":656000,"累計動支率":0.52,"本年度預算":1707000,"年度動支率":0.2,"剩餘可動支數":1703594,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294F","會計項目":"資訊與通信產品業務成本－能源管理／專業服務之專案建置","本月動支數":0,"本月餘額":0,"本月預算數":921000,"至本月預算數累計":4878000,"累計動支率":0,"本年度預算":12698000,"年度動支率":0,"剩餘可動支數":12698000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294G","會計項目":"資訊與通信產品業務成本－水資源專案建置","本月動支數":0,"本月餘額":0,"本月預算數":106000,"至本月預算數累計":562000,"累計動支率":0,"本年度預算":1464000,"年度動支率":0,"剩餘可動支數":1464000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294I","會計項目":"資訊與通信產品業務成本－充電樁專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":65000,"至本月預算數累計":343000,"累計動支率":0,"本年度預算":892000,"年度動支率":0,"剩餘可動支數":892000,"預算主管單位":"","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294K","會計項目":"智慧型運輸系統（ＩＴＳ）－智慧交控專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":550000,"至本月預算數累計":2915000,"累計動支率":0,"本年度預算":7590000,"年度動支率":0,"剩餘可動支數":7590000,"預算主管單位":"","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294L","會計項目":"資訊與通信產品業務成本-智慧安防(IVS)產品線-科技執法專案建置成本","本月動支數":0,"本月餘額":497385,"本月預算數":172000,"至本月預算數累計":912000,"累計動支率":54.54,"本年度預算":2373000,"年度動支率":20.96,"剩餘可動支數":1875615,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294M","會計項目":"資訊與通信產品業務成本－太陽能光電維運","本月動支數":0,"本月餘額":0,"本月預算數":171000,"至本月預算數累計":906000,"累計動支率":0,"本年度預算":2356000,"年度動支率":0,"剩餘可動支數":2356000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294N","會計項目":"資訊與通信產品業務成本-智慧安防(IVS)產品線-AI科技執法專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":143000,"至本月預算數累計":757000,"累計動支率":0,"本年度預算":1972000,"年度動支率":0,"剩餘可動支數":1972000,"預算主管單位":"","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294R","會計項目":"資訊與通信產品業務成本－資安產品－資安專業服務專安建置成本","本月動支數":0,"本月餘額":0,"本月預算數":685000,"至本月預算數累計":3629000,"累計動支率":0,"本年度預算":9448000,"年度動支率":0,"剩餘可動支數":9448000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294S","會計項目":"資訊與通信產品業務成本－太陽能光電專案建置","本月動支數":0,"本月餘額":7715290.24,"本月預算數":2394000,"至本月預算數累計":12689000,"累計動支率":60.8,"本年度預算":33030000,"年度動支率":23.36,"剩餘可動支數":25314709.76,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294U","會計項目":"資訊與通信產品業務成本－企業健康雲系統(HCS)專案建置","本月動支數":0,"本月餘額":17400,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294W","會計項目":"資訊與通信產品業務成本－智慧建築（IGB ) 產品成本－弱電工程專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":1452000,"至本月預算數累計":7695000,"累計動支率":0,"本年度預算":20033000,"年度動支率":0,"剩餘可動支數":20033000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294X","會計項目":"資訊與通信產品業務成本－智慧建築（IGB ) 產品成本－機電工程專案建置成本","本月動支數":0,"本月餘額":14398,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294Y","會計項目":"資訊與通信產品業務成本－資安產品線業務專案建置成本－在地化資安專案建置成本","本月動支數":208556,"本月餘額":830981,"本月預算數":2182000,"至本月預算數累計":11561000,"累計動支率":7.19,"本年度預算":30095000,"年度動支率":2.76,"剩餘可動支數":29264019,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"92941","會計項目":"資訊與通信產品業務成本－智慧型運輸系統(ITS)－政府交通專案建置","本月動支數":0,"本月餘額":0,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"92942","會計項目":"資訊與通信產品業務成本－智慧節能服務（iEN）","本月動支數":160317,"本月餘額":1689703,"本月預算數":236000,"至本月預算數累計":1249000,"累計動支率":135.28,"本年度預算":3251000,"年度動支率":51.97,"剩餘可動支數":1561297,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"92944","會計項目":"資訊與通信產品業務成本－智慧型運輸系統(ITS)－其他專案建置","本月動支數":0,"本月餘額":45896,"本月預算數":755000,"至本月預算數累計":4002000,"累計動支率":1.15,"本年度預算":10418000,"年度動支率":0.44,"剩餘可動支數":10372104,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"92946","會計項目":"資訊與通信產品業務成本－交換機（ＰＢＸ）","本月動支數":21011,"本月餘額":351993,"本月預算數":66000,"至本月預算數累計":349000,"累計動支率":100.86,"本年度預算":908000,"年度動支率":38.77,"剩餘可動支數":556007,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"92947","會計項目":"資訊與通信產品業務成本－智慧建築（IGB ) 產品成本－其他專案建置成本","本月動支數":27929,"本月餘額":2289604,"本月預算數":911000,"至本月預算數累計":4827000,"累計動支率":47.43,"本年度預算":12563000,"年度動支率":18.22,"剩餘可動支數":10273396,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"92948","會計項目":"資訊與通信產品業務成本－智慧安防","本月動支數":325,"本月餘額":6189676,"本月預算數":2365000,"至本月預算數累計":12534000,"累計動支率":49.38,"本年度預算":32629000,"年度動支率":18.97,"剩餘可動支數":26439324,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"92949","會計項目":"資訊與通信產品業務成本-資安產品-身分識別專案建置","本月動支數":0,"本月餘額":0,"本月預算數":631000,"至本月預算數累計":3344000,"累計動支率":0,"本年度預算":8705000,"年度動支率":0,"剩餘可動支數":8705000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9295B","會計項目":"SaaS產品業務專案建置成本-企業資源整合(ERP)服務專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9295D","會計項目":"SaaS產品業務專案建置成本-其他整合包裝及服務專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":350000,"至本月預算數累計":1855000,"累計動支率":0,"本年度預算":4828000,"年度動支率":0,"剩餘可動支數":4828000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"92951","會計項目":"IaaS類業務-GSN客戶IaaS類業務產品成本-政府雲端專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":61000,"至本月預算數累計":323000,"累計動支率":0,"本年度預算":839000,"年度動支率":0,"剩餘可動支數":839000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"92953","會計項目":"AWS公有雲業務專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":148000,"至本月預算數累計":785000,"累計動支率":0,"本年度預算":2043000,"年度動支率":0,"剩餘可動支數":2043000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"92958","會計項目":"IaaS類業務-專案建置成本","本月動支數":0,"本月餘額":1,"本月預算數":473000,"至本月預算數累計":2506000,"累計動支率":0,"本年度預算":6526000,"年度動支率":0,"剩餘可動支數":6525999,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9297L","會計項目":"行動ICT M化業務成本－行動訊號涵蓋工程專案建置成本","本月動支數":0,"本月餘額":56560,"本月預算數":76000,"至本月預算數累計":403000,"累計動支率":14.03,"本年度預算":1048000,"年度動支率":5.4,"剩餘可動支數":991440,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9297M","會計項目":"行動ICT M化業務成本－行動裝置管理專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":294000,"至本月預算數累計":1557000,"累計動支率":0,"本年度預算":4055000,"年度動支率":0,"剩餘可動支數":4055000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9297V","會計項目":"行動ICT M化業務成本－行動即時影像專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9297Y","會計項目":"行動ICT M化業務成本－其他專案建置成本","本月動支數":9504,"本月餘額":315854,"本月預算數":450000,"至本月預算數累計":2386000,"累計動支率":13.24,"本年度預算":6212000,"年度動支率":5.08,"剩餘可動支數":5896146,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"92972","會計項目":"行動物聯網業務專案建置成本","本月動支數":0,"本月餘額":27736,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"92973","會計項目":"行動物聯網業務－智慧停車專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":138000,"至本月預算數累計":734000,"累計動支率":0,"本年度預算":1909000,"年度動支率":0,"剩餘可動支數":1909000,"預算主管單位":"","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"92974","會計項目":"行動ICT M化業務－企業專網專案建置成本","本月動支數":0,"本月餘額":247299,"本月預算數":270000,"至本月預算數累計":1431000,"累計動支率":17.28,"本年度預算":3725000,"年度動支率":6.64,"剩餘可動支數":3477701,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9298A","會計項目":"其他企業客戶專案成本－郵費","本月動支數":0,"本月餘額":0,"本月預算數":39000,"至本月預算數累計":209000,"累計動支率":0,"本年度預算":544000,"年度動支率":0,"剩餘可動支數":544000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.2"},{"明細帳":"92981","會計項目":"其他企業客戶專案成本－企業客戶端設備攤銷費","本月動支數":33333,"本月餘額":2942882.32,"本月預算數":33000,"至本月預算數累計":176000,"累計動支率":1672.09,"本年度預算":459000,"年度動支率":641.15,"剩餘可動支數":-2483882.32,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.2"},{"明細帳":"92982","會計項目":"其他企業客戶專案成本－維運備品費","本月動支數":0,"本月餘額":19952,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.2"},{"明細帳":"92984","會計項目":"其他企業客戶專案成本－人力費用－薪資及加班費","本月動支數":0,"本月餘額":50772,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.2"},{"明細帳":"92985","會計項目":"其他企業客戶專案成本－人力費用－其他用人費用","本月動支數":0,"本月餘額":0,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.2"},{"明細帳":"92986","會計項目":"其他企業客戶專案成本－廠商成本","本月動支數":58498,"本月餘額":1791814,"本月預算數":2033000,"至本月預算數累計":10719000,"累計動支率":16.72,"本年度預算":28196000,"年度動支率":6.35,"剩餘可動支數":26404186,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.2"},{"明細帳":"92987","會計項目":"其他企業客戶專案成本－保固及售後服務費","本月動支數":0,"本月餘額":0,"本月預算數":24000,"至本月預算數累計":127000,"累計動支率":0,"本年度預算":330000,"年度動支率":0,"剩餘可動支數":330000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.2"},{"明細帳":"92989","會計項目":"其他企業客戶專案成本－其他","本月動支數":1901434,"本月餘額":15600928,"本月預算數":764000,"至本月預算數累計":4044000,"累計動支率":385.78,"本年度預算":10514000,"年度動支率":148.38,"剩餘可動支數":-5086928,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.2"},{"明細帳":"9299A","會計項目":"其他費用－Apple軟體商店","本月動支數":-18408,"本月餘額":1011995,"本月預算數":307000,"至本月預算數累計":991000,"累計動支率":102.12,"本年度預算":2313000,"年度動支率":43.75,"剩餘可動支數":1301005,"預算主管單位":"服務中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"9299B","會計項目":"其他費用－Google Play","本月動支數":-506,"本月餘額":568216,"本月預算數":307000,"至本月預算數累計":951000,"累計動支率":59.75,"本年度預算":1330000,"年度動支率":42.72,"剩餘可動支數":761784,"預算主管單位":"服務中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"9299C","會計項目":"其他費用－行動電信帳單代收Netflix款項","本月動支數":0,"本月餘額":93272,"本月預算數":15000,"至本月預算數累計":83000,"累計動支率":112.38,"本年度預算":201000,"年度動支率":46.4,"剩餘可動支數":107728,"預算主管單位":"服務中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"9299D","會計項目":"其他費用－手機代收停車費","本月動支數":0,"本月餘額":93,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":-93,"預算主管單位":"企業客戶科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"9299F","會計項目":"其他費用－數據業務代收Netflix款項","本月動支數":0,"本月餘額":-889,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"服務中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"9299G","會計項目":"其他費用－固網業務代收Netflix款項","本月動支數":0,"本月餘額":-93728,"本月預算數":4000,"至本月預算數累計":24000,"累計動支率":-390.53,"本年度預算":52000,"年度動支率":-180.25,"剩餘可動支數":145728,"預算主管單位":"服務中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"9299K","會計項目":"其他費用－MOD","本月動支數":0,"本月餘額":-56,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":56,"預算主管單位":"服務中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"9299L","會計項目":"其他費用－OTT影視業務","本月動支數":0,"本月餘額":146,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":-146,"預算主管單位":"服務中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"9299M","會計項目":"其他費用－行動促案代收Netflix款項","本月動支數":0,"本月餘額":17451,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"服務中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"9299O","會計項目":"其他費用－Sony Play Station","本月動支數":0,"本月餘額":13902,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":2000,"年度動支率":695.1,"剩餘可動支數":-11902,"預算主管單位":"服務中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"9299Z","會計項目":"其他費用－其他","本月動支數":0,"本月餘額":0.56,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"}];
-var YEAR = '115';
-var MONTH = '6';
+var RAW = [{"明細帳":"A201","會計項目":"市話接續費－市話","本月動支數":0,"本月餘額":103144,"本月預算數":50000,"至本月預算數累計":292000,"累計動支率":35.32,"本年度預算":590000,"年度動支率":17.48,"剩餘可動支數":486856,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.05"},{"明細帳":"A202","會計項目":"市話接續費－長話","本月動支數":0,"本月餘額":200849,"本月預算數":35000,"至本月預算數累計":208000,"累計動支率":96.56,"本年度預算":419000,"年度動支率":47.94,"剩餘可動支數":218151,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.05"},{"明細帳":"A207","會計項目":"市話接續費－公話","本月動支數":0,"本月餘額":369,"本月預算數":0,"至本月預算數累計":1000,"累計動支率":36.9,"本年度預算":1000,"年度動支率":36.9,"剩餘可動支數":631,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.05"},{"明細帳":"A212","會計項目":"公用電話攤分費－公話撥叫行動電話攤分費","本月動支數":0,"本月餘額":30318,"本月預算數":5000,"至本月預算數累計":30000,"累計動支率":101.06,"本年度預算":57000,"年度動支率":53.19,"剩餘可動支數":26682,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.05"},{"明細帳":"A261","會計項目":"Ｅ.１６４用戶號碼網路電話接續費－市話","本月動支數":0,"本月餘額":911,"本月預算數":0,"至本月預算數累計":1000,"累計動支率":91.1,"本年度預算":1000,"年度動支率":91.1,"剩餘可動支數":89,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.05"},{"明細帳":"A288","會計項目":"行動接續費─市話","本月動支數":0,"本月餘額":2074914,"本月預算數":399000,"至本月預算數累計":2326000,"累計動支率":89.21,"本年度預算":4622000,"年度動支率":44.89,"剩餘可動支數":2547086,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.05"},{"明細帳":"A289","會計項目":"行動接續費─ＩＮ","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":0,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.05"},{"明細帳":"R25","會計項目":"修理保養及材料費(重分類使用)","本月動支數":"","本月餘額":"","本月預算數":-758000,"至本月預算數累計":-4548000,"累計動支率":"","本年度預算":-9096000,"年度動支率":"","剩餘可動支數":"","預算主管單位":"","費用分類":"設備及折舊","分類代碼":"E.3.4"},{"明細帳":"1131","會計項目":"員工薪金－職階待遇","本月動支數":30266189,"本月餘額":187269007,"本月預算數":32232000,"至本月預算數累計":191506000,"累計動支率":97.79,"本年度預算":379233000,"年度動支率":49.38,"剩餘可動支數":191963993,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1132","會計項目":"員工薪金－職務待遇","本月動支數":3742071,"本月餘額":22358250,"本月預算數":3737000,"至本月預算數累計":22276000,"累計動支率":100.37,"本年度預算":44203000,"年度動支率":50.58,"剩餘可動支數":21844750,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"122","會計項目":"臨時職員薪金","本月動支數":0,"本月餘額":99130,"本月預算數":75000,"至本月預算數累計":449000,"累計動支率":22.08,"本年度預算":888000,"年度動支率":11.16,"剩餘可動支數":788870,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"123","會計項目":"臨時人員獎金","本月動支數":0,"本月餘額":0,"本月預算數":1000,"至本月預算數累計":4000,"累計動支率":0,"本年度預算":5000,"年度動支率":0,"剩餘可動支數":5000,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1311","會計項目":"加班誤餐費－一般加班費","本月動支數":-440414,"本月餘額":2609499,"本月預算數":584000,"至本月預算數累計":4332000,"累計動支率":60.24,"本年度預算":8663000,"年度動支率":30.12,"剩餘可動支數":6053501,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1312","會計項目":"加班誤餐費－員工不休假加班費","本月動支數":690194,"本月餘額":4362916,"本月預算數":820000,"至本月預算數累計":4889000,"累計動支率":89.24,"本年度預算":10113000,"年度動支率":43.14,"剩餘可動支數":5750084,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1313","會計項目":"加班誤餐費－員工不休假加班費－保留休假","本月動支數":0,"本月餘額":1749676,"本月預算數":342000,"至本月預算數累計":2031000,"累計動支率":86.15,"本年度預算":4427000,"年度動支率":39.52,"剩餘可動支數":2677324,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1314","會計項目":"加班誤餐費－補休未休畢加班費","本月動支數":-459805,"本月餘額":98534,"本月預算數":38000,"至本月預算數累計":361000,"累計動支率":27.29,"本年度預算":616000,"年度動支率":16,"剩餘可動支數":517466,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"142","會計項目":"主管津貼","本月動支數":0,"本月餘額":527166,"本月預算數":122000,"至本月預算數累計":720000,"累計動支率":73.22,"本年度預算":1424000,"年度動支率":37.02,"剩餘可動支數":896834,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"144","會計項目":"育嬰留職停薪津貼","本月動支數":45800,"本月餘額":229739,"本月預算數":30000,"至本月預算數累計":180000,"累計動支率":127.63,"本年度預算":358000,"年度動支率":64.17,"剩餘可動支數":128261,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"145","會計項目":"伙食津貼","本月動支數":1368610,"本月餘額":8424383,"本月預算數":1429000,"至本月預算數累計":8516000,"累計動支率":98.92,"本年度預算":17130000,"年度動支率":49.18,"剩餘可動支數":8705617,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"147","會計項目":"交通津貼","本月動支數":1140516,"本月餘額":6801485,"本月預算數":1158000,"至本月預算數累計":6891000,"累計動支率":98.7,"本年度預算":13890000,"年度動支率":48.97,"剩餘可動支數":7088515,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1481","會計項目":"出納津貼－經管銀錢津貼","本月動支數":0,"本月餘額":7020,"本月預算數":1000,"至本月預算數累計":6000,"累計動支率":117,"本年度預算":10000,"年度動支率":70.2,"剩餘可動支數":2980,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1491","會計項目":"其他津貼－兼任駕駛津貼","本月動支數":0,"本月餘額":1585184,"本月預算數":399000,"至本月預算數累計":2389000,"累計動支率":66.35,"本年度預算":4728000,"年度動支率":33.53,"剩餘可動支數":3142816,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1511","會計項目":"績效獎金－績效獎金","本月動支數":7388766,"本月餘額":45046735,"本月預算數":7890000,"至本月預算數累計":47071000,"累計動支率":95.7,"本年度預算":93412000,"年度動支率":48.22,"剩餘可動支數":48365265,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"153","會計項目":"企業化特別獎金","本月動支數":6952681,"本月餘額":42720830,"本月預算數":6652000,"至本月預算數累計":39912000,"累計動支率":107.04,"本年度預算":79818000,"年度動支率":53.52,"剩餘可動支數":37097170,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1541","會計項目":"考核獎金－考核折發獎金","本月動支數":147194,"本月餘額":883244,"本月預算數":155000,"至本月預算數累計":921000,"累計動支率":95.9,"本年度預算":1824000,"年度動支率":48.42,"剩餘可動支數":940756,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"155","會計項目":"年節獎金","本月動支數":3651277,"本月餘額":27232487,"本月預算數":4763000,"至本月預算數累計":28420000,"累計動支率":95.82,"本年度預算":56396000,"年度動支率":48.29,"剩餘可動支數":29163513,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"156","會計項目":"全勤獎金","本月動支數":0,"本月餘額":5842146,"本月預算數":1200000,"至本月預算數累計":7162000,"累計動支率":81.57,"本年度預算":14212000,"年度動支率":41.11,"剩餘可動支數":8369854,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"157","會計項目":"員工酬勞","本月動支數":4125934,"本月餘額":25350088,"本月預算數":3811000,"至本月預算數累計":22866000,"累計動支率":110.86,"本年度預算":45742000,"年度動支率":55.42,"剩餘可動支數":20391912,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1592","會計項目":"其他獎金－久任人員獎勵金","本月動支數":51036,"本月餘額":304513,"本月預算數":76000,"至本月預算數累計":449000,"累計動支率":67.82,"本年度預算":886000,"年度動支率":34.37,"剩餘可動支數":581487,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1599","會計項目":"其他獎金－其他","本月動支數":0,"本月餘額":0,"本月預算數":4000,"至本月預算數累計":22000,"累計動支率":0,"本年度預算":44000,"年度動支率":0,"剩餘可動支數":44000,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1611","會計項目":"退休金－舊制","本月動支數":1464983,"本月餘額":9081018,"本月預算數":1265000,"至本月預算數累計":7590000,"累計動支率":119.64,"本年度預算":15180000,"年度動支率":59.82,"剩餘可動支數":6098982,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1612","會計項目":"退休金－新制","本月動支數":7980,"本月餘額":6286249,"本月預算數":1206000,"至本月預算數累計":7197000,"累計動支率":87.35,"本年度預算":14277000,"年度動支率":44.03,"剩餘可動支數":7990751,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"163","會計項目":"卹償金","本月動支數":246911,"本月餘額":1463368,"本月預算數":306000,"至本月預算數累計":1822000,"累計動支率":80.32,"本年度預算":3615000,"年度動支率":40.48,"剩餘可動支數":2151632,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"165","會計項目":"確定福利計畫利息費用","本月動支數":-286235,"本月餘額":-1689989,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"18111","會計項目":"分擔員工保險費－分擔員工勞保費","本月動支數":4008,"本月餘額":9596598,"本月預算數":2036000,"至本月預算數累計":12149000,"累計動支率":78.99,"本年度預算":24108000,"年度動支率":39.81,"剩餘可動支數":14511402,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"18112","會計項目":"分擔員工保險費－分擔員工一般健保費","本月動支數":2332,"本月餘額":5953302,"本月預算數":1235000,"至本月預算數累計":7372000,"累計動支率":80.76,"本年度預算":14628000,"年度動支率":40.7,"剩餘可動支數":8674698,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1812","會計項目":"分擔員工及眷屬保險費－分擔員工眷屬一般健保費","本月動支數":1306,"本月餘額":3393165,"本月預算數":697000,"至本月預算數累計":4161000,"累計動支率":81.55,"本年度預算":8259000,"年度動支率":41.08,"剩餘可動支數":4865835,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1813","會計項目":"全民健保雇主補充保險費","本月動支數":-895402,"本月餘額":2128844,"本月預算數":562000,"至本月預算數累計":3356000,"累計動支率":63.43,"本年度預算":6655000,"年度動支率":31.99,"剩餘可動支數":4526156,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"183","會計項目":"傷病醫藥費","本月動支數":0,"本月餘額":0,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"183A","會計項目":"傷病醫藥費－健康檢查","本月動支數":0,"本月餘額":0,"本月預算數":7000,"至本月預算數累計":91000,"累計動支率":0,"本年度預算":1926000,"年度動支率":0,"剩餘可動支數":1926000,"預算主管單位":"職業安全衛生科","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"183B","會計項目":"傷病醫藥費－健康促進","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":3000,"累計動支率":0,"本年度預算":94000,"年度動支率":0,"剩餘可動支數":94000,"預算主管單位":"職業安全衛生科","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"183C","會計項目":"傷病醫藥費－諮詢","本月動支數":0,"本月餘額":0,"本月預算數":20000,"至本月預算數累計":120000,"累計動支率":0,"本年度預算":240000,"年度動支率":0,"剩餘可動支數":240000,"預算主管單位":"職業安全衛生科","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"183D","會計項目":"傷病醫藥費－其他","本月動支數":0,"本月餘額":2857,"本月預算數":0,"至本月預算數累計":240000,"累計動支率":1.19,"本年度預算":240000,"年度動支率":1.19,"剩餘可動支數":237143,"預算主管單位":"職業安全衛生科","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1851","會計項目":"提撥福利金－按營收提撥數","本月動支數":558412,"本月餘額":3599117,"本月預算數":615000,"至本月預算數累計":3671000,"累計動支率":98.04,"本年度預算":7289000,"年度動支率":49.38,"剩餘可動支數":3689883,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"186","會計項目":"體育活動費","本月動支數":0,"本月餘額":125761,"本月預算數":31000,"至本月預算數累計":186000,"累計動支率":67.61,"本年度預算":380000,"年度動支率":33.1,"剩餘可動支數":254239,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1891","會計項目":"其他福利費－退休人員慰問金","本月動支數":0,"本月餘額":970800,"本月預算數":1000,"至本月預算數累計":928000,"累計動支率":104.61,"本年度預算":1017000,"年度動支率":95.46,"剩餘可動支數":46200,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1894","會計項目":"其他福利費－休假補助費","本月動支數":8735,"本月餘額":2104292,"本月預算數":516000,"至本月預算數累計":3081000,"累計動支率":68.3,"本年度預算":6115000,"年度動支率":34.41,"剩餘可動支數":4010708,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1895","會計項目":"其他福利費－員工持股信託獎勵金","本月動支數":1071570,"本月餘額":6510941,"本月預算數":1124000,"至本月預算數累計":6707000,"累計動支率":97.08,"本年度預算":13306000,"年度動支率":48.93,"剩餘可動支數":6795059,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1896","會計項目":"其他福利費－員工子女教育補助費","本月動支數":63047,"本月餘額":378282,"本月預算數":81000,"至本月預算數累計":486000,"累計動支率":77.84,"本年度預算":961000,"年度動支率":39.36,"剩餘可動支數":582718,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"18981","會計項目":"其他福利費－留才增給金-持股信託","本月動支數":760717,"本月餘額":4589959,"本月預算數":728000,"至本月預算數累計":4343000,"累計動支率":105.69,"本年度預算":8619000,"年度動支率":53.25,"剩餘可動支數":4029041,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"18982","會計項目":"其他福利費－留才增給金-福利儲蓄","本月動支數":5438,"本月餘額":32628,"本月預算數":6000,"至本月預算數累計":36000,"累計動支率":90.63,"本年度預算":73000,"年度動支率":44.7,"剩餘可動支數":40372,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"1899","會計項目":"其他福利費－其他","本月動支數":142000,"本月餘額":603000,"本月預算數":144000,"至本月預算數累計":860000,"累計動支率":70.12,"本年度預算":1704000,"年度動支率":35.39,"剩餘可動支數":1101000,"預算主管單位":"人發駐點","費用分類":"人事費","分類代碼":"A.1"},{"明細帳":"201A1","會計項目":"行銷推廣費－CPE業務","本月動支數":0,"本月餘額":16937,"本月預算數":3000,"至本月預算數累計":31000,"累計動支率":54.64,"本年度預算":62000,"年度動支率":27.32,"剩餘可動支數":45063,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"201T1","會計項目":"行銷推廣費－OTT業務","本月動支數":0,"本月餘額":0,"本月預算數":1000,"至本月預算數累計":6000,"累計動支率":0,"本年度預算":24000,"年度動支率":0,"剩餘可動支數":24000,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"20101","會計項目":"ＭＯＤ業務－ＭＯＤ業務","本月動支數":0,"本月餘額":25777,"本月預算數":2000,"至本月預算數累計":42000,"累計動支率":61.37,"本年度預算":98000,"年度動支率":26.3,"剩餘可動支數":72223,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"20112","會計項目":"市話業務－市話電子帳單","本月動支數":0,"本月餘額":98026,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"2013G","會計項目":"行銷推廣費－行動電話業務－行動寬頻業務（不劃帳）","本月動支數":0,"本月餘額":14124,"本月預算數":5000,"至本月預算數累計":30000,"累計動支率":47.08,"本年度預算":98000,"年度動支率":14.41,"剩餘可動支數":83876,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"20130","會計項目":"行銷推廣費－行動電話業務－Disney 行動促案","本月動支數":0,"本月餘額":29967,"本月預算數":7000,"至本月預算數累計":36000,"累計動支率":83.24,"本年度預算":94000,"年度動支率":31.88,"剩餘可動支數":64033,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"20139","會計項目":"行動電話業務－行動電話業務－Netflix行動促案","本月動支數":0,"本月餘額":1254849,"本月預算數":141000,"至本月預算數累計":1034000,"累計動支率":121.36,"本年度預算":1880000,"年度動支率":66.75,"剩餘可動支數":625151,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"20153","會計項目":"電路出租業務－ＷiFi業務","本月動支數":0,"本月餘額":-72564,"本月預算數":1000,"至本月預算數累計":6000,"累計動支率":-1209.4,"本年度預算":24000,"年度動支率":-302.35,"剩餘可動支數":96564,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"20154","會計項目":"電路出租業務－ＦＴＴｘ","本月動支數":0,"本月餘額":34535,"本月預算數":5000,"至本月預算數累計":30000,"累計動支率":115.12,"本年度預算":92000,"年度動支率":37.54,"剩餘可動支數":57465,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"20181","會計項目":"行銷推廣費－數據業務－Netflix固網促案","本月動支數":0,"本月餘額":225008,"本月預算數":12000,"至本月預算數累計":219000,"累計動支率":102.74,"本年度預算":295000,"年度動支率":76.27,"剩餘可動支數":69992,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"20182","會計項目":"行銷推廣費－數據業務－Disney 固網促案","本月動支數":0,"本月餘額":5850,"本月預算數":3000,"至本月預算數累計":16000,"累計動支率":36.56,"本年度預算":42000,"年度動支率":13.93,"剩餘可動支數":36150,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"20194","會計項目":"行銷推廣費－企業形象推廣","本月動支數":"","本月餘額":"","本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":"","預算主管單位":"","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"20195","會計項目":"行銷推廣費－ESG活動","本月動支數":35927,"本月餘額":35927,"本月預算數":9000,"至本月預算數累計":54000,"累計動支率":66.53,"本年度預算":111000,"年度動支率":32.37,"剩餘可動支數":75073,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"20199","會計項目":"行銷推廣費－其他－其他","本月動支數":0,"本月餘額":66225,"本月預算數":4000,"至本月預算數累計":24000,"累計動支率":275.94,"本年度預算":65000,"年度動支率":101.88,"剩餘可動支數":-1225,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"2021","會計項目":"客製化產品行銷推廣費－市話網路","本月動支數":0,"本月餘額":1598,"本月預算數":0,"至本月預算數累計":2000,"累計動支率":79.9,"本年度預算":2000,"年度動支率":79.9,"剩餘可動支數":402,"預算主管單位":"企業客戶科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"2029","會計項目":"客製化產品行銷推廣費－其他","本月動支數":0,"本月餘額":90000,"本月預算數":0,"至本月預算數累計":25000,"累計動支率":360,"本年度預算":135000,"年度動支率":66.67,"剩餘可動支數":45000,"預算主管單位":"企業客戶科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"2031A","會計項目":"行銷業務推廣激勵獎金－銷售商品","本月動支數":820,"本月餘額":2985,"本月預算數":2000,"至本月預算數累計":2000,"累計動支率":149.25,"本年度預算":4000,"年度動支率":74.63,"剩餘可動支數":1015,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"20319","會計項目":"行銷業務推廣激勵獎金－其他","本月動支數":7140,"本月餘額":20480,"本月預算數":17000,"至本月預算數累計":102000,"累計動支率":20.08,"本年度預算":200000,"年度動支率":10.24,"剩餘可動支數":179520,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"2041B","會計項目":"行銷業務推廣代理佣金－行動寬頻5G","本月動支數":0,"本月餘額":17312,"本月預算數":6000,"至本月預算數累計":36000,"累計動支率":48.09,"本年度預算":71000,"年度動支率":24.38,"剩餘可動支數":53688,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"2041C","會計項目":"行銷業務推廣代理佣金－行動寬頻","本月動支數":0,"本月餘額":8508,"本月預算數":6000,"至本月預算數累計":36000,"累計動支率":23.63,"本年度預算":70000,"年度動支率":12.15,"剩餘可動支數":61492,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"2041E","會計項目":"行銷業務推廣代理佣金－WiFi商務","本月動支數":0,"本月餘額":61524,"本月預算數":31000,"至本月預算數累計":77000,"累計動支率":79.9,"本年度預算":107000,"年度動支率":57.5,"剩餘可動支數":45476,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"2041F","會計項目":"行銷業務推廣代理佣金－ＦＴＴｘ","本月動支數":0,"本月餘額":268465,"本月預算數":7000,"至本月預算數累計":167000,"累計動支率":160.76,"本年度預算":223000,"年度動支率":120.39,"剩餘可動支數":-45465,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"2041K","會計項目":"行銷業務推廣代理佣金─其他","本月動支數":-13096,"本月餘額":680560,"本月預算數":24000,"至本月預算數累計":506000,"累計動支率":134.5,"本年度預算":535000,"年度動支率":127.21,"剩餘可動支數":-145560,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"2041P","會計項目":"行銷業務推廣代理佣金─承攬門市業務","本月動支數":-77802,"本月餘額":9876563,"本月預算數":216000,"至本月預算數累計":7940000,"累計動支率":124.39,"本年度預算":8964000,"年度動支率":110.18,"剩餘可動支數":-912563,"預算主管單位":"行銷科","費用分類":"業務外包","分類代碼":"B.3"},{"明細帳":"2041T","會計項目":"行銷業務推廣代理佣金－OTT","本月動支數":0,"本月餘額":0,"本月預算數":2000,"至本月預算數累計":12000,"累計動支率":0,"本年度預算":22000,"年度動支率":0,"剩餘可動支數":22000,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"2041W","會計項目":"行銷業務推廣代理佣金─WiFi","本月動支數":0,"本月餘額":0,"本月預算數":2000,"至本月預算數累計":12000,"累計動支率":0,"本年度預算":22000,"年度動支率":0,"剩餘可動支數":22000,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"20411","會計項目":"行銷業務推廣代理佣金－ＭＯＤ","本月動支數":0,"本月餘額":35870,"本月預算數":10000,"至本月預算數累計":86000,"累計動支率":41.71,"本年度預算":151000,"年度動支率":23.75,"剩餘可動支數":115130,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"20412","會計項目":"行銷業務推廣代理佣金－市話","本月動支數":0,"本月餘額":28,"本月預算數":2000,"至本月預算數累計":12000,"累計動支率":0.23,"本年度預算":25000,"年度動支率":0.11,"剩餘可動支數":24972,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"20415","會計項目":"行銷業務推廣代理佣金－網際網路及加值","本月動支數":0,"本月餘額":118845,"本月預算數":8000,"至本月預算數累計":116000,"累計動支率":102.45,"本年度預算":159000,"年度動支率":74.75,"剩餘可動支數":40155,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"20417","會計項目":"行銷業務推廣代理佣金－公話","本月動支數":0,"本月餘額":59301,"本月預算數":4000,"至本月預算數累計":25000,"累計動支率":237.2,"本年度預算":53000,"年度動支率":111.89,"剩餘可動支數":-6301,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"20418","會計項目":"行銷業務推廣代理佣金－銷售商品","本月動支數":57195,"本月餘額":366798,"本月預算數":8000,"至本月預算數累計":156000,"累計動支率":235.13,"本年度預算":215000,"年度動支率":170.6,"剩餘可動支數":-151798,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"2042F","會計項目":"客製化產品業務推廣代理佣金－ＦＴＴｘ","本月動支數":0,"本月餘額":-9,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":42000,"年度動支率":-0.02,"剩餘可動支數":42009,"預算主管單位":"企業客戶科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"205A1","會計項目":"點數行銷推廣費－CPE業務","本月動支數":0,"本月餘額":195274,"本月預算數":0,"至本月預算數累計":192000,"累計動支率":101.71,"本年度預算":192000,"年度動支率":101.71,"剩餘可動支數":-3274,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"20501","會計項目":"點數行銷推廣費─ＭＯＤ業務－ＭＯＤ業務","本月動支數":0,"本月餘額":-1,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"20537","會計項目":"點數行銷推廣費─行動電話業務－銷售商品","本月動支數":0,"本月餘額":15,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"2059","會計項目":"點數行銷推廣費－其他","本月動支數":0,"本月餘額":-1,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.03"},{"明細帳":"2072C","會計項目":"取得合約增額成本攤銷-客戶合約佣金-行動寬頻（行銷）","本月動支數":0,"本月餘額":885834,"本月預算數":0,"至本月預算數累計":469000,"累計動支率":188.88,"本年度預算":469000,"年度動支率":188.88,"剩餘可動支數":-416834,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"2072D","會計項目":"取得合約增額成本攤銷-客戶合約佣金- MOD","本月動支數":0,"本月餘額":387179,"本月預算數":0,"至本月預算數累計":229000,"累計動支率":169.07,"本年度預算":229000,"年度動支率":169.07,"剩餘可動支數":-158179,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"2072F","會計項目":"取得合約增額成本攤銷-客戶合約佣金-電路出租","本月動支數":"","本月餘額":"","本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":"","預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"2072G","會計項目":"取得合約增額成本攤銷-客戶合約佣金-網際網路及加值","本月動支數":"","本月餘額":"","本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":"","預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"2072I","會計項目":"取得合約增額成本攤銷-客戶合約佣金- FTTX","本月動支數":0,"本月餘額":2562792,"本月預算數":0,"至本月預算數累計":1476000,"累計動支率":173.63,"本年度預算":1476000,"年度動支率":173.63,"剩餘可動支數":-1086792,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"2072J","會計項目":"取得合約增額成本攤銷-客戶合約佣金- WIFI","本月動支數":"","本月餘額":"","本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":"","預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"2072T","會計項目":"取得合約增額成本攤銷-客戶合約佣金-行動寬頻5G（行銷）","本月動支數":0,"本月餘額":617019,"本月預算數":0,"至本月預算數累計":169000,"累計動支率":365.1,"本年度預算":169000,"年度動支率":365.1,"剩餘可動支數":-448019,"預算主管單位":"行銷科","費用分類":"業務成本","分類代碼":"C.02"},{"明細帳":"2111","會計項目":"動力費－契約電費","本月動支數":0,"本月餘額":1789051,"本月預算數":411000,"至本月預算數累計":2312000,"累計動支率":77.38,"本年度預算":5614000,"年度動支率":31.87,"剩餘可動支數":3824949,"預算主管單位":"網路維運中心","費用分類":"設備及折舊","分類代碼":"E.4"},{"明細帳":"2112","會計項目":"動力費－流動電費","本月動支數":11291,"本月餘額":20117375,"本月預算數":3598000,"至本月預算數累計":23810000,"累計動支率":84.49,"本年度預算":54964000,"年度動支率":36.6,"剩餘可動支數":34846625,"預算主管單位":"網路維運中心","費用分類":"設備及折舊","分類代碼":"E.4"},{"明細帳":"2119","會計項目":"動力費－其他","本月動支數":0,"本月餘額":1964,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"網路維運中心","費用分類":"設備及折舊","分類代碼":"E.4"},{"明細帳":"2121","會計項目":"工作場所電費－基本電費","本月動支數":0,"本月餘額":359765,"本月預算數":91000,"至本月預算數累計":495000,"累計動支率":72.68,"本年度預算":1104000,"年度動支率":32.59,"剩餘可動支數":744235,"預算主管單位":"行政管理科","費用分類":"設備及折舊","分類代碼":"E.4"},{"明細帳":"2122","會計項目":"工作場所電費－流動電費","本月動支數":-224311,"本月餘額":1598822,"本月預算數":524000,"至本月預算數累計":2644000,"累計動支率":60.47,"本年度預算":5822000,"年度動支率":27.46,"剩餘可動支數":4223178,"預算主管單位":"行政管理科","費用分類":"設備及折舊","分類代碼":"E.4"},{"明細帳":"2129","會計項目":"工作場所電費－其他","本月動支數":0,"本月餘額":121,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"行政管理科","費用分類":"設備及折舊","分類代碼":"E.4"},{"明細帳":"2141","會計項目":"工作場所水費－基本水費","本月動支數":0,"本月餘額":36648,"本月預算數":6000,"至本月預算數累計":40000,"累計動支率":91.62,"本年度預算":80000,"年度動支率":45.81,"剩餘可動支數":43352,"預算主管單位":"行政管理科","費用分類":"設備及折舊","分類代碼":"E.4"},{"明細帳":"2142","會計項目":"工作場所水費－流動水費","本月動支數":-3336,"本月餘額":116287,"本月預算數":13000,"至本月預算數累計":138000,"累計動支率":84.27,"本年度預算":320000,"年度動支率":36.34,"剩餘可動支數":203713,"預算主管單位":"行政管理科","費用分類":"設備及折舊","分類代碼":"E.4"},{"明細帳":"2149","會計項目":"工作場所水費－其他","本月動支數":0,"本月餘額":50391,"本月預算數":7000,"至本月預算數累計":59000,"累計動支率":85.41,"本年度預算":136000,"年度動支率":37.05,"剩餘可動支數":85609,"預算主管單位":"行政管理科","費用分類":"設備及折舊","分類代碼":"E.4"},{"明細帳":"2211","會計項目":"郵費－一般公務用郵費","本月動支數":15987,"本月餘額":89182,"本月預算數":20000,"至本月預算數累計":117000,"累計動支率":76.22,"本年度預算":233000,"年度動支率":38.28,"剩餘可動支數":143818,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"2213","會計項目":"郵費－行銷業務用郵費","本月動支數":6308,"本月餘額":29765,"本月預算數":8000,"至本月預算數累計":51000,"累計動支率":58.36,"本年度預算":98000,"年度動支率":30.37,"剩餘可動支數":68235,"預算主管單位":"行銷科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"2219","會計項目":"郵費－其他","本月動支數":0,"本月餘額":84,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":-84,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"2221","會計項目":"電話費－公務電話費","本月動支數":0,"本月餘額":0,"本月預算數":3000,"至本月預算數累計":14000,"累計動支率":0,"本年度預算":32000,"年度動支率":0,"剩餘可動支數":32000,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"2311","會計項目":"臺澎金馬地區旅費－員工公務臺澎金馬地區旅費","本月動支數":70321,"本月餘額":417853,"本月預算數":110000,"至本月預算數累計":620000,"累計動支率":67.4,"本年度預算":1411000,"年度動支率":29.61,"剩餘可動支數":993147,"預算主管單位":"人發駐點","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"2312","會計項目":"臺澎金馬地區旅費－工會臺澎金馬地區旅費","本月動支數":0,"本月餘額":34823,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"人發駐點","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"2313","會計項目":"臺澎金馬地區旅費－職工福利會臺澎金馬地區旅費","本月動支數":0,"本月餘額":0,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"人發駐點","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"2342","會計項目":"專力費－公文遞送費","本月動支數":0,"本月餘額":203570,"本月預算數":63000,"至本月預算數累計":371000,"累計動支率":54.87,"本年度預算":745000,"年度動支率":27.32,"剩餘可動支數":541430,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"2351","會計項目":"一般物品運費","本月動支數":10476,"本月餘額":16476,"本月預算數":7000,"至本月預算數累計":38000,"累計動支率":43.36,"本年度預算":77000,"年度動支率":21.4,"剩餘可動支數":60524,"預算主管單位":"供應科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"2412","會計項目":"印刷及裝訂費－法令帳冊表報印刷費","本月動支數":0,"本月餘額":45780,"本月預算數":19000,"至本月預算數累計":104000,"累計動支率":44.02,"本年度預算":290000,"年度動支率":15.79,"剩餘可動支數":244220,"預算主管單位":"供應科","費用分類":"管銷費用","分類代碼":"F.3.2"},{"明細帳":"2414","會計項目":"印刷及裝訂費－複製費","本月動支數":6857,"本月餘額":89234,"本月預算數":16000,"至本月預算數累計":108000,"累計動支率":82.62,"本年度預算":215000,"年度動支率":41.5,"剩餘可動支數":125766,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.2"},{"明細帳":"251","會計項目":"土地改良物維護費","本月動支數":5655,"本月餘額":240510,"本月預算數":55000,"至本月預算數累計":330000,"累計動支率":72.88,"本年度預算":686000,"年度動支率":35.06,"剩餘可動支數":445490,"預算主管單位":"行政管理科","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"25211","會計項目":"一般房屋修護費－修繕費","本月動支數":496356,"本月餘額":4378091,"本月預算數":1468000,"至本月預算數累計":7396000,"累計動支率":59.2,"本年度預算":14758000,"年度動支率":29.67,"剩餘可動支數":10379909,"預算主管單位":"行政管理科","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"25212","會計項目":"一般房屋修護費－清潔費","本月動支數":0,"本月餘額":1544206,"本月預算數":326000,"至本月預算數累計":1956000,"累計動支率":78.95,"本年度預算":3918000,"年度動支率":39.41,"剩餘可動支數":2373794,"預算主管單位":"行政管理科","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"253","會計項目":"資訊設備修護費","本月動支數":14322,"本月餘額":75559,"本月預算數":56000,"至本月預算數累計":336000,"累計動支率":22.49,"本年度預算":662000,"年度動支率":11.41,"剩餘可動支數":586441,"預算主管單位":"資通科","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"2541A","會計項目":"電信線路設備修護費－ＡＤＳＬ移機發包費","本月動支數":0,"本月餘額":170767,"本月預算數":35000,"至本月預算數累計":206000,"累計動支率":82.9,"本年度預算":430000,"年度動支率":39.71,"剩餘可動支數":259233,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"2541B","會計項目":"電信線路設備修護費－ＡＤＳＬ裝機發包費","本月動支數":0,"本月餘額":278665,"本月預算數":306000,"至本月預算數累計":1797000,"累計動支率":15.51,"本年度預算":3721000,"年度動支率":7.49,"剩餘可動支數":3442335,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"2541E","會計項目":"電信線路設備修護費－圖資維護費","本月動支數":0,"本月餘額":2054469,"本月預算數":450000,"至本月預算數累計":2700000,"累計動支率":76.09,"本年度預算":5400000,"年度動支率":38.05,"剩餘可動支數":3345531,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"2541F","會計項目":"電信線路設備修護費－ＦＴＴＸ移機發包費","本月動支數":0,"本月餘額":1489074,"本月預算數":307000,"至本月預算數累計":1805000,"累計動支率":82.5,"本年度預算":3740000,"年度動支率":39.81,"剩餘可動支數":2250926,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"2541G","會計項目":"電信線路設備修護費－ＦＴＴＸ裝機發包費","本月動支數":0,"本月餘額":10384141,"本月預算數":2153000,"至本月預算數累計":12650000,"累計動支率":82.09,"本年度預算":26199000,"年度動支率":39.64,"剩餘可動支數":15814859,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"2541K","會計項目":"電信線路設備修護費－ＭＯＤ移機發包費","本月動支數":0,"本月餘額":333531,"本月預算數":75000,"至本月預算數累計":440000,"累計動支率":75.8,"本年度預算":909000,"年度動支率":36.69,"剩餘可動支數":575469,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"2541L","會計項目":"電信線路設備修護費－ＭＯＤ裝機發包費","本月動支數":0,"本月餘額":1163684,"本月預算數":272000,"至本月預算數累計":1596000,"累計動支率":72.91,"本年度預算":3306000,"年度動支率":35.2,"剩餘可動支數":2142316,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"2541P","會計項目":"電信線路設備修護費－客戶端設備及其附屬設備查修交付承攬費","本月動支數":0,"本月餘額":32725189,"本月預算數":6682000,"至本月預算數累計":40049000,"累計動支率":81.71,"本年度預算":80210000,"年度動支率":40.8,"剩餘可動支數":47484811,"預算主管單位":"第一客戶網路中心","費用分類":"業務外包","分類代碼":"B.1"},{"明細帳":"2541Q","會計項目":"電信線路設備修護費－管道維護工程發包費","本月動支數":28547,"本月餘額":8494806,"本月預算數":1721000,"至本月預算數累計":7255000,"累計動支率":117.09,"本年度預算":18298000,"年度動支率":46.42,"剩餘可動支數":9803194,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"2541T","會計項目":"電信線路設備修護費－測量台工作交付承攬費","本月動支數":0,"本月餘額":4040216,"本月預算數":938000,"至本月預算數累計":5077000,"累計動支率":79.58,"本年度預算":10705000,"年度動支率":37.74,"剩餘可動支數":6664784,"預算主管單位":"第一客戶網路中心","費用分類":"業務外包","分類代碼":"B.1"},{"明細帳":"25411","會計項目":"電信線路設備修護費－纜線維護工程發包費","本月動支數":162238,"本月餘額":7425789,"本月預算數":2091000,"至本月預算數累計":12217000,"累計動支率":60.78,"本年度預算":24604000,"年度動支率":30.18,"剩餘可動支數":17178211,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"25412","會計項目":"電信線路設備修護費－纜線維護食宿費","本月動支數":244390,"本月餘額":1294051,"本月預算數":272000,"至本月預算數累計":1411000,"累計動支率":91.71,"本年度預算":3131000,"年度動支率":41.33,"剩餘可動支數":1836949,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"25413","會計項目":"電信線路設備修護費－運屯費","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":3000,"累計動支率":0,"本年度預算":6000,"年度動支率":0,"剩餘可動支數":6000,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"25414","會計項目":"電信線路設備修護費－移機發包費","本月動支數":0,"本月餘額":971957,"本月預算數":284000,"至本月預算數累計":1667000,"累計動支率":58.31,"本年度預算":3450000,"年度動支率":28.17,"剩餘可動支數":2478043,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"25415","會計項目":"電信線路設備修護費－裝機發包費","本月動支數":0,"本月餘額":662170,"本月預算數":181000,"至本月預算數累計":1063000,"累計動支率":62.29,"本年度預算":2200000,"年度動支率":30.1,"剩餘可動支數":1537830,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"25418","會計項目":"電信線路設備修護費－線路人員服裝洗燙費","本月動支數":0,"本月餘額":148887,"本月預算數":38000,"至本月預算數累計":213000,"累計動支率":69.9,"本年度預算":493000,"年度動支率":30.2,"剩餘可動支數":344113,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"25419","會計項目":"電信線路設備修護費－纜線－其他","本月動支數":69239,"本月餘額":1000971,"本月預算數":207000,"至本月預算數累計":1194000,"累計動支率":83.83,"本年度預算":2311000,"年度動支率":43.31,"剩餘可動支數":1310029,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.1"},{"明細帳":"25422","會計項目":"電信機械設備修護費－維護機械食宿費","本月動支數":76453,"本月餘額":469306,"本月預算數":79000,"至本月預算數累計":475000,"累計動支率":98.8,"本年度預算":956000,"年度動支率":49.09,"剩餘可動支數":486694,"預算主管單位":"網路維運中心","費用分類":"設備及折舊","分類代碼":"E.3.2"},{"明細帳":"25423","會計項目":"電信機械設備修護費－運屯費","本月動支數":0,"本月餘額":0,"本月預算數":10000,"至本月預算數累計":60000,"累計動支率":0,"本年度預算":120000,"年度動支率":0,"剩餘可動支數":120000,"預算主管單位":"網路維運中心","費用分類":"設備及折舊","分類代碼":"E.3.2"},{"明細帳":"25424","會計項目":"電信機械設備修護費－電信機具維護費","本月動支數":41512,"本月餘額":1209040,"本月預算數":425000,"至本月預算數累計":2550000,"累計動支率":47.41,"本年度預算":5100000,"年度動支率":23.71,"剩餘可動支數":3890960,"預算主管單位":"網路維運中心","費用分類":"設備及折舊","分類代碼":"E.3.2"},{"明細帳":"25425","會計項目":"電信機械設備修護費－公務用交換設備維護費","本月動支數":45402,"本月餘額":5229252,"本月預算數":990000,"至本月預算數累計":5940000,"累計動支率":88.03,"本年度預算":11880000,"年度動支率":44.02,"剩餘可動支數":6650748,"預算主管單位":"網路維運中心","費用分類":"設備及折舊","分類代碼":"E.3.2"},{"明細帳":"25426","會計項目":"電信機械設備修護費－機房人員服裝洗燙費","本月動支數":0,"本月餘額":4720,"本月預算數":3000,"至本月預算數累計":18000,"累計動支率":26.22,"本年度預算":36000,"年度動支率":13.11,"剩餘可動支數":31280,"預算主管單位":"網路維運中心","費用分類":"設備及折舊","分類代碼":"E.3.2"},{"明細帳":"25427","會計項目":"電信機械設備修護費－數據設備維護費","本月動支數":119381,"本月餘額":3290825,"本月預算數":846000,"至本月預算數累計":5076000,"累計動支率":64.83,"本年度預算":10152000,"年度動支率":32.42,"剩餘可動支數":6861175,"預算主管單位":"網路維運中心","費用分類":"設備及折舊","分類代碼":"E.3.2"},{"明細帳":"25428","會計項目":"電信機械設備修護費－客戶端交換設備維護費","本月動支數":0,"本月餘額":19048,"本月預算數":26000,"至本月預算數累計":105000,"累計動支率":18.14,"本年度預算":227000,"年度動支率":8.39,"剩餘可動支數":207952,"預算主管單位":"資通科","費用分類":"設備及折舊","分類代碼":"E.3.2"},{"明細帳":"25429","會計項目":"電信機械設備修護費－其他","本月動支數":398,"本月餘額":191953,"本月預算數":130000,"至本月預算數累計":750000,"累計動支率":25.59,"本年度預算":1480000,"年度動支率":12.97,"剩餘可動支數":1288047,"預算主管單位":"網路維運中心","費用分類":"設備及折舊","分類代碼":"E.3.2"},{"明細帳":"25471","會計項目":"公用電話維護費－公話維護食宿費","本月動支數":12710,"本月餘額":59906,"本月預算數":17000,"至本月預算數累計":104000,"累計動支率":57.6,"本年度預算":210000,"年度動支率":28.53,"剩餘可動支數":150094,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"25472","會計項目":"公用電話維護費－公話裝移機工什費","本月動支數":0,"本月餘額":0,"本月預算數":1000,"至本月預算數累計":7000,"累計動支率":0,"本年度預算":11000,"年度動支率":0,"剩餘可動支數":11000,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"25473","會計項目":"公用電話維護費－數幣機維護等費","本月動支數":0,"本月餘額":4600,"本月預算數":1000,"至本月預算數累計":5000,"累計動支率":92,"本年度預算":10000,"年度動支率":46,"剩餘可動支數":5400,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"25474","會計項目":"公用電話維護費－公用電話機及附屬設備修護費","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":250000,"年度動支率":0,"剩餘可動支數":250000,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"25476","會計項目":"公用電話維護費－公話用電費","本月動支數":0,"本月餘額":2004,"本月預算數":1000,"至本月預算數累計":2000,"累計動支率":100.2,"本年度預算":4000,"年度動支率":50.1,"剩餘可動支數":1996,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.4"},{"明細帳":"25477","會計項目":"公用電話維護費－公話人員服裝洗燙費","本月動支數":0,"本月餘額":4115,"本月預算數":2000,"至本月預算數累計":8000,"累計動支率":51.44,"本年度預算":17000,"年度動支率":24.21,"剩餘可動支數":12885,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"25479","會計項目":"公用電話維護費－其他","本月動支數":0,"本月餘額":6000,"本月預算數":1000,"至本月預算數累計":5000,"累計動支率":120,"本年度預算":10000,"年度動支率":60,"剩餘可動支數":4000,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"255","會計項目":"運輸設備修護費","本月動支數":170983,"本月餘額":905390,"本月預算數":181000,"至本月預算數累計":1030000,"累計動支率":87.9,"本年度預算":2101000,"年度動支率":43.09,"剩餘可動支數":1195610,"預算主管單位":"供應科","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"2561","會計項目":"其他設備修護費－事務","本月動支數":10200,"本月餘額":19629,"本月預算數":27000,"至本月預算數累計":161000,"累計動支率":12.19,"本年度預算":323000,"年度動支率":6.08,"剩餘可動支數":303371,"預算主管單位":"行政管理科","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"2562","會計項目":"其他設備修護費－維運機具","本月動支數":0,"本月餘額":58740,"本月預算數":21000,"至本月預算數累計":174000,"累計動支率":33.76,"本年度預算":367000,"年度動支率":16.01,"剩餘可動支數":308260,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"2592","會計項目":"保固及售後服務費用－採購","本月動支數":0,"本月餘額":0,"本月預算數":7000,"至本月預算數累計":42000,"累計動支率":0,"本年度預算":84000,"年度動支率":0,"剩餘可動支數":84000,"預算主管單位":"供應科","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"2621","會計項目":"一般房屋保險費－一般房屋保險費","本月動支數":0,"本月餘額":13029,"本月預算數":6000,"至本月預算數累計":36000,"累計動支率":36.19,"本年度預算":72000,"年度動支率":18.1,"剩餘可動支數":58971,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"264","會計項目":"電信設備保險費","本月動支數":0,"本月餘額":5299,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":14000,"年度動支率":37.85,"剩餘可動支數":8701,"預算主管單位":"網路維運中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"265","會計項目":"運輸設備保險費","本月動支數":350155,"本月餘額":371965,"本月預算數":120000,"至本月預算數累計":566000,"累計動支率":65.72,"本年度預算":1140000,"年度動支率":32.63,"剩餘可動支數":768035,"預算主管單位":"供應科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"2672","會計項目":"現金及貨物保險費－銀錢竊盜保險費","本月動支數":0,"本月餘額":1557,"本月預算數":0,"至本月預算數累計":2000,"累計動支率":77.85,"本年度預算":2000,"年度動支率":77.85,"剩餘可動支數":443,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"268","會計項目":"責任保險費","本月動支數":4300,"本月餘額":9850,"本月預算數":5000,"至本月預算數累計":10000,"累計動支率":98.5,"本年度預算":20000,"年度動支率":49.25,"剩餘可動支數":10150,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"271","會計項目":"棧儲費","本月動支數":0,"本月餘額":1200,"本月預算數":3000,"至本月預算數累計":18000,"累計動支率":6.67,"本年度預算":40000,"年度動支率":3,"剩餘可動支數":38800,"預算主管單位":"供應科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"273","會計項目":"公證費","本月動支數":0,"本月餘額":18700,"本月預算數":0,"至本月預算數累計":30000,"累計動支率":62.33,"本年度預算":48000,"年度動支率":38.96,"剩餘可動支數":29300,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"2761","會計項目":"佣金、匯費及手續費－代辦電信業務服務費","本月動支數":0,"本月餘額":40171,"本月預算數":9000,"至本月預算數累計":53000,"累計動支率":75.79,"本年度預算":113000,"年度動支率":35.55,"剩餘可動支數":72829,"預算主管單位":"服務中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"2763","會計項目":"佣金、匯費及手續費－代收電信資費手續費","本月動支數":0,"本月餘額":9321477,"本月預算數":1853000,"至本月預算數累計":11380000,"累計動支率":81.91,"本年度預算":22781000,"年度動支率":40.92,"剩餘可動支數":13459523,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.08"},{"明細帳":"2765","會計項目":"佣金、匯費及手續費－代管公話服務費","本月動支數":0,"本月餘額":62247,"本月預算數":13000,"至本月預算數累計":78000,"累計動支率":79.8,"本年度預算":156000,"年度動支率":39.9,"剩餘可動支數":93753,"預算主管單位":"第一客戶網路中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"2769","會計項目":"佣金、匯費及手續費－匯費及手續費","本月動支數":1035,"本月餘額":276807,"本月預算數":83000,"至本月預算數累計":509000,"累計動支率":54.38,"本年度預算":1044000,"年度動支率":26.51,"剩餘可動支數":767193,"預算主管單位":"行政管理科","費用分類":"業務成本","分類代碼":"C.09"},{"明細帳":"28032","會計項目":"委外製播費－委外製播費","本月動支數":0,"本月餘額":16620,"本月預算數":4000,"至本月預算數累計":24000,"累計動支率":69.25,"本年度預算":44000,"年度動支率":37.77,"剩餘可動支數":27380,"預算主管單位":"規劃設計科","費用分類":"管銷費用","分類代碼":"F.1.7"},{"明細帳":"2807A","會計項目":"委外費－客服業務","本月動支數":0,"本月餘額":26932032,"本月預算數":5913000,"至本月預算數累計":34462000,"累計動支率":78.15,"本年度預算":59035000,"年度動支率":45.62,"剩餘可動支數":32102968,"預算主管單位":"服務中心","費用分類":"業務外包","分類代碼":"B.2"},{"明細帳":"2821","會計項目":"法律事務費－律師服務費","本月動支數":0,"本月餘額":0,"本月預算數":20000,"至本月預算數累計":80000,"累計動支率":0,"本年度預算":249000,"年度動支率":0,"剩餘可動支數":249000,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.1.5"},{"明細帳":"2822","會計項目":"法律事務費－訴訟行政費","本月動支數":74990,"本月餘額":368901,"本月預算數":100000,"至本月預算數累計":520000,"累計動支率":70.94,"本年度預算":1040000,"年度動支率":35.47,"剩餘可動支數":671099,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.1.5"},{"明細帳":"28301","會計項目":"工程及管理諮詢服務費-非專標案","本月動支數":0,"本月餘額":28000,"本月預算數":8000,"至本月預算數累計":142000,"累計動支率":19.72,"本年度預算":352000,"年度動支率":7.95,"剩餘可動支數":324000,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.1.5"},{"明細帳":"2841","會計項目":"講課鐘點及稿費－講課鐘點費","本月動支數":4800,"本月餘額":4800,"本月預算數":0,"至本月預算數累計":12000,"累計動支率":40,"本年度預算":25000,"年度動支率":19.2,"剩餘可動支數":20200,"預算主管單位":"人發駐點","費用分類":"管銷費用","分類代碼":"F.1.7"},{"明細帳":"2853","會計項目":"委託調查研究費－顧問及專家報酬","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":30000,"累計動支率":0,"本年度預算":60000,"年度動支率":0,"剩餘可動支數":60000,"預算主管單位":"規劃設計科","費用分類":"管銷費用","分類代碼":"F.1.4"},{"明細帳":"286","會計項目":"委託檢驗試驗費","本月動支數":0,"本月餘額":20572,"本月預算數":4000,"至本月預算數累計":29000,"累計動支率":70.94,"本年度預算":68000,"年度動支率":30.25,"剩餘可動支數":47428,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.1.7"},{"明細帳":"28711","會計項目":"委託國內考選訓練費－勞教經費","本月動支數":0,"本月餘額":0,"本月預算數":4000,"至本月預算數累計":16000,"累計動支率":0,"本年度預算":38000,"年度動支率":0,"剩餘可動支數":38000,"預算主管單位":"人發駐點","費用分類":"管銷費用","分類代碼":"F.1.7"},{"明細帳":"28712","會計項目":"委託國內考選訓練費－就學進修費","本月動支數":0,"本月餘額":95658,"本月預算數":0,"至本月預算數累計":45000,"累計動支率":212.57,"本年度預算":105000,"年度動支率":91.1,"剩餘可動支數":9342,"預算主管單位":"人發駐點","費用分類":"管銷費用","分類代碼":"F.1.7"},{"明細帳":"28713","會計項目":"委託國內考選訓練費－訓練班費用","本月動支數":0,"本月餘額":2742,"本月預算數":14000,"至本月預算數累計":46000,"累計動支率":5.96,"本年度預算":106000,"年度動支率":2.59,"剩餘可動支數":103258,"預算主管單位":"人發駐點","費用分類":"管銷費用","分類代碼":"F.1.7"},{"明細帳":"28719","會計項目":"委託國內考選訓練費－其他","本月動支數":0,"本月餘額":41766,"本月預算數":4000,"至本月預算數累計":53000,"累計動支率":78.8,"本年度預算":90000,"年度動支率":46.41,"剩餘可動支數":48234,"預算主管單位":"人發駐點","費用分類":"管銷費用","分類代碼":"F.1.7"},{"明細帳":"28821","會計項目":"電腦軟體服務費－價購軟體費－自用","本月動支數":7293,"本月餘額":43758,"本月預算數":8000,"至本月預算數累計":48000,"累計動支率":91.16,"本年度預算":98000,"年度動支率":44.65,"剩餘可動支數":54242,"預算主管單位":"資通科","費用分類":"管銷費用","分類代碼":"F.1.3"},{"明細帳":"2883","會計項目":"電腦軟體服務費－軟體使用費","本月動支數":4281,"本月餘額":25686,"本月預算數":6000,"至本月預算數累計":36000,"累計動支率":71.35,"本年度預算":73000,"年度動支率":35.19,"剩餘可動支數":47314,"預算主管單位":"資通科","費用分類":"管銷費用","分類代碼":"F.1.3"},{"明細帳":"2891","會計項目":"保全費用－駐衛保全費","本月動支數":-2048,"本月餘額":2401867,"本月預算數":492000,"至本月預算數累計":2964000,"累計動支率":81.03,"本年度預算":5885000,"年度動支率":40.81,"剩餘可動支數":3483133,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.1.6"},{"明細帳":"2892","會計項目":"保全費用－機械保全費","本月動支數":0,"本月餘額":426132,"本月預算數":129000,"至本月預算數累計":770000,"累計動支率":55.34,"本年度預算":1544000,"年度動支率":27.6,"剩餘可動支數":1117868,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.1.6"},{"明細帳":"291","會計項目":"公共關係費－一般","本月動支數":23750,"本月餘額":96098,"本月預算數":38000,"至本月預算數累計":228000,"累計動支率":42.15,"本年度預算":466000,"年度動支率":20.62,"剩餘可動支數":369902,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"2922","會計項目":"公共關係費－企客","本月動支數":0,"本月餘額":91761,"本月預算數":8000,"至本月預算數累計":153000,"累計動支率":59.97,"本年度預算":350000,"年度動支率":26.22,"剩餘可動支數":258239,"預算主管單位":"企業客戶科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"312","會計項目":"設備維運備品費","本月動支數":0,"本月餘額":33697710.16,"本月預算數":6118000,"至本月預算數累計":36238000,"累計動支率":92.99,"本年度預算":75698000,"年度動支率":44.52,"剩餘可動支數":42000289.84,"預算主管單位":"供應科","費用分類":"設備及折舊","分類代碼":"E.3.5"},{"明細帳":"313","會計項目":"燃料費","本月動支數":0,"本月餘額":1579187,"本月預算數":356000,"至本月預算數累計":2138000,"累計動支率":73.86,"本年度預算":4328000,"年度動支率":36.49,"剩餘可動支數":2748813,"預算主管單位":"供應科","費用分類":"設備及折舊","分類代碼":"E.3.5"},{"明細帳":"321","會計項目":"辦公（事務）用品","本月動支數":60708,"本月餘額":186770,"本月預算數":57000,"至本月預算數累計":342000,"累計動支率":54.61,"本年度預算":691000,"年度動支率":27.03,"剩餘可動支數":504230,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"322","會計項目":"報章什誌","本月動支數":0,"本月餘額":0,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"325A","會計項目":"服裝－勞安人員工作服裝","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":18000,"年度動支率":0,"剩餘可動支數":18000,"預算主管單位":"職業安全衛生科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"3251","會計項目":"服裝－倉儲作業人員工作服裝","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":9000,"年度動支率":0,"剩餘可動支數":9000,"預算主管單位":"供應科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"3253","會計項目":"服裝－數據外勤人員工作服裝","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":228000,"年度動支率":0,"剩餘可動支數":228000,"預算主管單位":"網路維運中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"3254","會計項目":"服裝－機務外勤人員工作服裝","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":1030000,"年度動支率":0,"剩餘可動支數":1030000,"預算主管單位":"網路維運中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"32551","會計項目":"服裝－線路外勤人員工作服裝－正職人員","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":2103000,"年度動支率":0,"剩餘可動支數":2103000,"預算主管單位":"第一客戶網路中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"3256","會計項目":"服裝－機報話房防塵工作服裝","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":171000,"年度動支率":0,"剩餘可動支數":171000,"預算主管單位":"網路維運中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"32571","會計項目":"營業人員工作服裝─正職人員","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":1000000,"年度動支率":0,"剩餘可動支數":1000000,"預算主管單位":"服務中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"3258","會計項目":"服裝－企客人員工作服裝","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":658000,"年度動支率":0,"剩餘可動支數":658000,"預算主管單位":"企業客戶科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"326","會計項目":"食　品","本月動支數":55420,"本月餘額":285756,"本月預算數":56000,"至本月預算數累計":338000,"累計動支率":84.54,"本年度預算":692000,"年度動支率":41.29,"剩餘可動支數":406244,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"32912","會計項目":"洗燙費－營業人員服裝洗燙費","本月動支數":0,"本月餘額":-78,"本月預算數":2000,"至本月預算數累計":14000,"累計動支率":-0.56,"本年度預算":32000,"年度動支率":-0.24,"剩餘可動支數":32078,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"32919","會計項目":"洗燙費－其他洗燙費","本月動支數":0,"本月餘額":4460,"本月預算數":4000,"至本月預算數累計":24000,"累計動支率":18.58,"本年度預算":47000,"年度動支率":9.49,"剩餘可動支數":42540,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"32921","會計項目":"其他用品消耗－獎品費","本月動支數":0,"本月餘額":97200,"本月預算數":6000,"至本月預算數累計":44000,"累計動支率":220.91,"本年度預算":80000,"年度動支率":121.5,"剩餘可動支數":-17200,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"32922","會計項目":"其他用品消耗－工務競賽獎品費","本月動支數":0,"本月餘額":-330,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"第一客戶網路中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"3294","會計項目":"其他用品消耗－年節活動費","本月動支數":0,"本月餘額":585600,"本月預算數":0,"至本月預算數累計":859000,"累計動支率":68.17,"本年度預算":974000,"年度動支率":60.12,"剩餘可動支數":388400,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"3299","會計項目":"其他用品消耗－其他","本月動支數":10000,"本月餘額":358259,"本月預算數":111000,"至本月預算數累計":573000,"累計動支率":62.52,"本年度預算":1161000,"年度動支率":30.86,"剩餘可動支數":802741,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"3311B","會計項目":"手機配件成本","本月動支數":-12881,"本月餘額":11978073,"本月預算數":2048000,"至本月預算數累計":14453000,"累計動支率":82.88,"本年度預算":30964000,"年度動支率":38.68,"剩餘可動支數":18985927,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.04"},{"明細帳":"3311C","會計項目":"商品成本─國際衛星手機及配件","本月動支數":0,"本月餘額":144173,"本月預算數":4000,"至本月預算數累計":24000,"累計動支率":600.72,"本年度預算":46000,"年度動支率":313.42,"剩餘可動支數":-98173,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.04"},{"明細帳":"3311D","會計項目":"商品成本－電話機","本月動支數":0,"本月餘額":860406,"本月預算數":170000,"至本月預算數累計":1048000,"累計動支率":82.1,"本年度預算":2271000,"年度動支率":37.89,"剩餘可動支數":1410594,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.04"},{"明細帳":"3311F","會計項目":"商品成本－節能週邊商品","本月動支數":34121,"本月餘額":23537498,"本月預算數":2353000,"至本月預算數累計":13681000,"累計動支率":172.05,"本年度預算":27168000,"年度動支率":86.64,"剩餘可動支數":3630502,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.04"},{"明細帳":"33111","會計項目":"商品成本－手機成本","本月動支數":0,"本月餘額":1118886,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":-1118886,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.04"},{"明細帳":"33114","會計項目":"商品成本－喇叭組成本","本月動支數":0,"本月餘額":748503,"本月預算數":64000,"至本月預算數累計":378000,"累計動支率":198.02,"本年度預算":748000,"年度動支率":100.07,"剩餘可動支數":-503,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.04"},{"明細帳":"33117","會計項目":"商品成本－高畫質電視機","本月動支數":-9331,"本月餘額":1218775,"本月預算數":279000,"至本月預算數累計":1847000,"累計動支率":65.99,"本年度預算":3630000,"年度動支率":33.58,"剩餘可動支數":2411225,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.04"},{"明細帳":"33130","會計項目":"商品成本─Apple Watch","本月動支數":"","本月餘額":"","本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":"","預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.04"},{"明細帳":"33131","會計項目":"商品成本─平板電腦","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":80000,"累計動支率":0,"本年度預算":135000,"年度動支率":0,"剩餘可動支數":135000,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.04"},{"明細帳":"33133","會計項目":"商品成本─3C週邊商品","本月動支數":-3905,"本月餘額":1644421,"本月預算數":164000,"至本月預算數累計":1378000,"累計動支率":119.33,"本年度預算":2503000,"年度動支率":65.7,"剩餘可動支數":858579,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.04"},{"明細帳":"33138","會計項目":"商品成本－投影機","本月動支數":0,"本月餘額":0,"本月預算數":9000,"至本月預算數累計":55000,"累計動支率":0,"本年度預算":109000,"年度動支率":0,"剩餘可動支數":109000,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.04"},{"明細帳":"3317","會計項目":"商品成本─居家生活用品","本月動支數":-1428,"本月餘額":201172,"本月預算數":46000,"至本月預算數累計":297000,"累計動支率":67.73,"本年度預算":651000,"年度動支率":30.9,"剩餘可動支數":449828,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.04"},{"明細帳":"3318","會計項目":"商品成本─健康保養產品","本月動支數":-5449,"本月餘額":918961,"本月預算數":64000,"至本月預算數累計":468000,"累計動支率":196.36,"本年度預算":1103000,"年度動支率":83.31,"剩餘可動支數":184039,"預算主管單位":"服務中心","費用分類":"業務成本","分類代碼":"C.04"},{"明細帳":"3320","會計項目":"商品成本─智慧音箱─行分","本月動支數":"","本月餘額":"","本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":"","預算主管單位":"","費用分類":"業務成本","分類代碼":"C.04"},{"明細帳":"3321A","會計項目":"其他營業成本－紅利積點成本－市長話","本月動支數":3362,"本月餘額":4877,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"行銷科","費用分類":"管銷費用","分類代碼":"F.3.1"},{"明細帳":"3321B","會計項目":"其他營業成本－紅利積點成本－HiNet上網","本月動支數":665159,"本月餘額":3368471,"本月預算數":546000,"至本月預算數累計":3193000,"累計動支率":105.5,"本年度預算":6934000,"年度動支率":48.58,"剩餘可動支數":3565529,"預算主管單位":"行銷科","費用分類":"管銷費用","分類代碼":"F.3.1"},{"明細帳":"3321C","會計項目":"其他營業成本－紅利積點成本－寬頻接取","本月動支數":704182,"本月餘額":2911867,"本月預算數":399000,"至本月預算數累計":2398000,"累計動支率":121.43,"本年度預算":4936000,"年度動支率":58.99,"剩餘可動支數":2024133,"預算主管單位":"行銷科","費用分類":"管銷費用","分類代碼":"F.3.1"},{"明細帳":"3321D","會計項目":"其他營業成本－紅利積點成本－MOD業務","本月動支數":55315,"本月餘額":425877,"本月預算數":42000,"至本月預算數累計":247000,"累計動支率":172.42,"本年度預算":634000,"年度動支率":67.17,"剩餘可動支數":208123,"預算主管單位":"行銷科","費用分類":"管銷費用","分類代碼":"F.3.1"},{"明細帳":"3321F","會計項目":"其他營業成本－紅利積點成本－加值業務","本月動支數":3239451,"本月餘額":9504563,"本月預算數":1841000,"至本月預算數累計":10770000,"累計動支率":88.25,"本年度預算":22549000,"年度動支率":42.15,"剩餘可動支數":13044437,"預算主管單位":"行銷科","費用分類":"管銷費用","分類代碼":"F.3.1"},{"明細帳":"3321K","會計項目":"其他營業成本－紅利積點成本－點數外賣","本月動支數":"","本月餘額":"","本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":"","預算主管單位":"","費用分類":"管銷費用","分類代碼":"F.3.1"},{"明細帳":"3321L","會計項目":"其他營業成本－紅利積點成本－OTT影視業務","本月動支數":19828,"本月餘額":47157,"本月預算數":56000,"至本月預算數累計":130000,"累計動支率":36.27,"本年度預算":260000,"年度動支率":18.14,"剩餘可動支數":212843,"預算主管單位":"行銷科","費用分類":"管銷費用","分類代碼":"F.3.1"},{"明細帳":"411A","會計項目":"土地使用費","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":0,"預算主管單位":"行政管理科","費用分類":"設備及折舊","分類代碼":"E.5"},{"明細帳":"4212A","會計項目":"電信室使用費","本月動支數":0,"本月餘額":42444,"本月預算數":7000,"至本月預算數累計":42000,"累計動支率":101.06,"本年度預算":84000,"年度動支率":50.53,"剩餘可動支數":41556,"預算主管單位":"行政管理科","費用分類":"設備及折舊","分類代碼":"E.5"},{"明細帳":"442A","會計項目":"電桿附掛費","本月動支數":11581,"本月餘額":58371,"本月預算數":11000,"至本月預算數累計":57000,"累計動支率":102.41,"本年度預算":114000,"年度動支率":51.2,"剩餘可動支數":55629,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.5"},{"明細帳":"443A","會計項目":"中高軌衛星電路服務使用費","本月動支數":0,"本月餘額":0,"本月預算數":21000,"至本月預算數累計":126000,"累計動支率":0,"本年度預算":255000,"年度動支率":0,"剩餘可動支數":255000,"預算主管單位":"企業客戶科","費用分類":"設備及折舊","分類代碼":"E.5"},{"明細帳":"443C","會計項目":"低軌衛星電路服務使用費","本月動支數":0,"本月餘額":0,"本月預算數":82000,"至本月預算數累計":493000,"累計動支率":0,"本年度預算":1068000,"年度動支率":0,"剩餘可動支數":1068000,"預算主管單位":"企業客戶科","費用分類":"設備及折舊","分類代碼":"E.5"},{"明細帳":"445A","會計項目":"管道使用費","本月動支數":49843,"本月餘額":388643,"本月預算數":68000,"至本月預算數累計":408000,"累計動支率":95.26,"本年度預算":816000,"年度動支率":47.63,"剩餘可動支數":427357,"預算主管單位":"第一客戶網路中心","費用分類":"設備及折舊","分類代碼":"E.5"},{"明細帳":"461A","會計項目":"其他設備使用費","本月動支數":0,"本月餘額":103376,"本月預算數":33000,"至本月預算數累計":198000,"累計動支率":52.21,"本年度預算":407000,"年度動支率":25.4,"剩餘可動支數":303624,"預算主管單位":"行政管理科","費用分類":"設備及折舊","分類代碼":"E.5"},{"明細帳":"479","會計項目":"其他利息","本月動支數":0,"本月餘額":54271,"本月預算數":0,"至本月預算數累計":60000,"累計動支率":90.45,"本年度預算":60000,"年度動支率":90.45,"剩餘可動支數":5729,"預算主管單位":"行政管理科","費用分類":"設備及折舊","分類代碼":"E.5"},{"明細帳":"5A07","會計項目":"使用權資產折舊費用－公務車","本月動支數":0,"本月餘額":55242,"本月預算數":26000,"至本月預算數累計":52000,"累計動支率":106.23,"本年度預算":384000,"年度動支率":14.39,"剩餘可動支數":328758,"預算主管單位":"會計駐點","費用分類":"設備及折舊","分類代碼":"E.1"},{"明細帳":"5A10","會計項目":"使用權資產折舊費用－土地上含自有建物","本月動支數":0,"本月餘額":2555349,"本月預算數":481000,"至本月預算數累計":2883000,"累計動支率":88.64,"本年度預算":5769000,"年度動支率":44.29,"剩餘可動支數":3213651,"預算主管單位":"會計駐點","費用分類":"設備及折舊","分類代碼":"E.1"},{"明細帳":"5A11","會計項目":"使用權資產折舊費用－工程車","本月動支數":0,"本月餘額":652925,"本月預算數":742000,"至本月預算數累計":2008000,"累計動支率":32.52,"本年度預算":9308000,"年度動支率":7.01,"剩餘可動支數":8655075,"預算主管單位":"會計駐點","費用分類":"設備及折舊","分類代碼":"E.1"},{"明細帳":"521","會計項目":"一般房屋折舊","本月動支數":0,"本月餘額":12080265,"本月預算數":2984000,"至本月預算數累計":17857000,"累計動支率":67.65,"本年度預算":35847000,"年度動支率":33.7,"剩餘可動支數":23766735,"預算主管單位":"會計駐點","費用分類":"設備及折舊","分類代碼":"E.1"},{"明細帳":"522","會計項目":"其他建築折舊","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":0,"預算主管單位":"會計駐點","費用分類":"設備及折舊","分類代碼":"E.1"},{"明細帳":"524","會計項目":"自用出租房屋折舊","本月動支數":0,"本月餘額":2641560,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"會計駐點","費用分類":"設備及折舊","分類代碼":"E.1"},{"明細帳":"531","會計項目":"資訊設備折舊","本月動支數":0,"本月餘額":3105115,"本月預算數":580000,"至本月預算數累計":3465000,"累計動支率":89.61,"本年度預算":7170000,"年度動支率":43.31,"剩餘可動支數":4064885,"預算主管單位":"會計駐點","費用分類":"設備及折舊","分類代碼":"E.1"},{"明細帳":"541","會計項目":"電信線路設備折舊","本月動支數":0,"本月餘額":132712071,"本月預算數":26817000,"至本月預算數累計":158122000,"累計動支率":83.93,"本年度預算":319607000,"年度動支率":41.52,"剩餘可動支數":186894929,"預算主管單位":"會計駐點","費用分類":"設備及折舊","分類代碼":"E.1"},{"明細帳":"542","會計項目":"電信機械設備折舊","本月動支數":0,"本月餘額":55213855,"本月預算數":11271000,"至本月預算數累計":68651000,"累計動支率":80.43,"本年度預算":136558000,"年度動支率":40.43,"剩餘可動支數":81344145,"預算主管單位":"會計駐點","費用分類":"設備及折舊","分類代碼":"E.1"},{"明細帳":"551","會計項目":"運輸設備折舊","本月動支數":0,"本月餘額":3111040,"本月預算數":648000,"至本月預算數累計":3776000,"累計動支率":82.39,"本年度預算":8428000,"年度動支率":36.91,"剩餘可動支數":5316960,"預算主管單位":"會計駐點","費用分類":"設備及折舊","分類代碼":"E.1"},{"明細帳":"561","會計項目":"其他設備折舊","本月動支數":0,"本月餘額":2962301,"本月預算數":583000,"至本月預算數累計":3507000,"累計動支率":84.47,"本年度預算":12048000,"年度動支率":24.59,"剩餘可動支數":9085699,"預算主管單位":"會計駐點","費用分類":"設備及折舊","分類代碼":"E.1"},{"明細帳":"5611","會計項目":"太陽光電系統設備折舊","本月動支數":0,"本月餘額":897110,"本月預算數":187000,"至本月預算數累計":1122000,"累計動支率":79.96,"本年度預算":2249000,"年度動支率":39.89,"剩餘可動支數":1351890,"預算主管單位":"會計駐點","費用分類":"設備及折舊","分類代碼":"E.1"},{"明細帳":"592","會計項目":"攤銷電腦軟體","本月動支數":0,"本月餘額":3600,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":9000,"年度動支率":40,"剩餘可動支數":5400,"預算主管單位":"資通科","費用分類":"設備及折舊","分類代碼":"E.2"},{"明細帳":"612","會計項目":"一般土地地價稅","本月動支數":0,"本月餘額":6689644,"本月預算數":1338000,"至本月預算數累計":8028000,"累計動支率":83.33,"本年度預算":16452000,"年度動支率":40.66,"剩餘可動支數":9762356,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.2"},{"明細帳":"631","會計項目":"一般房屋稅","本月動支數":0,"本月餘額":2590593,"本月預算數":529000,"至本月預算數累計":3080000,"累計動支率":84.11,"本年度預算":6250000,"年度動支率":41.45,"剩餘可動支數":3659407,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.2"},{"明細帳":"6421","會計項目":"印花稅－營收現金貼用","本月動支數":0,"本月餘額":694802,"本月預算數":120000,"至本月預算數累計":870000,"累計動支率":79.86,"本年度預算":1800000,"年度動支率":38.6,"剩餘可動支數":1105198,"預算主管單位":"服務中心","費用分類":"管銷費用","分類代碼":"F.2"},{"明細帳":"6422","會計項目":"印花稅－合約貼用","本月動支數":0,"本月餘額":101146,"本月預算數":19000,"至本月預算數累計":100000,"累計動支率":101.15,"本年度預算":218000,"年度動支率":46.4,"剩餘可動支數":116854,"預算主管單位":"供應科","費用分類":"管銷費用","分類代碼":"F.2"},{"明細帳":"6429","會計項目":"印花稅－其他","本月動支數":0,"本月餘額":41864,"本月預算數":6000,"至本月預算數累計":37000,"累計動支率":113.15,"本年度預算":75000,"年度動支率":55.82,"剩餘可動支數":33136,"預算主管單位":"供應科","費用分類":"管銷費用","分類代碼":"F.2"},{"明細帳":"643","會計項目":"使用牌照稅","本月動支數":0,"本月餘額":313327,"本月預算數":60000,"至本月預算數累計":384000,"累計動支率":81.6,"本年度預算":754000,"年度動支率":41.56,"剩餘可動支數":440673,"預算主管單位":"供應科","費用分類":"管銷費用","分類代碼":"F.2"},{"明細帳":"657","會計項目":"頻率使用費－衛星通信","本月動支數":0,"本月餘額":0,"本月預算數":4000,"至本月預算數累計":24000,"累計動支率":0,"本年度預算":48000,"年度動支率":0,"剩餘可動支數":48000,"預算主管單位":"企業客戶科","費用分類":"管銷費用","分類代碼":"F.2"},{"明細帳":"6712","會計項目":"電信行政規費－電信監理規費","本月動支數":"","本月餘額":"","本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":"","預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.2"},{"明細帳":"6713","會計項目":"電信行政規費－道路使用費","本月動支數":0,"本月餘額":3824531,"本月預算數":752000,"至本月預算數累計":4512000,"累計動支率":84.76,"本年度預算":9024000,"年度動支率":42.38,"剩餘可動支數":5199469,"預算主管單位":"第二客戶網路中心","費用分類":"管銷費用","分類代碼":"F.2"},{"明細帳":"67151","會計項目":"電信號碼使用費－市內網路","本月動支數":0,"本月餘額":43978,"本月預算數":10000,"至本月預算數累計":69000,"累計動支率":63.74,"本年度預算":129000,"年度動支率":34.09,"剩餘可動支數":85022,"預算主管單位":"行銷科","費用分類":"管銷費用","分類代碼":"F.2"},{"明細帳":"67152","會計項目":"電信號碼使用費－長途網路","本月動支數":0,"本月餘額":1,"本月預算數":0,"至本月預算數累計":1000,"累計動支率":0.1,"本年度預算":1000,"年度動支率":0.1,"剩餘可動支數":999,"預算主管單位":"行銷科","費用分類":"管銷費用","分類代碼":"F.2"},{"明細帳":"67155","會計項目":"電信號碼使用費－行動寬頻","本月動支數":0,"本月餘額":9130,"本月預算數":17000,"至本月預算數累計":144000,"累計動支率":6.34,"本年度預算":263000,"年度動支率":3.47,"剩餘可動支數":253870,"預算主管單位":"行銷科","費用分類":"管銷費用","分類代碼":"F.2"},{"明細帳":"672","會計項目":"汽車燃料使用費","本月動支數":0,"本月餘額":470835,"本月預算數":118000,"至本月預算數累計":558000,"累計動支率":84.38,"本年度預算":1178000,"年度動支率":39.97,"剩餘可動支數":707165,"預算主管單位":"供應科","費用分類":"管銷費用","分類代碼":"F.2"},{"明細帳":"679","會計項目":"其他行政規費","本月動支數":10236,"本月餘額":93900,"本月預算數":27000,"至本月預算數累計":155000,"累計動支率":60.58,"本年度預算":307000,"年度動支率":30.59,"剩餘可動支數":213100,"預算主管單位":"供應科","費用分類":"管銷費用","分類代碼":"F.2"},{"明細帳":"713","會計項目":"職業團體會費","本月動支數":0,"本月餘額":39000,"本月預算數":0,"至本月預算數累計":64000,"累計動支率":60.94,"本年度預算":83000,"年度動支率":46.99,"剩餘可動支數":44000,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"721","會計項目":"捐助個人","本月動支數":0,"本月餘額":3600,"本月預算數":1000,"至本月預算數累計":5000,"累計動支率":72,"本年度預算":6000,"年度動支率":60,"剩餘可動支數":2400,"預算主管單位":"服務中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"722","會計項目":"捐助社團","本月動支數":0,"本月餘額":0,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":6000,"年度動支率":0,"剩餘可動支數":6000,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"7252","會計項目":"公益支出－公益支出","本月動支數":0,"本月餘額":10000,"本月預算數":0,"至本月預算數累計":85000,"累計動支率":11.76,"本年度預算":165000,"年度動支率":6.06,"剩餘可動支數":155000,"預算主管單位":"規劃設計科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"8121U","會計項目":"預期信用減損損失－應收帳款及催收款項－專標案－未達營收認列時點","本月動支數":"","本月餘額":"","本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":"","預算主管單位":"企業客戶科","費用分類":"業務成本","分類代碼":"C.10.1"},{"明細帳":"8121Z","會計項目":"預期信用減損損失－應收帳款及催收款項－專標案","本月動支數":0,"本月餘額":-65619,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":65619,"預算主管單位":"企業客戶科","費用分類":"業務成本","分類代碼":"C.10.1"},{"明細帳":"81747","會計項目":"災害損失－搶修設備－纜線","本月動支數":0,"本月餘額":566142.89,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"第一客戶網路中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"81749","會計項目":"災害損失－搶修設備－其他","本月動支數":0,"本月餘額":18124,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":-18124,"預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"926","會計項目":"其他費用-太陽能光電躉售電費業務成本","本月動支數":0,"本月餘額":264179,"本月預算數":0,"至本月預算數累計":7000,"累計動支率":3773.99,"本年度預算":34000,"年度動支率":777,"剩餘可動支數":-230179,"預算主管單位":"企業客戶科","費用分類":"設備及折舊","分類代碼":"E.3.3"},{"明細帳":"92853","會計項目":"資訊與通信產品業務成本－AWS公有雲業務－非專標案","本月動支數":0,"本月餘額":0,"本月預算數":2232000,"至本月預算數累計":11828000,"累計動支率":0,"本年度預算":30790000,"年度動支率":0,"剩餘可動支數":30790000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.2"},{"明細帳":"92854","會計項目":"資訊與通信產品業務成本－Azure公有雲業務－非專標案","本月動支數":0,"本月餘額":0,"本月預算數":161000,"至本月預算數累計":854000,"累計動支率":0,"本年度預算":2221000,"年度動支率":0,"剩餘可動支數":2221000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.2"},{"明細帳":"92855","會計項目":"資訊與通信產品業務成本－GCP公有雲業務－非專標案","本月動支數":0,"本月餘額":0,"本月預算數":449000,"至本月預算數累計":2377000,"累計動支率":0,"本年度預算":6187000,"年度動支率":0,"剩餘可動支數":6187000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.2"},{"明細帳":"92856","會計項目":"資訊與通信產品業務成本－M365公有雲業務－非專標案","本月動支數":0,"本月餘額":0,"本月預算數":468000,"至本月預算數累計":2481000,"累計動支率":0,"本年度預算":6459000,"年度動支率":0,"剩餘可動支數":6459000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.2"},{"明細帳":"92882","會計項目":"其他企業客戶專案成本－維護企業客戶設備費－非專標案","本月動支數":0,"本月餘額":0,"本月預算數":60000,"至本月預算數累計":320000,"累計動支率":0,"本年度預算":834000,"年度動支率":0,"剩餘可動支數":834000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.2"},{"明細帳":"92889","會計項目":"其他企業客戶專案成本－其他－非專標案","本月動支數":0,"本月餘額":0,"本月預算數":212000,"至本月預算數累計":1178000,"累計動支率":0,"本年度預算":2788000,"年度動支率":0,"剩餘可動支數":2788000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.2"},{"明細帳":"929A","會計項目":"其他費用－IDC專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":3163000,"至本月預算數累計":16761000,"累計動支率":0,"本年度預算":43632000,"年度動支率":0,"剩餘可動支數":43632000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"929AB","會計項目":"其他費用－AI機房專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":320000,"至本月預算數累計":1696000,"累計動支率":0,"本年度預算":4415000,"年度動支率":0,"剩餘可動支數":4415000,"預算主管單位":"","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"929BE","會計項目":"其他費用－企業通訊及內容整合專案建置成本－商務應用整合專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":15000,"至本月預算數累計":79000,"累計動支率":0,"本年度預算":208000,"年度動支率":0,"剩餘可動支數":208000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"929BG","會計項目":"其他費用－企業通訊及內容整合專案建置成本－視訊會議專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"929BH","會計項目":"其他費用－企業通訊及內容整合專案建置成本－數位經濟多元支付專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":17000,"至本月預算數累計":89000,"累計動支率":0,"本年度預算":233000,"年度動支率":0,"剩餘可動支數":233000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"929E6","會計項目":"其他費用－大數據業務－大數據平台專案建置成本","本月動支數":0,"本月餘額":450448,"本月預算數":1492000,"至本月預算數累計":7907000,"累計動支率":5.7,"本年度預算":20583000,"年度動支率":2.19,"剩餘可動支數":20132552,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"929E7","會計項目":"其他費用－大數據業務－智慧網管(EyeSee)專案建置成本","本月動支數":0,"本月餘額":4066690,"本月預算數":192000,"至本月預算數累計":1017000,"累計動支率":399.87,"本年度預算":2650000,"年度動支率":153.46,"剩餘可動支數":-1416690,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"929F","會計項目":"其他營業成本－海外ICT整合服務專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":203000,"至本月預算數累計":1074000,"累計動支率":0,"本年度預算":2797000,"年度動支率":0,"剩餘可動支數":2797000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"929H","會計項目":"其他費用－市內/數據/國際IDC機房客戶設備代管專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"929IC","會計項目":"其他費用－衛星ICT整合服務專案建置成本－低軌相關","本月動支數":0,"本月餘額":0,"本月預算數":177000,"至本月預算數累計":936000,"累計動支率":0,"本年度預算":2437000,"年度動支率":0,"剩餘可動支數":2437000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"929JB","會計項目":"其他費用－AI業務-雲端AIGC應用專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":128000,"至本月預算數累計":678000,"累計動支率":0,"本年度預算":1765000,"年度動支率":0,"剩餘可動支數":1765000,"預算主管單位":"","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"929JC","會計項目":"其他費用－AI業務-AI開發分析平台專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":93000,"至本月預算數累計":493000,"累計動支率":0,"本年度預算":1281000,"年度動支率":0,"剩餘可動支數":1281000,"預算主管單位":"","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"929JD","會計項目":"其他費用－AI業務-其他專案建置成本","本月動支數":0,"本月餘額":3553810,"本月預算數":67000,"至本月預算數累計":355000,"累計動支率":1001.07,"本年度預算":927000,"年度動支率":383.37,"剩餘可動支數":-2626810,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9291","會計項目":"其他費用－客戶專案建置成本","本月動支數":0,"本月餘額":12205,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9292H","會計項目":"政府業務產品成本－公路監理專案及加值服務專案建置","本月動支數":0,"本月餘額":0,"本月預算數":40000,"至本月預算數累計":212000,"累計動支率":0,"本年度預算":555000,"年度動支率":0,"剩餘可動支數":555000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9292K","會計項目":"政府業務產品成本－政府電子採購服務專案建置","本月動支數":0,"本月餘額":0,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294A","會計項目":"資訊與通信產品業務成本－智慧建築（IGB ) 產品成本－綜合佈線工程專案建置成本","本月動支數":0,"本月餘額":6293,"本月預算數":73000,"至本月預算數累計":389000,"累計動支率":1.62,"本年度預算":1012000,"年度動支率":0.62,"剩餘可動支數":1005707,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294D","會計項目":"資訊與通信產品業務成本－企業健康雲系統(HCS)－遠距醫療平台專案建置","本月動支數":0,"本月餘額":3406,"本月預算數":124000,"至本月預算數累計":656000,"累計動支率":0.52,"本年度預算":1707000,"年度動支率":0.2,"剩餘可動支數":1703594,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294F","會計項目":"資訊與通信產品業務成本－能源管理／專業服務之專案建置","本月動支數":0,"本月餘額":0,"本月預算數":921000,"至本月預算數累計":4878000,"累計動支率":0,"本年度預算":12698000,"年度動支率":0,"剩餘可動支數":12698000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294G","會計項目":"資訊與通信產品業務成本－水資源專案建置","本月動支數":0,"本月餘額":0,"本月預算數":106000,"至本月預算數累計":562000,"累計動支率":0,"本年度預算":1464000,"年度動支率":0,"剩餘可動支數":1464000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294I","會計項目":"資訊與通信產品業務成本－充電樁專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":65000,"至本月預算數累計":343000,"累計動支率":0,"本年度預算":892000,"年度動支率":0,"剩餘可動支數":892000,"預算主管單位":"","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294K","會計項目":"智慧型運輸系統（ＩＴＳ）－智慧交控專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":550000,"至本月預算數累計":2915000,"累計動支率":0,"本年度預算":7590000,"年度動支率":0,"剩餘可動支數":7590000,"預算主管單位":"","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294L","會計項目":"資訊與通信產品業務成本-智慧安防(IVS)產品線-科技執法專案建置成本","本月動支數":0,"本月餘額":497385,"本月預算數":172000,"至本月預算數累計":912000,"累計動支率":54.54,"本年度預算":2373000,"年度動支率":20.96,"剩餘可動支數":1875615,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294M","會計項目":"資訊與通信產品業務成本－太陽能光電維運","本月動支數":0,"本月餘額":0,"本月預算數":171000,"至本月預算數累計":906000,"累計動支率":0,"本年度預算":2356000,"年度動支率":0,"剩餘可動支數":2356000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294N","會計項目":"資訊與通信產品業務成本-智慧安防(IVS)產品線-AI科技執法專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":143000,"至本月預算數累計":757000,"累計動支率":0,"本年度預算":1972000,"年度動支率":0,"剩餘可動支數":1972000,"預算主管單位":"","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294R","會計項目":"資訊與通信產品業務成本－資安產品－資安專業服務專安建置成本","本月動支數":0,"本月餘額":0,"本月預算數":685000,"至本月預算數累計":3629000,"累計動支率":0,"本年度預算":9448000,"年度動支率":0,"剩餘可動支數":9448000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294S","會計項目":"資訊與通信產品業務成本－太陽能光電專案建置","本月動支數":0,"本月餘額":7715290.24,"本月預算數":2394000,"至本月預算數累計":12689000,"累計動支率":60.8,"本年度預算":33030000,"年度動支率":23.36,"剩餘可動支數":25314709.76,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294U","會計項目":"資訊與通信產品業務成本－企業健康雲系統(HCS)專案建置","本月動支數":0,"本月餘額":17400,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294W","會計項目":"資訊與通信產品業務成本－智慧建築（IGB ) 產品成本－弱電工程專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":1452000,"至本月預算數累計":7695000,"累計動支率":0,"本年度預算":20033000,"年度動支率":0,"剩餘可動支數":20033000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294X","會計項目":"資訊與通信產品業務成本－智慧建築（IGB ) 產品成本－機電工程專案建置成本","本月動支數":0,"本月餘額":14398,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9294Y","會計項目":"資訊與通信產品業務成本－資安產品線業務專案建置成本－在地化資安專案建置成本","本月動支數":208556,"本月餘額":830981,"本月預算數":2182000,"至本月預算數累計":11561000,"累計動支率":7.19,"本年度預算":30095000,"年度動支率":2.76,"剩餘可動支數":29264019,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"92941","會計項目":"資訊與通信產品業務成本－智慧型運輸系統(ITS)－政府交通專案建置","本月動支數":0,"本月餘額":0,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"92942","會計項目":"資訊與通信產品業務成本－智慧節能服務（iEN）","本月動支數":160317,"本月餘額":1689703,"本月預算數":236000,"至本月預算數累計":1249000,"累計動支率":135.28,"本年度預算":3251000,"年度動支率":51.97,"剩餘可動支數":1561297,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"92944","會計項目":"資訊與通信產品業務成本－智慧型運輸系統(ITS)－其他專案建置","本月動支數":0,"本月餘額":45896,"本月預算數":755000,"至本月預算數累計":4002000,"累計動支率":1.15,"本年度預算":10418000,"年度動支率":0.44,"剩餘可動支數":10372104,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"92946","會計項目":"資訊與通信產品業務成本－交換機（ＰＢＸ）","本月動支數":21011,"本月餘額":351993,"本月預算數":66000,"至本月預算數累計":349000,"累計動支率":100.86,"本年度預算":908000,"年度動支率":38.77,"剩餘可動支數":556007,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"92947","會計項目":"資訊與通信產品業務成本－智慧建築（IGB ) 產品成本－其他專案建置成本","本月動支數":27929,"本月餘額":2289604,"本月預算數":911000,"至本月預算數累計":4827000,"累計動支率":47.43,"本年度預算":12563000,"年度動支率":18.22,"剩餘可動支數":10273396,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"92948","會計項目":"資訊與通信產品業務成本－智慧安防","本月動支數":305563,"本月餘額":6494914,"本月預算數":2365000,"至本月預算數累計":12534000,"累計動支率":51.82,"本年度預算":32629000,"年度動支率":19.91,"剩餘可動支數":26134086,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"92949","會計項目":"資訊與通信產品業務成本-資安產品-身分識別專案建置","本月動支數":0,"本月餘額":0,"本月預算數":631000,"至本月預算數累計":3344000,"累計動支率":0,"本年度預算":8705000,"年度動支率":0,"剩餘可動支數":8705000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9295B","會計項目":"SaaS產品業務專案建置成本-企業資源整合(ERP)服務專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9295D","會計項目":"SaaS產品業務專案建置成本-其他整合包裝及服務專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":350000,"至本月預算數累計":1855000,"累計動支率":0,"本年度預算":4828000,"年度動支率":0,"剩餘可動支數":4828000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"92951","會計項目":"IaaS類業務-GSN客戶IaaS類業務產品成本-政府雲端專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":61000,"至本月預算數累計":323000,"累計動支率":0,"本年度預算":839000,"年度動支率":0,"剩餘可動支數":839000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"92953","會計項目":"AWS公有雲業務專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":148000,"至本月預算數累計":785000,"累計動支率":0,"本年度預算":2043000,"年度動支率":0,"剩餘可動支數":2043000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"92958","會計項目":"IaaS類業務-專案建置成本","本月動支數":0,"本月餘額":1,"本月預算數":473000,"至本月預算數累計":2506000,"累計動支率":0,"本年度預算":6526000,"年度動支率":0,"剩餘可動支數":6525999,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9297L","會計項目":"行動ICT M化業務成本－行動訊號涵蓋工程專案建置成本","本月動支數":0,"本月餘額":56560,"本月預算數":76000,"至本月預算數累計":403000,"累計動支率":14.03,"本年度預算":1048000,"年度動支率":5.4,"剩餘可動支數":991440,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9297M","會計項目":"行動ICT M化業務成本－行動裝置管理專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":294000,"至本月預算數累計":1557000,"累計動支率":0,"本年度預算":4055000,"年度動支率":0,"剩餘可動支數":4055000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9297V","會計項目":"行動ICT M化業務成本－行動即時影像專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9297Y","會計項目":"行動ICT M化業務成本－其他專案建置成本","本月動支數":9504,"本月餘額":315854,"本月預算數":450000,"至本月預算數累計":2386000,"累計動支率":13.24,"本年度預算":6212000,"年度動支率":5.08,"剩餘可動支數":5896146,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"92972","會計項目":"行動物聯網業務專案建置成本","本月動支數":0,"本月餘額":27736,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"92973","會計項目":"行動物聯網業務－智慧停車專案建置成本","本月動支數":0,"本月餘額":0,"本月預算數":138000,"至本月預算數累計":734000,"累計動支率":0,"本年度預算":1909000,"年度動支率":0,"剩餘可動支數":1909000,"預算主管單位":"","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"92974","會計項目":"行動ICT M化業務－企業專網專案建置成本","本月動支數":0,"本月餘額":247299,"本月預算數":270000,"至本月預算數累計":1431000,"累計動支率":17.28,"本年度預算":3725000,"年度動支率":6.64,"剩餘可動支數":3477701,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.1"},{"明細帳":"9298A","會計項目":"其他企業客戶專案成本－郵費","本月動支數":0,"本月餘額":0,"本月預算數":39000,"至本月預算數累計":209000,"累計動支率":0,"本年度預算":544000,"年度動支率":0,"剩餘可動支數":544000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.2"},{"明細帳":"92981","會計項目":"其他企業客戶專案成本－企業客戶端設備攤銷費","本月動支數":33333,"本月餘額":2942882.32,"本月預算數":33000,"至本月預算數累計":176000,"累計動支率":1672.09,"本年度預算":459000,"年度動支率":641.15,"剩餘可動支數":-2483882.32,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.2"},{"明細帳":"92982","會計項目":"其他企業客戶專案成本－維運備品費","本月動支數":0,"本月餘額":19952,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.2"},{"明細帳":"92984","會計項目":"其他企業客戶專案成本－人力費用－薪資及加班費","本月動支數":0,"本月餘額":50772,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.2"},{"明細帳":"92985","會計項目":"其他企業客戶專案成本－人力費用－其他用人費用","本月動支數":0,"本月餘額":0,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.2"},{"明細帳":"92986","會計項目":"其他企業客戶專案成本－廠商成本","本月動支數":70285,"本月餘額":1803601,"本月預算數":2033000,"至本月預算數累計":10719000,"累計動支率":16.83,"本年度預算":28196000,"年度動支率":6.4,"剩餘可動支數":26392399,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.2"},{"明細帳":"92987","會計項目":"其他企業客戶專案成本－保固及售後服務費","本月動支數":0,"本月餘額":0,"本月預算數":24000,"至本月預算數累計":127000,"累計動支率":0,"本年度預算":330000,"年度動支率":0,"剩餘可動支數":330000,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.2"},{"明細帳":"92989","會計項目":"其他企業客戶專案成本－其他","本月動支數":2001834,"本月餘額":15701328,"本月預算數":764000,"至本月預算數累計":4044000,"累計動支率":388.26,"本年度預算":10514000,"年度動支率":149.34,"剩餘可動支數":-5187328,"預算主管單位":"企業客戶科","費用分類":"專案建置成本","分類代碼":"D.2"},{"明細帳":"9299A","會計項目":"其他費用－Apple軟體商店","本月動支數":-110633,"本月餘額":919770,"本月預算數":307000,"至本月預算數累計":991000,"累計動支率":92.81,"本年度預算":2313000,"年度動支率":39.77,"剩餘可動支數":1393230,"預算主管單位":"服務中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"9299B","會計項目":"其他費用－Google Play","本月動支數":-17119,"本月餘額":551603,"本月預算數":307000,"至本月預算數累計":951000,"累計動支率":58,"本年度預算":1330000,"年度動支率":41.47,"剩餘可動支數":778397,"預算主管單位":"服務中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"9299C","會計項目":"其他費用－行動電信帳單代收Netflix款項","本月動支數":0,"本月餘額":93272,"本月預算數":15000,"至本月預算數累計":83000,"累計動支率":112.38,"本年度預算":201000,"年度動支率":46.4,"剩餘可動支數":107728,"預算主管單位":"服務中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"9299D","會計項目":"其他費用－手機代收停車費","本月動支數":0,"本月餘額":93,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":-93,"預算主管單位":"企業客戶科","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"9299F","會計項目":"其他費用－數據業務代收Netflix款項","本月動支數":0,"本月餘額":-889,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"服務中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"9299G","會計項目":"其他費用－固網業務代收Netflix款項","本月動支數":0,"本月餘額":-93728,"本月預算數":4000,"至本月預算數累計":24000,"累計動支率":-390.53,"本年度預算":52000,"年度動支率":-180.25,"剩餘可動支數":145728,"預算主管單位":"服務中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"9299K","會計項目":"其他費用－MOD","本月動支數":0,"本月餘額":-56,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":56,"預算主管單位":"服務中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"9299L","會計項目":"其他費用－OTT影視業務","本月動支數":0,"本月餘額":146,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":0,"年度動支率":"","剩餘可動支數":-146,"預算主管單位":"服務中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"9299M","會計項目":"其他費用－行動促案代收Netflix款項","本月動支數":0,"本月餘額":17451,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"服務中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"9299O","會計項目":"其他費用－Sony Play Station","本月動支數":0,"本月餘額":13902,"本月預算數":0,"至本月預算數累計":0,"累計動支率":"","本年度預算":2000,"年度動支率":695.1,"剩餘可動支數":-11902,"預算主管單位":"服務中心","費用分類":"管銷費用","分類代碼":"F.3.3"},{"明細帳":"9299Z","會計項目":"其他費用－其他","本月動支數":0,"本月餘額":0.56,"本月預算數":"","至本月預算數累計":"","累計動支率":"","本年度預算":"","年度動支率":"","剩餘可動支數":"","預算主管單位":"行政管理科","費用分類":"管銷費用","分類代碼":"F.3.3"}];
 
-var CAT_COLORS = {
-  '人事費':     {bg:'#e8f5e9',color:'#2e7d32'},
-  '業務外包':   {bg:'#e3f2fd',color:'#1565c0'},
-  '業務成本':   {bg:'#fff3e0',color:'#e65100'},
-  '專案建置成本':{bg:'#fce4ec',color:'#c62828'},
-  '設備及折舊': {bg:'#f3e5f5',color:'#6a1b9a'},
-  '管銷費用':   {bg:'#e0f2f1',color:'#00695c'},
-  '其他':       {bg:'#f5f5f5',color:'#555'}
-};
-
-var UNIT_PALETTE = ['#128048','#1565c0','#e65100','#6a1b9a','#00695c','#c62828','#0277bd','#558b2f','#4527a0','#ad1457','#37474f','#bf360c','#1b5e20'];
+var CAT_COLORS = {"人事費": "#1565c0", "業務外包": "#6a1b9a", "業務成本": "#00695c", "專案建置成本": "#e65100", "設備及折舊": "#4e342e", "管銷費用": "#37474f", "其他": "#757575"};
+var UNIT_PALETTE = ["#1565c0", "#6a1b9a", "#00695c", "#e65100", "#4e342e", "#c62828", "#37474f", "#0277bd", "#2e7d32", "#f57f17", "#880e4f", "#1b5e20", "#bf360c"];
 var unitColorMap = {};
-var unitList = [];
-(function(){
-  var us = {};
-  RAW.forEach(function(r){ if(r['預算主管單位']) us[r['預算主管單位']] = true; });
-  unitList = Object.keys(us).sort();
-  unitList.forEach(function(u,i){ unitColorMap[u] = UNIT_PALETTE[i % UNIT_PALETTE.length]; });
-})();
+var unitIdx = 0;
 
-// ── Tab 切換 ──────────────────────────────────────────────
-var _summaryDone = false, _warnDone = false, _chartsDone = false;
-function switchTab(name){
-  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab === name); });
-  document.querySelectorAll('.tab-content').forEach(function(c){ c.classList.toggle('active', c.id === 'tab-'+name); });
-  if(name === 'summary' && !_summaryDone){ renderSummary(); _summaryDone = true; }
-  if(name === 'warning' && !_warnDone){ renderWarning(); _warnDone = true; }
-  if(name === 'charts'  && !_chartsDone){ renderCharts();  _chartsDone = true; }
+function getUnitColor(unit) {
+  if (!unit) return '#999';
+  if (!unitColorMap[unit]) {
+    unitColorMap[unit] = UNIT_PALETTE[unitIdx % UNIT_PALETTE.length];
+    unitIdx++;
+  }
+  return unitColorMap[unit];
 }
-document.querySelectorAll('.tab-btn').forEach(function(b){
-  b.addEventListener('click', function(){ switchTab(this.dataset.tab); });
+
+function fmt(v) {
+  if (v === '' || v === null || v === undefined) return '—';
+  var n = parseFloat(v);
+  if (isNaN(n)) return v;
+  return n.toLocaleString('zh-TW');
+}
+
+function rateColor(r) {
+  var n = parseFloat(r);
+  if (isNaN(n)) return '#128048';
+  if (n >= 90) return '#c62828';
+  if (n >= 70) return '#e07b00';
+  return '#128048';
+}
+
+// ── Tab 切換 ──────────────────────────────────────────
+var _summaryDone = false, _chartsReady = false;
+
+function switchTab(tabName) {
+  document.querySelectorAll('.tab-btn').forEach(function(b) {
+    b.classList.toggle('active', b.dataset.tab === tabName);
+  });
+  document.querySelectorAll('.nav-btn').forEach(function(b) {
+    b.classList.toggle('active', b.dataset.tab === tabName);
+  });
+  document.querySelectorAll('.tab-content').forEach(function(c) {
+    c.classList.toggle('active', c.id === 'tab-' + tabName);
+  });
+  if (tabName === 'summary' && !_summaryDone) { renderSummary(); _summaryDone = true; }
+  if (tabName === 'warning') renderWarning();
+  if (tabName === 'charts' && !_chartsReady) { _chartsReady = true; renderCharts(); }
+}
+
+document.querySelectorAll('.tab-btn, .nav-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() { switchTab(this.dataset.tab); });
 });
 
-// ── 篩選狀態 ──────────────────────────────────────────────
-var filterKw = '', filterCat = 'all', filterUnit = 'all';
-var PAGE_SIZE = 20, curPage = 1;
-
-// 費用分類 Chips
+// ── Chips 建立 ────────────────────────────────────────
+var catFilter = 'all', unitFilter = 'all', keyword = '', curPage = 1;
 var CATS = ['all','人事費','業務外包','業務成本','專案建置成本','設備及折舊','管銷費用'];
-var catChips = document.getElementById('catChips');
-CATS.forEach(function(c){
+var catChipsEl = document.getElementById('catChips');
+var unitSet = {};
+RAW.forEach(function(r) { if (r['預算主管單位']) unitSet[r['預算主管單位']] = true; });
+var UNITS = ['all'].concat(Object.keys(unitSet).sort());
+
+CATS.forEach(function(c) {
   var btn = document.createElement('button');
   btn.className = 'chip' + (c === 'all' ? ' active' : '');
   btn.textContent = c === 'all' ? '全部' : c;
   btn.dataset.cat = c;
-  btn.addEventListener('click', function(){
-    filterCat = this.dataset.cat;
-    document.querySelectorAll('#catChips .chip').forEach(function(x){ x.classList.toggle('active', x.dataset.cat === filterCat); });
+  btn.addEventListener('click', function() {
+    catFilter = this.dataset.cat;
+    document.querySelectorAll('#catChips .chip').forEach(function(b) { b.classList.remove('active'); });
+    this.classList.add('active');
     curPage = 1; render();
   });
-  catChips.appendChild(btn);
+  catChipsEl.appendChild(btn);
 });
 
-// 科室 Chips
-var unitChips = document.getElementById('unitChips');
-(['all'].concat(unitList)).forEach(function(u){
+var unitChipsEl = document.getElementById('unitChips');
+UNITS.forEach(function(u) {
   var btn = document.createElement('button');
   btn.className = 'chip' + (u === 'all' ? ' active' : '');
   btn.textContent = u === 'all' ? '全部' : u;
   btn.dataset.unit = u;
-  btn.addEventListener('click', function(){
-    filterUnit = this.dataset.unit;
-    document.querySelectorAll('#unitChips .chip').forEach(function(x){ x.classList.toggle('active', x.dataset.unit === filterUnit); });
+  if (u !== 'all') {
+    var uc = getUnitColor(u);
+    btn.style.borderColor = uc;
+    btn.style.color = uc;
+    btn.style.background = uc + '12';
+  }
+  btn.addEventListener('click', function() {
+    unitFilter = this.dataset.unit;
+    document.querySelectorAll('#unitChips .chip').forEach(function(b) { b.classList.remove('active'); if (b.dataset.unit !== 'all') { var uc2 = getUnitColor(b.dataset.unit); b.style.background = uc2 + '12'; b.style.color = uc2; } else { b.style.background=''; b.style.color=''; } });
+    this.classList.add('active');
+    if (this.dataset.unit !== 'all') { this.style.background = getUnitColor(this.dataset.unit); this.style.color = '#fff'; }
     curPage = 1; render();
   });
-  unitChips.appendChild(btn);
+  unitChipsEl.appendChild(btn);
 });
 
-// 關鍵字
-document.getElementById('kwInput').addEventListener('input', function(){
-  filterKw = this.value.trim().toLowerCase();
+document.getElementById('searchBox').addEventListener('input', function() {
+  keyword = this.value.trim().toLowerCase();
   curPage = 1; render();
 });
 
-// ── 篩選 ──────────────────────────────────────────────────
-function filtered(){
-  return RAW.filter(function(r){
-    var kw = !filterKw || r['明細帳'].toLowerCase().indexOf(filterKw) >= 0 || r['會計項目'].toLowerCase().indexOf(filterKw) >= 0;
-    var cat = filterCat === 'all' || r['費用分類'] === filterCat;
-    var unit = filterUnit === 'all' || r['預算主管單位'] === filterUnit;
-    return kw && cat && unit;
+// ── 篩選 ─────────────────────────────────────────────
+function filtered() {
+  return RAW.filter(function(r) {
+    if (catFilter !== 'all' && r['費用分類'] !== catFilter) return false;
+    if (unitFilter !== 'all' && r['預算主管單位'] !== unitFilter) return false;
+    if (keyword && !(r['明細帳'].toLowerCase().includes(keyword) || r['會計項目'].toLowerCase().includes(keyword))) return false;
+    return true;
   });
 }
 
-// ── 格式化 ────────────────────────────────────────────────
-function fmt(n){
-  if(n === '' || n === null || n === undefined) return '—';
-  return Number(n).toLocaleString();
-}
-function pct(n){
-  if(n === '' || n === null || n === undefined) return '—';
-  return Number(n).toFixed(2) + '%';
-}
-function rateColor(r){
-  return r >= 90 ? 'val-red' : r >= 70 ? 'val-orange' : 'val-green';
-}
-function progressClass(r){
-  return r >= 90 ? 'progress-red' : r >= 70 ? 'progress-orange' : 'progress-green';
-}
+// ── 主渲染 ────────────────────────────────────────────
+var PAGE_SIZE = 20;
 
-// ── 主渲染 ────────────────────────────────────────────────
-function render(){
+function render() {
   var items = filtered();
-  var total = items.length;
+  document.getElementById('totalBadge').textContent = RAW.length + ' 筆';
 
-  // 已套用篩選
+  // 篩選條件 pills
   var af = document.getElementById('activeFilters');
   af.innerHTML = '';
-  if(filterKw){ var p=document.createElement('span'); p.className='filter-pill kw'; p.textContent='關鍵字: '+filterKw; af.appendChild(p); }
-  if(filterCat !== 'all'){ var p=document.createElement('span'); p.className='filter-pill cat'; p.textContent='分類: '+filterCat; af.appendChild(p); }
-  if(filterUnit !== 'all'){ var p=document.createElement('span'); p.className='filter-pill unit'; p.textContent='科室: '+filterUnit; af.appendChild(p); }
+  if (catFilter !== 'all') {
+    var p = document.createElement('span');
+    p.className = 'filter-pill';
+    p.style.background = CAT_COLORS[catFilter] || '#128048';
+    p.textContent = '分類：' + catFilter;
+    af.appendChild(p);
+  }
+  if (unitFilter !== 'all') {
+    var p2 = document.createElement('span');
+    p2.className = 'filter-pill';
+    p2.style.background = getUnitColor(unitFilter);
+    p2.textContent = '科室：' + unitFilter;
+    af.appendChild(p2);
+  }
+  if (keyword) {
+    var p3 = document.createElement('span');
+    p3.className = 'filter-pill';
+    p3.style.background = '#e07b00';
+    p3.textContent = '搜尋：' + keyword;
+    af.appendChild(p3);
+  }
 
   // 統計卡片
-  var sumBal=0, sumBgt=0, sumYear=0, sumRem=0;
-  items.forEach(function(r){ sumBal += (r['本月餘額']||0); sumBgt += (r['本月預算數']||0); sumYear += (r['本年度預算']||0); sumRem += (r['剩餘可動支數']||0); });
-  document.getElementById('statsGrid').innerHTML =
-    '<div class="stat-card"><div class="label">本月餘額累計</div><div class="value val-blue" style="color:#1565c0">'+fmt(sumBal)+'</div></div>'+
-    '<div class="stat-card"><div class="label">本月預算數</div><div class="value">'+fmt(sumBgt)+'</div></div>'+
-    '<div class="stat-card"><div class="label">本年度預算</div><div class="value">'+fmt(sumYear)+'</div></div>'+
-    '<div class="stat-card"><div class="label">剩餘可動支數</div><div class="value" style="color:'+(sumRem<0?'#c62828':'#128048')+'">'+fmt(sumRem)+'</div></div>';
+  var totalBal = 0, totalBgt = 0, totalYear = 0, totalRem = 0;
+  items.forEach(function(r) {
+    totalBal  += parseFloat(r['本月餘額']) || 0;
+    totalBgt  += parseFloat(r['本月預算數']) || 0;
+    totalYear += parseFloat(r['本年度預算']) || 0;
+    totalRem  += parseFloat(r['剩餘可動支數']) || 0;
+  });
 
-  document.getElementById('totalBadge').textContent = total + ' 筆';
-  document.getElementById('resultCount').textContent = '共 ' + total + ' 筆';
+  var sg = document.getElementById('statsGrid');
+  sg.innerHTML = '';
+  [
+    ['本月餘額（累計）', totalBal, '#1565c0'],
+    ['本月預算數', totalBgt, '#128048'],
+    ['本年度預算', totalYear, '#128048'],
+    ['剩餘可動支數', totalRem, totalRem < 0 ? '#c62828' : '#128048'],
+  ].forEach(function(s) {
+    var card = document.createElement('div');
+    card.className = 'stat-card';
+    card.innerHTML = '<div class="stat-label">' + s[0] + '</div><div class="stat-value" style="color:' + s[2] + '">' + fmt(Math.round(s[1])) + '</div>';
+    sg.appendChild(card);
+  });
+
+  document.getElementById('resultCount').textContent = '共 ' + items.length + ' 筆';
 
   // 分頁
-  var totalPage = Math.ceil(total / PAGE_SIZE) || 1;
-  if(curPage > totalPage) curPage = totalPage;
-  var start = (curPage-1)*PAGE_SIZE;
-  var pageItems = items.slice(start, start+PAGE_SIZE);
+  var totalPages = Math.ceil(items.length / PAGE_SIZE);
+  if (curPage > totalPages) curPage = 1;
+  var pageItems = items.slice((curPage-1)*PAGE_SIZE, curPage*PAGE_SIZE);
 
-  // 卡片列表
-  var list = document.getElementById('cardsList');
+  var list = document.getElementById('itemList');
   list.innerHTML = '';
-  pageItems.forEach(function(r){
-    var cc = CAT_COLORS[r['費用分類']] || CAT_COLORS['其他'];
-    var uc = unitColorMap[r['預算主管單位']] || '#888';
-    var yr = Number(r['年度動支率']) || 0;
-    var unitBadge = r['預算主管單位']
-      ? '<span class="unit-badge" style="background:'+uc+'1a;color:'+uc+'">'+r['預算主管單位']+'</span>'
+  pageItems.forEach(function(r) {
+    var card = document.createElement('div');
+    card.className = 'item-card';
+    card.dataset.acc = r['明細帳'];
+    var yr = parseFloat(r['年度動支率']) || 0;
+    var pct = Math.min(yr, 100);
+    var fillColor = yr >= 90 ? '#c62828' : yr >= 70 ? '#e07b00' : '#128048';
+    var catColor = CAT_COLORS[r['費用分類']] || '#757575';
+    var unitBadgeHtml = r['預算主管單位']
+      ? '<span class="unit-badge" style="background:' + getUnitColor(r['預算主管單位']) + '1a;color:' + getUnitColor(r['預算主管單位']) + '">' + r['預算主管單位'] + '</span>'
       : '';
-    var barW = Math.min(yr, 100);
-    var div = document.createElement('div');
-    div.className = 'budget-card';
-    div.dataset.acc = r['明細帳'];
-    div.innerHTML =
-      '<div class="card-header">'+
-        '<span class="acc">'+r['明細帳']+'</span>'+
-        '<div class="badges">'+
-          '<span class="cat-badge" style="background:'+cc.bg+';color:'+cc.color+'">'+r['費用分類']+'</span>'+
-          unitBadge+
-        '</div>'+
-      '</div>'+
-      '<div class="card-name">'+r['會計項目']+'</div>'+
-      '<div class="card-grid">'+
-        '<div class="card-item"><div class="lbl">本月餘額（累計）</div><div class="val val-blue">'+fmt(r['本月餘額'])+'</div></div>'+
-        '<div class="card-item"><div class="lbl">累計動支率</div><div class="val '+rateColor(Number(r['累計動支率'])||0)+'">'+pct(r['累計動支率'])+'</div></div>'+
-        '<div class="card-item"><div class="lbl">本年度預算</div><div class="val">'+fmt(r['本年度預算'])+'</div></div>'+
-        '<div class="card-item"><div class="lbl">剩餘可動支數</div><div class="val '+(Number(r['剩餘可動支數']||0)<0?'val-red':'val-green')+'">'+fmt(r['剩餘可動支數'])+'</div></div>'+
-      '</div>'+
-      '<div style="margin-top:8px;font-size:11px;color:#888">年度動支率 <strong class="'+rateColor(yr)+'">'+pct(r['年度動支率'])+'</strong></div>'+
-      '<div class="progress-bar"><div class="progress-fill '+progressClass(yr)+'" style="width:'+barW+'%"></div></div>';
-    div.addEventListener('click', function(){ openSheet(this.dataset.acc); });
-    list.appendChild(div);
+    var remColor = (parseFloat(r['剩餘可動支數']) || 0) < 0 ? '#c62828' : '#128048';
+    card.innerHTML =
+      '<div class="card-header">' +
+        '<span class="card-acc">' + r['明細帳'] + '</span>' +
+        '<span class="card-name">' + r['會計項目'] + '</span>' +
+        '<div class="badges">' +
+          '<span class="cat-badge" style="background:' + catColor + '">' + r['費用分類'] + '</span>' +
+          unitBadgeHtml +
+        '</div>' +
+      '</div>' +
+      '<div class="card-body">' +
+        '<div class="card-grid">' +
+          '<div><div class="card-field">本月餘額（累計）</div><div class="card-val" style="color:#1565c0">' + fmt(r['本月餘額']) + '</div></div>' +
+          '<div><div class="card-field">累計動支率</div><div class="card-val" style="color:' + rateColor(r['累計動支率']) + '">' + (r['累計動支率'] !== '' ? r['累計動支率'] + '%' : '—') + '</div></div>' +
+          '<div><div class="card-field">本年度預算</div><div class="card-val">' + fmt(r['本年度預算']) + '</div></div>' +
+          '<div><div class="card-field">剩餘可動支數</div><div class="card-val" style="color:' + remColor + '">' + fmt(r['剩餘可動支數']) + '</div></div>' +
+        '</div>' +
+        '<div class="progress-wrap">' +
+          '<div class="progress-label"><span>年度動支率</span><span style="color:' + fillColor + ';font-weight:700">' + (yr > 0 ? yr.toFixed(2) + '%' : '—') + '</span></div>' +
+          '<div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%;background:' + fillColor + '"></div></div>' +
+        '</div>' +
+      '</div>';
+    card.addEventListener('click', function() { openSheet(this.dataset.acc); });
+    list.appendChild(card);
   });
 
   // 分頁按鈕
-  var pb = document.getElementById('pageBtns');
-  pb.innerHTML = '';
-  for(var i=1; i<=totalPage; i++){
+  var pg = document.getElementById('pagination');
+  pg.innerHTML = '';
+  for (var i = 1; i <= totalPages; i++) {
     var btn = document.createElement('button');
-    btn.className = 'page-btn' + (i===curPage?' active':'');
+    btn.className = 'page-btn' + (i === curPage ? ' active' : '');
     btn.textContent = i;
     btn.dataset.page = i;
-    btn.addEventListener('click', function(){ curPage=parseInt(this.dataset.page); render(); window.scrollTo(0,0); });
-    pb.appendChild(btn);
+    btn.addEventListener('click', function() {
+      curPage = parseInt(this.dataset.page);
+      render();
+      document.getElementById('tab-query').scrollTop = 0;
+    });
+    pg.appendChild(btn);
   }
 }
 
-// ── Sheet 彈窗 ────────────────────────────────────────────
-function openSheet(acc){
-  var r = RAW.find(function(x){ return x['明細帳'] === acc; });
-  if(!r) return;
-  document.getElementById('sheetTitle').textContent = r['會計項目'];
-  var cc = CAT_COLORS[r['費用分類']] || CAT_COLORS['其他'];
-  var uc = unitColorMap[r['預算主管單位']] || '#888';
-  var sb = document.getElementById('sheetBadges');
-  sb.innerHTML = '<span class="cat-badge" style="background:'+cc.bg+';color:'+cc.color+'">'+r['費用分類']+'</span>'
-    + (r['預算主管單位'] ? '<span class="unit-badge" style="background:'+uc+'1a;color:'+uc+'">'+r['預算主管單位']+'</span>' : '')
-    + '<span style="font-size:12px;color:#888;padding:2px 6px">'+r['明細帳']+'</span>';
-  var yr = Number(r['年度動支率']) || 0;
-  var barW = Math.min(yr, 100);
+// ── 底部 Sheet ────────────────────────────────────────
+function openSheet(acc) {
+  var r = RAW.find(function(x) { return x['明細帳'] === acc; });
+  if (!r) return;
+  var yr = parseFloat(r['年度動支率']) || 0;
+  var fillColor = yr >= 90 ? '#c62828' : yr >= 70 ? '#e07b00' : '#128048';
+  var catColor = CAT_COLORS[r['費用分類']] || '#757575';
+  var unitHtml = r['預算主管單位']
+    ? '<span class="unit-badge" style="background:' + getUnitColor(r['預算主管單位']) + '1a;color:' + getUnitColor(r['預算主管單位']) + ';margin-left:6px">' + r['預算主管單位'] + '</span>'
+    : '';
   document.getElementById('sheetBody').innerHTML =
-    '<div class="sheet-section"><h4>本月數據</h4><div class="sheet-grid">'+
-      '<div class="sheet-item"><div class="lbl">本月動支數</div><div class="val">'+fmt(r['本月動支數'])+'</div></div>'+
-      '<div class="sheet-item"><div class="lbl">本月餘額（累計）</div><div class="val val-blue">'+fmt(r['本月餘額'])+'</div></div>'+
-      '<div class="sheet-item"><div class="lbl">本月預算數</div><div class="val">'+fmt(r['本月預算數'])+'</div></div>'+
-      '<div class="sheet-item"><div class="lbl">至本月預算數累計</div><div class="val">'+fmt(r['至本月預算數累計'])+'</div></div>'+
-      '<div class="sheet-item"><div class="lbl">累計動支率</div><div class="val '+rateColor(Number(r['累計動支率'])||0)+'">'+pct(r['累計動支率'])+'</div></div>'+
-    '</div></div>'+
-    '<div class="sheet-section"><h4>年度數據</h4><div class="sheet-grid">'+
-      '<div class="sheet-item"><div class="lbl">本年度預算</div><div class="val">'+fmt(r['本年度預算'])+'</div></div>'+
-      '<div class="sheet-item"><div class="lbl">剩餘可動支數</div><div class="val '+(Number(r['剩餘可動支數']||0)<0?'val-red':'val-green')+'">'+fmt(r['剩餘可動支數'])+'</div></div>'+
-    '</div></div>'+
-    '<div class="sheet-section"><h4>年度動支進度</h4>'+
-      '<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span>年度動支率</span><strong class="'+rateColor(yr)+'">'+pct(r['年度動支率'])+'</strong></div>'+
-      '<div class="progress-bar" style="height:12px"><div class="progress-fill '+progressClass(yr)+'" style="width:'+barW+'%"></div></div>'+
+    '<div class="sheet-title">' +
+      '<span class="cat-badge" style="background:' + catColor + ';margin-right:6px">' + r['費用分類'] + '</span>' +
+      r['明細帳'] + unitHtml +
+    '</div>' +
+    '<div style="font-size:15px;font-weight:700;color:#1a2e1a;margin-bottom:14px">' + r['會計項目'] + '</div>' +
+    '<div class="sheet-section"><div class="sheet-section-title">本月數據</div>' +
+      '<div class="sheet-row"><span class="sheet-label">本月餘額（累計）</span><span class="sheet-val" style="color:#1565c0">' + fmt(r['本月餘額']) + '</span></div>' +
+      '<div class="sheet-row"><span class="sheet-label">本月動支增減</span><span class="sheet-val">' + fmt(r['本月動支數']) + '</span></div>' +
+      '<div class="sheet-row"><span class="sheet-label">本月預算數</span><span class="sheet-val">' + fmt(r['本月預算數']) + '</span></div>' +
+      '<div class="sheet-row"><span class="sheet-label">至本月預算數累計</span><span class="sheet-val">' + fmt(r['至本月預算數累計']) + '</span></div>' +
+      '<div class="sheet-row"><span class="sheet-label">累計動支率</span><span class="sheet-val" style="color:' + rateColor(r['累計動支率']) + '">' + (r['累計動支率'] !== '' ? r['累計動支率'] + '%' : '—') + '</span></div>' +
+    '</div>' +
+    '<div class="sheet-section"><div class="sheet-section-title">年度數據</div>' +
+      '<div class="sheet-row"><span class="sheet-label">本年度預算</span><span class="sheet-val">' + fmt(r['本年度預算']) + '</span></div>' +
+      '<div class="sheet-row"><span class="sheet-label">年度動支率</span><span class="sheet-val" style="color:' + fillColor + '">' + (yr > 0 ? yr.toFixed(2) + '%' : '—') + '</span></div>' +
+      '<div class="sheet-row"><span class="sheet-label">剩餘可動支數</span><span class="sheet-val" style="color:' + ((parseFloat(r['剩餘可動支數'])||0) < 0 ? '#c62828' : '#128048') + '">' + fmt(r['剩餘可動支數']) + '</span></div>' +
+    '</div>' +
+    '<div class="sheet-section"><div class="sheet-section-title">年度動支進度</div>' +
+      '<div class="progress-label" style="font-size:13px;display:flex;justify-content:space-between;margin-bottom:6px">' +
+        '<span>年度動支率</span><span style="color:' + fillColor + ';font-weight:700">' + (yr > 0 ? yr.toFixed(2) + '%' : '—') + '</span>' +
+      '</div>' +
+      '<div class="progress-bar" style="height:12px"><div class="progress-fill" style="width:' + Math.min(yr,100) + '%;background:' + fillColor + '"></div></div>' +
     '</div>';
   document.getElementById('overlay').className = 'overlay open';
 }
-document.getElementById('overlay').addEventListener('click', function(e){
-  if(e.target === this) this.className = 'overlay';
+
+document.getElementById('overlay').addEventListener('click', function(e) {
+  if (e.target === this) this.className = 'overlay';
 });
 
-// ── 費用摘要 ──────────────────────────────────────────────
-function renderSummary(){
-  var catMap = {}, unitMap2 = {};
-  RAW.forEach(function(r){
+// ── 費用摘要 ──────────────────────────────────────────
+function renderSummary() {
+  var root = document.getElementById('summaryRoot');
+  root.innerHTML = '';
+
+  var totalYear = 0, totalBal = 0;
+  RAW.forEach(function(r) {
+    totalYear += parseFloat(r['本年度預算']) || 0;
+    totalBal  += parseFloat(r['本月餘額']) || 0;
+  });
+  var overallRate = totalYear > 0 ? (totalBal / totalYear * 100).toFixed(1) : 0;
+
+  var ov = document.createElement('div');
+  ov.className = 'summary-card';
+  ov.innerHTML = '<h3>整體預算概況</h3>' +
+    '<div class="summary-overview">' +
+      '<div class="overview-item"><div class="overview-label">本年度預算</div><div class="overview-value">' + (totalYear/10000).toFixed(0) + '萬</div></div>' +
+      '<div class="overview-item"><div class="overview-label">累計動支</div><div class="overview-value" style="color:#1565c0">' + (totalBal/10000).toFixed(0) + '萬</div></div>' +
+      '<div class="overview-item"><div class="overview-label">整體動支率</div><div class="overview-value" style="color:' + rateColor(overallRate) + '">' + overallRate + '%</div></div>' +
+    '</div>';
+  root.appendChild(ov);
+
+  // 費用分類統計
+  var catMap = {};
+  RAW.forEach(function(r) {
     var c = r['費用分類'];
-    if(!catMap[c]) catMap[c] = {budget:0, used:0, remain:0, acc:0};
-    catMap[c].budget += Number(r['本年度預算'])||0;
-    catMap[c].used   += Number(r['本月餘額'])||0;
-    catMap[c].remain += Number(r['剩餘可動支數'])||0;
-    catMap[c].acc    += 1;
+    if (!catMap[c]) catMap[c] = {budget:0, bal:0, yearBgt:0};
+    catMap[c].budget += parseFloat(r['本月預算數']) || 0;
+    catMap[c].bal    += parseFloat(r['本月餘額']) || 0;
+    catMap[c].yearBgt+= parseFloat(r['本年度預算']) || 0;
+  });
+
+  var catCard = document.createElement('div');
+  catCard.className = 'summary-card';
+  catCard.innerHTML = '<h3>各費用分類動支率</h3>';
+  Object.keys(catMap).sort().forEach(function(c) {
+    var m = catMap[c];
+    var rate = m.yearBgt > 0 ? (m.bal / m.yearBgt * 100) : 0;
+    var fc = CAT_COLORS[c] || '#128048';
+    var div = document.createElement('div');
+    div.className = 'cat-bar-wrap';
+    div.innerHTML =
+      '<div class="cat-bar-name">' +
+        '<span style="color:' + fc + '">' + c + '</span>' +
+        '<span style="color:#888;font-size:11px">動支率 ' + rate.toFixed(1) + '% ／年預算 ' + (m.yearBgt/10000).toFixed(0) + '萬</span>' +
+      '</div>' +
+      '<div class="cat-bar-track"><div class="cat-bar-fill" style="width:' + Math.min(rate,100) + '%;background:' + fc + '"></div></div>';
+    catCard.appendChild(div);
+  });
+  root.appendChild(catCard);
+
+  // 科室統計
+  var unitMap = {};
+  RAW.forEach(function(r) {
+    if (!r['預算主管單位']) return;
     var u = r['預算主管單位'];
-    if(u){
-      if(!unitMap2[u]) unitMap2[u] = {budget:0, used:0};
-      unitMap2[u].budget += Number(r['本年度預算'])||0;
-      unitMap2[u].used   += Number(r['本月餘額'])||0;
-    }
+    if (!unitMap[u]) unitMap[u] = {yearBgt:0, bal:0};
+    unitMap[u].yearBgt += parseFloat(r['本年度預算']) || 0;
+    unitMap[u].bal     += parseFloat(r['本月餘額']) || 0;
   });
 
-  var totalBgt=0, totalUsed=0;
-  Object.values(catMap).forEach(function(v){ totalBgt+=v.budget; totalUsed+=v.used; });
-  var overallRate = totalBgt > 0 ? (totalUsed/totalBgt*100) : 0;
-
-  var html = '<div class="summary-card"><h3>整體預算概況</h3>'+
-    '<div class="summary-row"><span class="summary-label">本年度總預算</span><span class="summary-value">'+fmt(totalBgt)+'</span></div>'+
-    '<div class="summary-row"><span class="summary-label">累計動支（本月餘額合計）</span><span class="summary-value val-blue">'+fmt(totalUsed)+'</span></div>'+
-    '<div class="summary-row"><span class="summary-label">整體動支率</span><span class="summary-value '+rateColor(overallRate)+'">'+overallRate.toFixed(2)+'%</span></div>'+
-    '</div>';
-
-  html += '<div class="summary-card"><h3>各費用分類動支率</h3>';
-  var CATS2 = ['人事費','業務外包','業務成本','專案建置成本','設備及折舊','管銷費用'];
-  CATS2.forEach(function(c){
-    var v = catMap[c]; if(!v) return;
-    var rate = v.budget > 0 ? (v.used/v.budget*100) : 0;
-    var cc = CAT_COLORS[c] || CAT_COLORS['其他'];
-    html += '<div class="bar-row">'+
-      '<div class="bar-label"><span style="font-weight:700;color:'+cc.color+'">'+c+'</span><span class="'+rateColor(rate)+'">'+rate.toFixed(1)+'%</span></div>'+
-      '<div style="font-size:11px;color:#888;margin-bottom:3px">年度預算 '+fmt(v.budget)+' | 動支 '+fmt(v.used)+'</div>'+
-      '<div class="bar-track"><div class="bar-fill '+progressClass(rate)+'" style="width:'+Math.min(rate,100)+'%">'+rate.toFixed(0)+'%</div></div>'+
-    '</div>';
+  var unitCard = document.createElement('div');
+  unitCard.className = 'summary-card';
+  unitCard.innerHTML = '<h3>各科室動支率</h3>';
+  var unitKeys = Object.keys(unitMap).sort(function(a,b) {
+    var ra = unitMap[a].yearBgt > 0 ? unitMap[a].bal/unitMap[a].yearBgt : 0;
+    var rb = unitMap[b].yearBgt > 0 ? unitMap[b].bal/unitMap[b].yearBgt : 0;
+    return rb - ra;
   });
-  html += '</div>';
+  unitKeys.forEach(function(u) {
+    var m = unitMap[u];
+    var rate = m.yearBgt > 0 ? (m.bal / m.yearBgt * 100) : 0;
+    var uc = getUnitColor(u);
+    var div = document.createElement('div');
+    div.className = 'cat-bar-wrap';
+    div.innerHTML =
+      '<div class="cat-bar-name">' +
+        '<span style="color:' + uc + '">' + u + '</span>' +
+        '<span style="color:#888;font-size:11px">' + rate.toFixed(1) + '%</span>' +
+      '</div>' +
+      '<div class="cat-bar-track"><div class="cat-bar-fill" style="width:' + Math.min(rate,100) + '%;background:' + uc + '"></div></div>';
+    unitCard.appendChild(div);
+  });
+  root.appendChild(unitCard);
+}
 
-  if(Object.keys(unitMap2).length > 0){
-    html += '<div class="summary-card"><h3>各科室動支率</h3>';
-    var ukeys = Object.keys(unitMap2).sort();
-    ukeys.forEach(function(u){
-      var v = unitMap2[u];
-      var rate = v.budget > 0 ? (v.used/v.budget*100) : 0;
-      var uc = unitColorMap[u] || '#888';
-      html += '<div class="bar-row">'+
-        '<div class="bar-label"><span style="font-weight:700;color:'+uc+'">'+u+'</span><span class="'+rateColor(rate)+'">'+rate.toFixed(1)+'%</span></div>'+
-        '<div class="bar-track"><div class="bar-fill" style="width:'+Math.min(rate,100)+'%;background:'+uc+'">'+rate.toFixed(0)+'%</div></div>'+
-      '</div>';
-    });
-    html += '</div>';
+// ── 高用率預警 ────────────────────────────────────────
+function renderWarning() {
+  var root = document.getElementById('warningRoot');
+  root.innerHTML = '';
+  var warns = RAW.filter(function(r) { return (parseFloat(r['年度動支率']) || 0) >= 70; });
+  warns.sort(function(a,b) { return (parseFloat(b['年度動支率'])||0) - (parseFloat(a['年度動支率'])||0); });
+  if (!warns.length) {
+    root.innerHTML = '<div style="text-align:center;color:#888;padding:40px">無年度動支率 ≥ 70% 的項目</div>';
+    return;
   }
-
-  document.getElementById('summaryRoot').innerHTML = html;
-}
-
-// ── 高用率預警 ────────────────────────────────────────────
-function renderWarning(){
-  var warns = RAW.filter(function(r){ return (Number(r['年度動支率'])||0) >= 70; })
-    .sort(function(a,b){ return (Number(b['年度動支率'])||0) - (Number(a['年度動支率'])||0); });
-  var html = '<div style="font-size:13px;color:#666;margin-bottom:10px">年度動支率 ≥ 70% 共 '+warns.length+' 筆</div>';
-  warns.forEach(function(r){
-    var yr = Number(r['年度動支率'])||0;
-    var uc = unitColorMap[r['預算主管單位']] || '#888';
+  warns.forEach(function(r) {
+    var yr = parseFloat(r['年度動支率']) || 0;
+    var card = document.createElement('div');
+    card.className = 'warning-card' + (yr >= 90 ? ' red' : '');
     var unitBadge = r['預算主管單位']
-      ? '<span class="unit-badge" style="background:'+uc+'1a;color:'+uc+';margin-left:6px">'+r['預算主管單位']+'</span>' : '';
-    html += '<div class="warn-card'+(yr>=90?' high':'')+'">'+
-      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">'+
-        '<span style="font-size:12px;color:#888">'+r['明細帳']+'</span>'+
-        '<strong class="'+rateColor(yr)+'" style="font-size:16px">'+pct(r['年度動支率'])+'</strong>'+
-      '</div>'+
-      '<div style="font-weight:700;margin-bottom:6px">'+r['會計項目']+unitBadge+'</div>'+
-      '<div style="font-size:12px;color:#555">本年度預算 '+fmt(r['本年度預算'])+' ｜ 剩餘 '+fmt(r['剩餘可動支數'])+'</div>'+
-    '</div>';
+      ? '<span class="unit-badge" style="background:' + getUnitColor(r['預算主管單位']) + '1a;color:' + getUnitColor(r['預算主管單位']) + ';margin-left:6px">' + r['預算主管單位'] + '</span>'
+      : '';
+    card.innerHTML =
+      '<div class="w-name">' + r['明細帳'] + ' ' + r['會計項目'] + unitBadge + '</div>' +
+      '<div class="w-rate" style="color:' + (yr >= 90 ? '#c62828' : '#e07b00') + '">' + yr.toFixed(2) + '%</div>' +
+      '<div class="w-sub">年度預算 ' + fmt(r['本年度預算']) + ' ／ 剩餘 ' + fmt(r['剩餘可動支數']) + '</div>';
+    root.appendChild(card);
   });
-  document.getElementById('warningRoot').innerHTML = html;
 }
 
-// ── 圖表分析 ──────────────────────────────────────────────
-var _chartsReady = false;
-function renderCharts(){
-  if(_chartsReady) return;
-  _chartsReady = true;
+// ── 圖表分析 ──────────────────────────────────────────
+function renderCharts() {
   var root = document.getElementById('chartsRoot');
+  root.innerHTML = '';
 
-  // KPI 卡片（不需 Chart.js）
-  var totalBgt=0, totalUsed=0;
-  RAW.forEach(function(r){ totalBgt+=Number(r['本年度預算'])||0; totalUsed+=Number(r['本月餘額'])||0; });
-  var overallRate = totalBgt > 0 ? (totalUsed/totalBgt*100) : 0;
-  var rateCol = overallRate>=90?'#c62828':overallRate>=70?'#e07b00':'#128048';
-  root.innerHTML =
-    '<div class="charts-kpi">'+
-      '<div class="kpi-card"><div class="k-label">本年度總預算</div><div class="k-value" style="color:#1565c0">'+Math.round(totalBgt/10000)+'萬</div></div>'+
-      '<div class="kpi-card"><div class="k-label">累計動支</div><div class="k-value" style="color:#128048">'+Math.round(totalUsed/10000)+'萬</div></div>'+
-      '<div class="kpi-card full"><div class="k-label">整體動支率</div><div class="k-value" style="color:'+rateCol+'">'+overallRate.toFixed(2)+'%</div></div>'+
-    '</div>'+
-    '<div class="chart-block" id="cb-donut"><h3>🍩 費用分類年度預算分配</h3><div class="chart-canvas-wrap" style="height:280px"><canvas id="chartDonut"></canvas></div></div>'+
-    '<div class="chart-block" id="cb-catbar"><h3>📊 費用分類年度動支率</h3><div class="chart-canvas-wrap" style="height:260px"><canvas id="chartCatBar"></canvas></div></div>'+
-    '<div class="chart-block" id="cb-unitbar"><h3>🏢 各科室年度動支率</h3><div id="unitChartWrap" class="chart-canvas-wrap"><canvas id="chartUnitBar"></canvas></div></div>'+
-    '<div class="chart-block" id="cb-stack"><h3>📦 費用分類動支 vs 剩餘（萬元）</h3><div class="chart-canvas-wrap" style="height:260px"><canvas id="chartStack"></canvas></div></div>';
+  // KPI 卡片
+  var totalYear = 0, totalBal = 0;
+  RAW.forEach(function(r) {
+    totalYear += parseFloat(r['本年度預算']) || 0;
+    totalBal  += parseFloat(r['本月餘額']) || 0;
+  });
+  var overallRate = totalYear > 0 ? (totalBal / totalYear * 100) : 0;
+  var kpiClass = overallRate >= 90 ? 'danger' : overallRate >= 70 ? 'warn' : '';
 
-  // 動態載入 Chart.js
-  if(typeof Chart === 'undefined'){
+  var kpiSec = document.createElement('div');
+  kpiSec.className = 'chart-section';
+  kpiSec.innerHTML = '<h3>📌 KPI 總覽</h3>' +
+    '<div class="kpi-grid">' +
+      '<div class="kpi-card"><div class="kpi-label">本年度預算</div><div class="kpi-value">' + (totalYear/10000).toFixed(0) + '萬</div></div>' +
+      '<div class="kpi-card"><div class="kpi-label">累計動支</div><div class="kpi-value" style="color:#1565c0">' + (totalBal/10000).toFixed(0) + '萬</div></div>' +
+      '<div class="kpi-card ' + kpiClass + '"><div class="kpi-label">整體動支率</div><div class="kpi-value">' + overallRate.toFixed(1) + '%</div></div>' +
+    '</div>';
+  root.appendChild(kpiSec);
+
+  // 費用分類統計
+  var catMap = {};
+  RAW.forEach(function(r) {
+    var c = r['費用分類'];
+    if (!catMap[c]) catMap[c] = {yearBgt:0, bal:0, rem:0};
+    catMap[c].yearBgt += parseFloat(r['本年度預算']) || 0;
+    catMap[c].bal     += parseFloat(r['本月餘額']) || 0;
+    catMap[c].rem     += parseFloat(r['剩餘可動支數']) || 0;
+  });
+  var catKeys = Object.keys(catMap).sort();
+
+  // 科室統計
+  var unitMap = {};
+  RAW.forEach(function(r) {
+    if (!r['預算主管單位']) return;
+    var u = r['預算主管單位'];
+    if (!unitMap[u]) unitMap[u] = {yearBgt:0, bal:0, rem:0};
+    unitMap[u].yearBgt += parseFloat(r['本年度預算']) || 0;
+    unitMap[u].bal     += parseFloat(r['本月餘額']) || 0;
+    unitMap[u].rem     += parseFloat(r['剩餘可動支數']) || 0;
+  });
+  var unitKeys = Object.keys(unitMap).sort(function(a,b) {
+    var ra = unitMap[a].yearBgt > 0 ? unitMap[a].bal/unitMap[a].yearBgt*100 : 0;
+    var rb = unitMap[b].yearBgt > 0 ? unitMap[b].bal/unitMap[b].yearBgt*100 : 0;
+    return rb - ra;
+  });
+
+  // 甜甜圈圖容器
+  var donutSec = document.createElement('div');
+  donutSec.className = 'chart-section';
+  donutSec.innerHTML = '<h3>🍩 費用分類預算分配</h3><div class="chart-canvas-wrap" style="height:280px"><canvas id="chartDonut"></canvas></div>';
+  root.appendChild(donutSec);
+
+  // 費用分類動支率橫條
+  var catBarSec = document.createElement('div');
+  catBarSec.className = 'chart-section';
+  catBarSec.innerHTML = '<h3>📊 費用分類年度動支率</h3><div class="chart-canvas-wrap" style="height:240px"><canvas id="chartCatBar"></canvas></div>';
+  root.appendChild(catBarSec);
+
+  // 科室橫條（動態高度）
+  var unitH = Math.max(260, unitKeys.length * 28);
+  var unitBarSec = document.createElement('div');
+  unitBarSec.className = 'chart-section';
+  unitBarSec.innerHTML = '<h3>🏢 各科室年度動支率</h3><div class="chart-canvas-wrap" id="unitChartWrap" style="height:' + unitH + 'px"><canvas id="chartUnitBar"></canvas></div>';
+  root.appendChild(unitBarSec);
+
+  // 堆疊橫條
+  var stackSec = document.createElement('div');
+  stackSec.className = 'chart-section';
+  stackSec.innerHTML = '<h3>📦 已動支 vs 剩餘（萬元）</h3><div class="chart-canvas-wrap" style="height:' + unitH + 'px"><canvas id="chartStack"></canvas></div>';
+  root.appendChild(stackSec);
+
+  // 載入 Chart.js
+  if (typeof Chart === 'undefined') {
     var s = document.createElement('script');
     s.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js';
-    s.onload = function(){ drawCharts(); };
+    s.onload = function() { drawCharts(catKeys, catMap, unitKeys, unitMap); };
     document.head.appendChild(s);
   } else {
-    drawCharts();
+    drawCharts(catKeys, catMap, unitKeys, unitMap);
   }
 }
 
-function drawCharts(){
-  var catMap = {};
-  var CATS3 = ['人事費','業務外包','業務成本','專案建置成本','設備及折舊','管銷費用'];
-  CATS3.forEach(function(c){ catMap[c] = {budget:0, used:0, remain:0}; });
-  var unitMap3 = {};
-  RAW.forEach(function(r){
-    var c = r['費用分類'];
-    if(catMap[c]){
-      catMap[c].budget += Number(r['本年度預算'])||0;
-      catMap[c].used   += Number(r['本月餘額'])||0;
-      catMap[c].remain += Math.max(0, Number(r['剩餘可動支數'])||0);
-    }
-    var u = r['預算主管單位'];
-    if(u){
-      if(!unitMap3[u]) unitMap3[u] = {budget:0, used:0};
-      unitMap3[u].budget += Number(r['本年度預算'])||0;
-      unitMap3[u].used   += Number(r['本月餘額'])||0;
-    }
-  });
-
+function drawCharts(catKeys, catMap, unitKeys, unitMap) {
   // 甜甜圈
   new Chart(document.getElementById('chartDonut'), {
     type: 'doughnut',
     data: {
-      labels: CATS3,
-      datasets: [{ data: CATS3.map(function(c){ return Math.round(catMap[c].budget/10000); }),
-        backgroundColor: ['#2e7d32','#1565c0','#e65100','#c62828','#6a1b9a','#00695c'],
-        borderWidth: 2, borderColor: '#fff'
+      labels: catKeys,
+      datasets: [{
+        data: catKeys.map(function(c) { return Math.round(catMap[c].yearBgt / 10000); }),
+        backgroundColor: catKeys.map(function(c) { return CAT_COLORS[c] || '#999'; }),
+        borderWidth: 2,
+        borderColor: '#fff',
       }]
     },
-    options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: {size:11}, padding:8 } } } }
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 11 }, padding: 8 } } }
+    }
   });
 
-  // 費用分類橫條
-  var catRates = CATS3.map(function(c){ return catMap[c].budget > 0 ? catMap[c].used/catMap[c].budget*100 : 0; });
-  var catColors = catRates.map(function(r){ return r>=90?'#c62828':r>=70?'#e07b00':'#2e7d32'; });
+  // 費用分類動支率橫條
+  var catRates = catKeys.map(function(c) {
+    return catMap[c].yearBgt > 0 ? parseFloat((catMap[c].bal/catMap[c].yearBgt*100).toFixed(1)) : 0;
+  });
   new Chart(document.getElementById('chartCatBar'), {
     type: 'bar',
     data: {
-      labels: CATS3,
-      datasets: [{ label: '年度動支率(%)', data: catRates.map(function(r){ return parseFloat(r.toFixed(1)); }),
-        backgroundColor: catColors, borderRadius: 6 }]
+      labels: catKeys,
+      datasets: [{
+        label: '年度動支率 %',
+        data: catRates,
+        backgroundColor: catRates.map(function(r) { return r >= 90 ? '#c62828' : r >= 70 ? '#e07b00' : '#2e7d32'; }),
+        borderRadius: 6,
+      }]
     },
-    options: { indexAxis:'y', maintainAspectRatio: false,
-      plugins: { legend: {display:false} },
-      scales: { x: { max:100, ticks:{callback:function(v){return v+'%'}} }, y: { ticks:{font:{size:11}} } }
+    options: {
+      responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+      plugins: { legend: { display: false } },
+      scales: { x: { max: 100, ticks: { callback: function(v) { return v + '%'; } } } }
     }
   });
 
   // 科室橫條
-  var ukeys = Object.keys(unitMap3).sort(function(a,b){
-    var ra = unitMap3[a].budget>0?unitMap3[a].used/unitMap3[a].budget*100:0;
-    var rb = unitMap3[b].budget>0?unitMap3[b].used/unitMap3[b].budget*100:0;
-    return rb-ra;
+  var unitRates = unitKeys.map(function(u) {
+    return unitMap[u].yearBgt > 0 ? parseFloat((unitMap[u].bal/unitMap[u].yearBgt*100).toFixed(1)) : 0;
   });
-  var unitH = Math.max(260, ukeys.length * 28);
-  document.getElementById('unitChartWrap').style.height = unitH + 'px';
-  var uRates = ukeys.map(function(u){ return unitMap3[u].budget>0?parseFloat((unitMap3[u].used/unitMap3[u].budget*100).toFixed(1)):0; });
-  var uColors = ukeys.map(function(u,i){ return UNIT_PALETTE[i%UNIT_PALETTE.length]; });
   new Chart(document.getElementById('chartUnitBar'), {
     type: 'bar',
     data: {
-      labels: ukeys,
-      datasets: [{ label: '年度動支率(%)', data: uRates, backgroundColor: uColors, borderRadius: 5 }]
+      labels: unitKeys,
+      datasets: [{
+        label: '年度動支率 %',
+        data: unitRates,
+        backgroundColor: unitRates.map(function(r) { return r >= 90 ? '#c62828' : r >= 70 ? '#e07b00' : '#2e7d32'; }),
+        borderRadius: 6,
+      }]
     },
-    options: { indexAxis:'y', maintainAspectRatio: false,
-      plugins: { legend:{display:false} },
-      scales: { x:{ max:100, ticks:{callback:function(v){return v+'%'}} }, y:{ticks:{font:{size:11}}} }
+    options: {
+      responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+      plugins: { legend: { display: false } },
+      scales: { x: { max: 100, ticks: { callback: function(v) { return v + '%'; } } } }
     }
   });
 
-  // 堆疊橫條
+  // 堆疊橫條（已動支 vs 剩餘，萬元）
   new Chart(document.getElementById('chartStack'), {
     type: 'bar',
     data: {
-      labels: CATS3,
+      labels: unitKeys,
       datasets: [
-        { label: '已動支(萬)', data: CATS3.map(function(c){ return Math.round(catMap[c].used/10000); }), backgroundColor: '#128048', borderRadius: 4 },
-        { label: '剩餘可動支(萬)', data: CATS3.map(function(c){ return Math.round(catMap[c].remain/10000); }), backgroundColor: '#a5d6a7', borderRadius: 4 }
+        {
+          label: '已動支（萬）',
+          data: unitKeys.map(function(u) { return Math.round(unitMap[u].bal / 10000); }),
+          backgroundColor: '#1565c0cc',
+          borderRadius: 4,
+        },
+        {
+          label: '剩餘可動支（萬）',
+          data: unitKeys.map(function(u) { return Math.max(0, Math.round(unitMap[u].rem / 10000)); }),
+          backgroundColor: '#2e7d32cc',
+          borderRadius: 4,
+        }
       ]
     },
-    options: { indexAxis:'y', maintainAspectRatio: false,
-      plugins: { legend:{position:'bottom'} },
-      scales: { x:{ stacked:true }, y:{ stacked:true, ticks:{font:{size:11}} } }
+    options: {
+      responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+      plugins: { legend: { position: 'top', labels: { font: { size: 11 } } } },
+      scales: { x: { stacked: true }, y: { stacked: true } }
     }
   });
 }
 
-// 初始化
+// 初始渲染
 render();
 </script>
 </body>
