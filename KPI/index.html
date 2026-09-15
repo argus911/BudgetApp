@@ -1139,8 +1139,8 @@ function renderDashboard(){
     alertBox.innerHTML = '';
   }
 
-  // KPI 清單(按權重由大到小排序)
-  const sorted = [...KPI].sort((a,b)=>b.weight-a.weight);
+  // KPI 清單(依字典編號順序排列,與「字典」分頁一致)
+  const sorted = KPI;
   let html = '';
   sorted.forEach(k=>{
     const s = me.scores[k.id];
