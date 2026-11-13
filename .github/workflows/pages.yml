@@ -1,0 +1,55 @@
+# GitHub Pages 上線前檢查＋部署
+# ・每次推送 main：先跑 tools/check_pages.py，通過才部署；不通過網站維持上一版
+# ・Pull Request：只跑檢查
+# ・部署工作需要「Settings → Pages → Source」設為 GitHub Actions，
+#   並在 Settings → Secrets and variables → Actions → Variables 設定 PAGES_VIA_ACTIONS = true
+name: Pages 上線前檢查
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  check:
+    name: 欄位名稱與資料筆數檢查
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: 執行 check_pages.py
+        run: python3 tools/check_pages.py
+
+  deploy:
+    name: 部署到 GitHub Pages
+    needs: check
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && vars.PAGES_VIA_ACTIONS == 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: 整理要上線的檔案（排除 .github、tools 等內部檔案）
+        run: |
+          mkdir _site
+          rsync -a --exclude '.git' --exclude '.github' --exclude '.claude' --exclude 'tools' --exclude '_site' ./ _site/
+          touch _site/.nojekyll
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4

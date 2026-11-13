@@ -1,0 +1,121 @@
+{
+  "_說明": "GitHub Pages 上線前檢查規則（tools/check_pages.py 讀取）。筆數範圍、必要欄位可在這裡調整。",
+  "global_must_not_contain": [],
+  "pages": {
+    "index.html": {
+      "min_bytes": 100000
+    },
+    "KPI/index.html": {
+      "min_bytes": 150000
+    },
+    "ICTCost/index.html": {
+      "min_bytes": 30000
+    },
+    "BonusPoints/index.html": {
+      "min_bytes": 50000
+    }
+  },
+  "kpi": {
+    "KPI/index.html": {
+      "const": "DATA",
+      "top_keys": [
+        "kpi",
+        "groups",
+        "history",
+        "actual"
+      ],
+      "kpi_ids": [
+        "O1",
+        "O2",
+        "L1",
+        "L2",
+        "L3",
+        "L4",
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5",
+        "M6",
+        "M7",
+        "E"
+      ],
+      "records_min": 17,
+      "records_max": 17,
+      "record_keys": [
+        "office",
+        "annual",
+        "rank",
+        "group_rank",
+        "scores"
+      ],
+      "forbidden_keys": [
+        "kpis",
+        "groupRank"
+      ],
+      "same_period_as": "KPI/actual_history.json"
+    },
+    "KPI/actual_history.json": {
+      "kpi_ids": [
+        "O1",
+        "O2",
+        "L1",
+        "L2",
+        "L3",
+        "L4",
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5",
+        "M6",
+        "M7",
+        "E"
+      ],
+      "records_min": 17,
+      "records_max": 17,
+      "record_keys": [
+        "office",
+        "annual",
+        "rank",
+        "group_rank",
+        "scores"
+      ],
+      "forbidden_keys": [
+        "kpis",
+        "groupRank"
+      ]
+    }
+  },
+  "csv": {
+    "budget.csv": {
+      "required_columns": [
+        "列帳機構",
+        "交易機構",
+        "年度",
+        "月份",
+        "總帳科目",
+        "明細帳",
+        "科目名稱",
+        "累計動支數",
+        "本月預算數",
+        "至本月預算數",
+        "年度預算數",
+        "項目代號",
+        "預算主管單位"
+      ],
+      "rows_min": 200,
+      "rows_max": 3000,
+      "single_value_columns": [
+        "年度",
+        "月份"
+      ],
+      "numeric_columns": [
+        "累計動支數",
+        "本月預算數",
+        "至本月預算數",
+        "年度預算數"
+      ]
+    }
+  }
+}
