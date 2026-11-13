@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-GitHub Pages 上線前檢查  v1.0
+GitHub Pages 上線前檢查  v1.1
 ==========================================================
 在 GitHub Actions 上執行（也可以在本機執行：python tools/check_pages.py）。
 任何一項「錯誤」→ 結束碼 1 → 部署工作不會執行，網站維持上一版。
@@ -10,6 +10,7 @@ GitHub Pages 上線前檢查  v1.0
   pages        要檢查的網頁：最小檔案大小、必須出現／不可出現的文字
   kpi          KPI 內嵌資料 DATA 的欄位名稱與筆數（scores／group_rank，禁用 kpis／groupRank）
   csv          資料檔（例 budget.csv）的必要欄位與資料筆數範圍
+  embedded     網頁內嵌資料陣列（例 var RAW = [...]）的筆數範圍、必要欄位、數字欄位（v1.1）
 所有網頁的 <script> 都會用 node --check 做語法檢查（有 node 才檢查）。
 """
 import csv, io, json, os, re, shutil, subprocess, sys, tempfile
@@ -206,11 +207,49 @@ def check_csv():
         print(f"  {'✔' if len(errors) == n0 else '✘'} {rel}：{len(rows)} 筆，{len(cols)} 欄")
 
 
+# ── 四、網頁內嵌資料陣列（v1.1）────────────────────────────────
+def check_embedded():
+    for rel, rule in RULES.get("embedded", {}).items():
+        if not (ROOT / rel).exists():
+            err(rel, "檔案不存在")
+            continue
+        n0 = len(errors)
+        html = read(rel)
+        var = rule.get("var", "RAW")
+        m = re.search(r"\b(?:var|let|const)\s+%s\s*=\s*" % re.escape(var), html)
+        if not m:
+            err(rel, f"找不到內嵌資料 {var} = [...]")
+            continue
+        try:
+            rows, _ = json.JSONDecoder().raw_decode(html[m.end():])
+        except ValueError as e:
+            err(rel, f"{var} 無法解析成 JSON：{e}")
+            continue
+        if not isinstance(rows, list):
+            err(rel, f"{var} 不是陣列")
+            continue
+        lo, hi = rule.get("rows_min", 1), rule.get("rows_max", 10 ** 7)
+        if not lo <= len(rows) <= hi:
+            err(rel, f"{var} 有 {len(rows)} 筆，應介於 {lo}～{hi} 筆")
+        for k in rule.get("required_keys", []):
+            lack = [i for i, r in enumerate(rows) if not isinstance(r, dict) or k not in r]
+            if lack:
+                err(rel, f"{var} 有 {len(lack)} 筆缺少欄位「{k}」（第 {lack[:5]} 筆；欄位名稱可能被改掉）")
+        for k in rule.get("numeric_keys", []):
+            bad = [i for i, r in enumerate(rows) if isinstance(r, dict) and r.get(k) not in (None, "")
+                   and not isinstance(r.get(k), (int, float))
+                   and not re.fullmatch(r"-?[\d,]+(\.\d+)?", str(r.get(k)).strip())]
+            if bad:
+                err(rel, f"{var} 欄位「{k}」有非數字資料，第 {bad[:5]} 筆")
+        print(f"  {'✔' if len(errors) == n0 else '✘'} {rel}：{var} {len(rows)} 筆")
+
+
 def main():
     print(f"檢查資料夾：{ROOT}")
     check_pages()
     check_kpi()
     check_csv()
+    check_embedded()
     print(f"  網頁 {len(RULES.get('pages', {}))} 個已檢查")
     for w in warnings:
         print(w)
